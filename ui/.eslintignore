@@ -1,0 +1,5 @@
+src/components/**/*
+src/*.svelte
+**/*.json
+*.js
+package.json

@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "jest"],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+      "no-console": "error",
+      "semi": "error",
+      "@typescript-eslint/no-use-before-define": "off",
+      "@typescript-eslint/no-empty-interface": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", {
+        "argsIgnorePattern": "^_.+",
+        "varsIgnorePattern": "^_.+"
+      }],
+      "jest/no-focused-tests": "off",
+      "jest/no-disabled-tests": "off"
+  },
+  "env": {
+    "browser": true,
+    "jest/globals": true
+  }
+}

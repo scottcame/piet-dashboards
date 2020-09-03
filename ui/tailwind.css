@@ -1,0 +1,42 @@
+/*
+
+  Tailwind "driver" stylesheet. If you change this file, you have to rebuild tailwind-gen.css by running npm run build:tailwind.
+
+*/
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.inset-below {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.text-xxs {
+  font-size: .625rem;
+}
+
+.max-h-128 {
+  max-height: 128px;
+}
+
+.max-h-screen-33 {
+  max-height: 33vh;
+}
+
+.h-screen-33 {
+  height: 33vh;
+}
+
+.h-screen-67 {
+  height: 67vh;
+}
+
+/* custom style to set the height of the html body. 88px is the approximate height of the nav header. */
+
+.app-height {
+  height: calc(100% - 88px);
+}
