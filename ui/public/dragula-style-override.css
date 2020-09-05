@@ -1,0 +1,7 @@
+/*
+  Override dragula styles here
+*/
+.gu-transit {
+  /* Don't display the dragged container in the target container */
+  display: none;
+}

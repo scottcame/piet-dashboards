@@ -1,0 +1,55 @@
+{
+  "title": {
+    "short": "Piet Dashboard",
+    "long": "Demo Piet Dashboard"
+  },
+  "appLogoImageUrl": "img/piet-logo.jpg",
+  "allowVizExport": false,
+  "groups": [
+    {
+      "header": "Visualization Group 1",
+      "visualizations": {
+        "viz-1-1": {
+          "panelTitle": "Bar Visualization",
+          "showEmpty": true,
+          "connection": "Test",
+          "cube": "[Test_F1]",
+          "measure": "F1_M1",
+          "xDimension": "[D1].[D1.D1].[D1_DESCRIPTION]",
+          "xDimensionExcludes": [],
+          "vizType": "bar",
+          "text": "These are the values of M1 for D1"
+        },
+        "viz-1-2": {
+          "panelTitle": "Pie Visualization",
+          "showEmpty": true,
+          "connection": "Test",
+          "cube": "[Test_F1]",
+          "measure": "F1_M1",
+          "xDimension": "[D1].[D1.D1].[D1_DESCRIPTION]",
+          "xDimensionExcludes": [],
+          "vizType": "pie",
+          "text": "These are the values of M1 for D1"
+        }
+      }
+    },
+    {
+      "header": "Visualization Group 2",
+      "visualizations": {
+        "viz-1-1": {
+          "panelTitle": "Heatgrid Visualization",
+          "showEmpty": true,
+          "connection": "Test",
+          "cube": "[Test_F3]",
+          "measure": "F3_M1",
+          "xDimension": "[D1].[D1.D1].[D1_DESCRIPTION]",
+          "xDimensionExcludes": [],
+          "yDimension": "[D2].[D2.D2].[D2_DESCRIPTION]",
+          "yDimensionExcludes": [],
+          "vizType": "heatgrid",
+          "text": "These are the values of M1 for D1xD2"
+        }
+      }
+    }
+  ]
+}

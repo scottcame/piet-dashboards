@@ -1,5 +1,5 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
-  "include": ["src/**/*.ts", "test/**/*.ts", "src/components/**/*.svelte"],
-  "compilerOptions": { "resolveJsonModule": true, "moduleResolution": "node", "downlevelIteration": true, "target": "ES6" }
+  "include": ["src/**/*.ts", "test/**/*.ts", "test/_data/*.json", "src/components/**/*.svelte"],
+  "compilerOptions": { "resolveJsonModule": true, "moduleResolution": "node", "downlevelIteration": true, "target": "ES6" , "lib": ["ES2018", "dom"] }
 }

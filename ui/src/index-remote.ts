@@ -13,6 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AppFactory } from "./js/AppFactory";
+import { AppFactory } from "./AppFactory";
 
-export default AppFactory.getInstance().makeApp(false);
+export default AppFactory.getInstance().makeApp(true);
