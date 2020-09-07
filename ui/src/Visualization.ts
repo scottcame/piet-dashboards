@@ -43,7 +43,6 @@ export abstract class Visualization {
     }
 
     if (ret) {
-
       ret._panelTitle = json.panelTitle;
       ret._showEmpty = json.showEmpty;
       ret._connection = json.connection;
@@ -59,15 +58,6 @@ export abstract class Visualization {
       ret._vizType = json.vizType;
       ret._text = json.text;
       ret._includeGridValueText = json.includeGridValueText;
-
-      if (ret._xDimensionLabel == undefined) {
-        ret._xDimensionLabel = null;
-      }
-
-      if (ret._yDimensionLabel == undefined) {
-        ret._yDimensionLabel = null;
-      }
-
     }
 
     return ret;
@@ -80,11 +70,11 @@ export abstract class Visualization {
   get cube(): string { return this._cube; }
   get measure(): string { return this._measure; }
   get xDimension(): string { return this._xDimension; }
-  get xDimensionLabel(): string { return this._xDimensionLabel; }
+  get xDimensionLabel(): string { return this._xDimensionLabel || null; }
   get xDimensionExcludes(): string[] { return this._xDimensionExcludes; }
   get xDimensionMembers(): string[] { return this._xDimensionMembers; }
   get yDimension(): string { return this._yDimension; }
-  get yDimensionLabel(): string { return this._yDimensionLabel; }
+  get yDimensionLabel(): string { return this._yDimensionLabel || null; }
   get yDimensionExcludes(): string[] { return this._yDimensionExcludes; }
   get vizType(): "heatgrid"|"bar"|"timeline"|"pie" { return this._vizType; }
   get text(): string { return this._text; }
@@ -130,9 +120,9 @@ export abstract class Visualization {
     yDimensionName: string, yDimensionLabel: string,
     measureName: string, measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any;
 
-  protected abstract buildQuery(): string;
+  abstract buildQuery(): string;
 
-  buildOneDimensionalQuery(): string {
+  protected buildOneDimensionalQuery(): string {
 
     let ret = null;
     const showEmptyText = this.showEmpty ? "" : " NON EMPTY ";
@@ -143,13 +133,13 @@ export abstract class Visualization {
     }
   
     ret = "SELECT" + showEmptyText + " {[Measures].[" + this.measure + "]} * " +
-      "Union({" + this.xDimension + ".Hierarchy.FirstChild.Parent}, " + xDimension + ") ON COLUMNS";
+      "Union({" + this.xDimension + ".Hierarchy.FirstChild.Parent}, " + xDimension + ") ON COLUMNS FROM " + this.cube;
   
     return ret;
   
   }
 
-  buildTwoDimensionalQuery(): string {
+  protected buildTwoDimensionalQuery(): string {
 
     if (!this.yDimension) {
       throw new Error("2D query requested but only one dimension specified in config; viz id = " + this.id);
@@ -169,13 +159,13 @@ export abstract class Visualization {
   
     ret = "SELECT" + showEmptyText + " {[Measures].[" + this.measure + "]} * " +
       "Union({" + this.xDimension + ".Hierarchy.FirstChild.Parent}, " + xDimension + ") * " +
-      "Union({" + this.yDimension + ".Hierarchy.FirstChild.Parent}, " + yDimension + ") ON COLUMNS";
+      "Union({" + this.yDimension + ".Hierarchy.FirstChild.Parent}, " + yDimension + ") ON COLUMNS FROM " + this.cube;
   
     return ret;
   
   }
 
-  buildTimelineQuery(): string {
+  protected buildTimelineQuery(): string {
 
     let ret = null;
     const showEmptyText = this.showEmpty ? "" : " NON EMPTY ";
@@ -183,7 +173,7 @@ export abstract class Visualization {
     const rollup = this.xDimensionMembers[0] + ".Hierarchy.FirstChild.Parent";
   
     ret = "SELECT " + showEmptyText + " {[Measures].[" + this.measure + "]} * {" + this.yDimension + ".Members} * " +
-      "Hierarchize({Except({" + rollup + "}, {" + this.xDimensionExcludes.join(",") + "}), {" + this.xDimensionMembers.join(",") + "}}) ON COLUMNS";
+      "Hierarchize({Except({" + rollup + "}, {" + this.xDimensionExcludes.join(",") + "}), {" + this.xDimensionMembers.join(",") + "}}) ON COLUMNS FROM " + this.cube;
   
     return ret;
   
@@ -242,7 +232,7 @@ export class TimelineChartVisualization extends Visualization {
   constructor(id: string) {
     super(id);
   }
-  protected buildQuery(): string{
+  buildQuery(): string{
     return super.buildTimelineQuery();
   }
   protected makeChart(_xDimensionName: string, _xDimensionLabel: string,
@@ -318,7 +308,7 @@ export class HeatgridChartVisualization extends Visualization {
   constructor(id: string) {
     super(id);
   }
-  protected buildQuery(): string{
+  buildQuery(): string{
     return super.buildTwoDimensionalQuery();
   }
   protected makeChart(
@@ -409,7 +399,7 @@ export class PieChartVisualization extends Visualization {
   constructor(id: string) {
     super(id);
   }
-  protected buildQuery(): string{
+  buildQuery(): string{
     return super.buildOneDimensionalQuery();
   }
   protected makeChart(xDimensionName: string, xDimensionLabel: string, _yDimensionName: string, _yDimensionLabel: string,measureName: string,measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any {
@@ -422,7 +412,7 @@ export class BarChartVisualization extends Visualization {
   constructor(id: string) {
     super(id);
   }
-  protected buildQuery(): string{
+  buildQuery(): string {
     return super.buildOneDimensionalQuery();
   }
   protected makeChart(xDimensionName: string, xDimensionLabel: string, _yDimensionName: string, _yDimensionLabel: string,measureName: string,measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any {
@@ -463,11 +453,6 @@ export class BarChartVisualization extends Visualization {
       }
     };
   
-    s.encoding.row = {
-      "field": "level",
-      "type": "nominal",
-      "title": null
-    };
     s.encoding.color = {
       "field": "level",
       "type": "nominal",
@@ -484,16 +469,18 @@ export class BarChartVisualization extends Visualization {
   private transform(data: DataObject): DataObject {
 
     let denom = 0;
+
+    data.values = data.values.filter((v: any): boolean => {
+      return v['x'] !== undefined;
+    });
+
     data.values.forEach((o: any): void => {
       o.m = o[this.measure];
       denom += o.m;
     });
+
     data.values.forEach((o: any): void => {
       o.m = denom ? o.m / denom : 0;
-    });
-
-    data.values = data.values.filter((v: any): boolean => {
-      return v['x'] !== undefined;
     });
 
     return super.fillGrid(data);

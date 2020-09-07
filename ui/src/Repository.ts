@@ -32,31 +32,23 @@ abstract class AbstractRepository implements Repository {
 
 export class LocalRepository extends AbstractRepository {
 
-  private static SIMULATED_DELAY = 500;
-
   async init(): Promise<Config> {
     this._config = Config.fromJson(TestData.TEST_CONFIG);
     return Promise.resolve(this._config);
   }
 
   async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean, _levelNameTranslationMap: any): Promise<any> {
+    
     let ret = Promise.resolve(null);
-    /*
-    if (mdx === TestData.TEST_QUERY_1D_SELF) {
-      ret = Promise.resolve(TestData.TEST_RESPONSE_1D_SELF);
-    } else if (mdx === TestData.TEST_QUERY_1D_ORDINARY) {
-      ret = Promise.resolve(TestData.TEST_RESPONSE_1D_ORDINARY);
-    } else if (mdx === TestData.TEST_QUERY_2D_SELF) {
-      ret = Promise.resolve(TestData.TEST_RESPONSE_2D_SELF);
-    } else if (mdx === TestData.TEST_QUERY_2D_ORDINARY) {
-      ret = Promise.resolve(TestData.TEST_RESPONSE_2D_ORDINARY);
-    } else if (mdx === TestData.TEST_QUERY_TIMELINE_SELF) {
-      ret = Promise.resolve(TestData.TEST_RESPONSE_TIMELINE_SELF);
-    } else if (mdx === TestData.TEST_QUERY_TIMELINE_ORDINARY) {
-      ret = Promise.resolve(TestData.TEST_RESPONSE_TIMELINE_ORDINARY);
+
+    if (mdx === TestData.TEST_QUERY_1D) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_1D);
+    } else if (mdx === TestData.TEST_QUERY_1D_EXCLUDES) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_1D_EXCLUDES);
     }
-    */
+
     return ret;
+
   }
 
   async saveCurrentState(currentState: WidgetState[][]): Promise<void> {

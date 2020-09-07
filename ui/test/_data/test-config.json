@@ -10,26 +10,37 @@
       "header": "Visualization Group 1",
       "visualizations": {
         "viz-1-1": {
-          "panelTitle": "Bar Visualization",
-          "showEmpty": true,
-          "connection": "Test",
-          "cube": "[Test_F1]",
-          "measure": "F1_M1",
-          "xDimension": "[D1].[D1.D1].[D1_DESCRIPTION]",
+          "panelTitle": "Bar: Units ordered by state",
+          "showEmpty": false,
+          "connection": "foodmart",
+          "cube": "[Warehouse]",
+          "measure": "Units Ordered",
+          "xDimension": "[Store].[Stores].[Store State]",
           "xDimensionExcludes": [],
           "vizType": "bar",
-          "text": "These are the values of M1 for D1"
+          "text": "Units ordered by state (bar chart)"
         },
         "viz-1-2": {
-          "panelTitle": "Pie Visualization",
-          "showEmpty": true,
-          "connection": "Test",
-          "cube": "[Test_F1]",
-          "measure": "F1_M1",
-          "xDimension": "[D1].[D1.D1].[D1_DESCRIPTION]",
+          "panelTitle": "Bar: Units ordered by state exclusing OR",
+          "showEmpty": false,
+          "connection": "foodmart",
+          "cube": "[Warehouse]",
+          "measure": "Units Ordered",
+          "xDimension": "[Store].[Stores].[Store State]",
+          "xDimensionExcludes": ["[Store].[Stores].[Store State].[OR]"],
+          "vizType": "bar",
+          "text": "Units ordered by state, excluding Oregon (bar chart)"
+        },
+        "viz-1-3": {
+          "panelTitle": "Pie: Units ordered by state",
+          "showEmpty": false,
+          "connection": "foodmart",
+          "cube": "[Warehouse]",
+          "measure": "Units Ordered",
+          "xDimension": "[Store].[Stores].[Store State]",
           "xDimensionExcludes": [],
           "vizType": "pie",
-          "text": "These are the values of M1 for D1"
+          "text": "Units ordered by state (pie chart)"
         }
       }
     },

@@ -13,7 +13,8 @@
     "playground": "run-p start:dev autobuild-playground",
     "start": "sirv public",
     "start:dev": "sirv public --dev",
-    "lint": "eslint --ext ts src/js test",
+    "lint": "eslint --ext ts src test",
+    "jest": "jest",
     "test": "run-s lint jest",
     "build:tailwind": "tailwind build tailwind.css -o public/tailwind-gen.css"
   },
