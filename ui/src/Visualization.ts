@@ -1,5 +1,6 @@
 import { ArrayUtils } from "./ArrayUtils";
 import type { Repository } from "./Repository";
+import { VegaLiteSpec, SizeByStep, Encoding, Axis, EncodingSpec, Layer, ColorEncodingSpec, Condition, Legend, Scale } from "./VegaLiteSpec";
 
 export abstract class Visualization {
 
@@ -12,6 +13,7 @@ export abstract class Visualization {
   private _connection: string;
   private _cube: string;
   private _measure: string;
+  private _measureLabel: string;
   private _xDimension: string;
   private _xDimensionLabel: string;
   private _xDimensionExcludes: string[];
@@ -39,7 +41,7 @@ export abstract class Visualization {
     } else if (json.vizType === "heatgrid") {
       ret = new HeatgridChartVisualization(id);
     } else if (json.vizType === "timeline") {
-      ret = new TimelineChartVisualization(id);
+      ret = null; // new TimelineChartVisualization(id);
     }
 
     if (ret) {
@@ -48,6 +50,7 @@ export abstract class Visualization {
       ret._connection = json.connection;
       ret._cube = json.cube;
       ret._measure = json.measure;
+      ret._measureLabel = json.measureLabel;
       ret._xDimension = json.xDimension;
       ret._xDimensionLabel = json.xDimensionLabel;
       ret._xDimensionExcludes = json.xDimensionExcludes;
@@ -69,6 +72,7 @@ export abstract class Visualization {
   get connection(): string { return this._connection; }
   get cube(): string { return this._cube; }
   get measure(): string { return this._measure; }
+  get measureLabel(): string { return this._measureLabel; }
   get xDimension(): string { return this._xDimension; }
   get xDimensionLabel(): string { return this._xDimensionLabel || null; }
   get xDimensionExcludes(): string[] { return this._xDimensionExcludes; }
@@ -94,7 +98,7 @@ export abstract class Visualization {
 
   }
 
-  render(repository: Repository, containerHeight: number, containerWidth: number): Promise<any> {
+  render(repository: Repository, containerHeight: number, containerWidth: number): Promise<VegaLiteSpec> {
 
     const query = this.buildQuery();
     const levelNameTranslationMap = this.buildLevelNameTranslationMap();
@@ -102,11 +106,11 @@ export abstract class Visualization {
 
     if (query) {
       ret = repository.executeQuery(query, this.connection, true, levelNameTranslationMap).then((data: any): Promise<any> => {
-        let spec = null;
+        let spec: VegaLiteSpec = null;
         if (data) {
           const dataObject = new DataObject();
           dataObject.values = data.values;
-          spec = this.makeChart("x", this.xDimensionLabel, "y", this.yDimensionLabel, "m", null, containerHeight, containerWidth, dataObject);
+          spec = this.makeChart("x", this.xDimensionLabel, "y", this.yDimensionLabel, "m", this.measureLabel, containerHeight, containerWidth, dataObject);
         }
         return Promise.resolve(spec);
       });
@@ -118,7 +122,7 @@ export abstract class Visualization {
 
   protected abstract makeChart(xDimensionName: string, xDimensionLabel: string,
     yDimensionName: string, yDimensionLabel: string,
-    measureName: string, measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any;
+    measureName: string, measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): VegaLiteSpec;
 
   abstract buildQuery(): string;
 
@@ -164,21 +168,19 @@ export abstract class Visualization {
     return ret;
   
   }
-
+  /*
   protected buildTimelineQuery(): string {
 
     let ret = null;
     const showEmptyText = this.showEmpty ? "" : " NON EMPTY ";
   
-    const rollup = this.xDimensionMembers[0] + ".Hierarchy.FirstChild.Parent";
-  
-    ret = "SELECT " + showEmptyText + " {[Measures].[" + this.measure + "]} * {" + this.yDimension + ".Members} * " +
-      "Hierarchize({Except({" + rollup + "}, {" + this.xDimensionExcludes.join(",") + "}), {" + this.xDimensionMembers.join(",") + "}}) ON COLUMNS FROM " + this.cube;
+    ret = "SELECT " + showEmptyText + " {[Measures].[" + this.measure + "]} * {" + this.xDimension + ".Members} * " +
+      "Hierarchize({Except(" + this.xDimension + ", {" + this.xDimensionExcludes.join(",") + "}), {" + this.xDimension + ".Members}}) ON COLUMNS FROM " + this.cube;
   
     return ret;
   
   }
-
+  */
   protected fillGrid(data: DataObject): DataObject {
 
     const FILL_VALUE = 0;
@@ -227,7 +229,7 @@ export abstract class Visualization {
   }
 
 }
-
+/*
 export class TimelineChartVisualization extends Visualization {
   constructor(id: string) {
     super(id);
@@ -235,8 +237,8 @@ export class TimelineChartVisualization extends Visualization {
   buildQuery(): string{
     return super.buildTimelineQuery();
   }
-  protected makeChart(_xDimensionName: string, _xDimensionLabel: string,
-    yDimensionName: string, _yDimensionLabel: string,
+  protected makeChart(xDimensionName: string, _xDimensionLabel: string,
+    _yDimensionName: string, _yDimensionLabel: string,
     measureName: string, measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any {
 
     const s: any = {
@@ -244,7 +246,7 @@ export class TimelineChartVisualization extends Visualization {
       "mark": "line",
       "encoding": {
         "x": {
-            "field": yDimensionName,
+            "field": xDimensionName,
             "type": "temporal",
             "axis": {
                 "title": null
@@ -303,7 +305,7 @@ export class TimelineChartVisualization extends Visualization {
     return this.fillGrid(ret);
   }
 }
-
+*/
 export class HeatgridChartVisualization extends Visualization {
   constructor(id: string) {
     super(id);
@@ -314,7 +316,7 @@ export class HeatgridChartVisualization extends Visualization {
   protected makeChart(
     xDimensionName: string, xDimensionLabel: string,
     yDimensionName: string, yDimensionLabel: string,
-    measureName: string, measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any {
+    measureName: string, measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): VegaLiteSpec {
 
     const includeGridValueText = this.includeGridValueText === null || this.includeGridValueText === undefined || this.includeGridValueText;
 
@@ -331,55 +333,64 @@ export class HeatgridChartVisualization extends Visualization {
       return v > total ? v : total;
     }, 0);
 
-    const s: any = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-      "encoding": {
-          "y": {"field": yDimensionName, "type": "nominal", "axis" : {"title" : yDimensionLabel}, "sort": null},
-          "x": {"field": xDimensionName, "type": "nominal", "axis" : {"title" : xDimensionLabel, "labelAngle": -30}, "sort": null},
-      },
-      "layer": [{
-        "mark": "rect",
-        "encoding": {
-          "color": {
-            "condition": {"test": "datum['" + measureName + "'] === null", "value": "#aaa"},
-            "field": measureName,
-            "type": "quantitative",
-            "legend": {"title": measureLabel}
-          }
-        }
-      }]
-    };
+    const spec = new VegaLiteSpec();
+    spec.encoding = new Encoding();
 
-    const layerArray = s.layer;
+    spec.encoding.x = new EncodingSpec();
+    spec.encoding.x.field = xDimensionName;
+    spec.encoding.x.type = "nominal";
+    spec.encoding.x.axis = new Axis();
+    spec.encoding.x.axis.title = xDimensionLabel;
+    spec.encoding.x.axis.labelAngle = -30;
+    
+    spec.encoding.y = new EncodingSpec();
+    spec.encoding.y.field = yDimensionName;
+    spec.encoding.y.type = "nominal";
+    spec.encoding.y.title = yDimensionLabel;
+
+    spec.data = data;
+    spec.height = height;
+    spec.width = width;
+
+    spec.layer = [];
+
+    let layer = new Layer();
+    layer.mark = "rect";
+    layer.encoding = new Encoding();
+    layer.encoding.color = new ColorEncodingSpec();
+    layer.encoding.color.condition = new Condition();
+    layer.encoding.color.condition.test = "datum['" + measureName + "'] === null";
+    layer.encoding.color.condition.value = "#aaa";
+    layer.encoding.color.field = measureName;
+    layer.encoding.color.type = "quantitative";
+    layer.encoding.color.legend = new Legend();
+    layer.encoding.color.legend.title = measureLabel;
+    layer.encoding.color.scale = new Scale();
+    layer.encoding.color.scale.type = "linear";
+    layer.encoding.color.scale.domain = [0, domainMax];
+
+    spec.layer.push(layer);
 
     if (includeGridValueText) {
-      layerArray.push(
-        {
-          "mark": "text",
-          "encoding": {
-            "text": {
-              "condition": {"test": "datum['" + measureName + "'] === null", "value": "N/A"},
-              "field": measureName,
-              "type": "quantitative"
-            },
-            "color": {
-              "value": "black",
-              "condition": {"test": "datum.m < " + -0.6*domainMax + " || datum.m > " + 0.6*domainMax, "value": "white"}
-            }
-          }
-        }
-      );
+      layer = new Layer();
+      layer.mark = "text";
+      layer.encoding = new Encoding();
+      layer.encoding.text = new EncodingSpec();
+      layer.encoding.text.condition = new Condition();
+      layer.encoding.text.condition.test = "datum['" + measureName + "'] === null";
+      layer.encoding.text.condition.value = "N/A";
+      layer.encoding.text.field = measureName;
+      layer.encoding.text.type = "quantitative";
+      layer.encoding.color = new ColorEncodingSpec();
+      layer.encoding.color.value = "black";
+      layer.encoding.color.condition = new Condition();
+      layer.encoding.color.condition.test = "datum.m < " + -0.6*domainMax + " || datum.m > " + 0.6*domainMax;
+      layer.encoding.color.condition.value = "white";
+      spec.layer.push(layer);
+
     }
 
-    layerArray[0].encoding.color.scale = new Object;
-    layerArray[0].encoding.color.scale.type = "linear";
-    layerArray[0].encoding.color.scale.domain = [0, domainMax];
-
-    s.data = data;
-    s.height = height;
-    s.width = width;
-
-    return s;
+    return spec;
     
   }
   private transform(data: DataObject): DataObject {
@@ -402,7 +413,7 @@ export class PieChartVisualization extends Visualization {
   buildQuery(): string{
     return super.buildOneDimensionalQuery();
   }
-  protected makeChart(xDimensionName: string, xDimensionLabel: string, _yDimensionName: string, _yDimensionLabel: string,measureName: string,measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any {
+  protected makeChart(xDimensionName: string, xDimensionLabel: string, _yDimensionName: string, _yDimensionLabel: string,measureName: string,measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): VegaLiteSpec {
     return null;
   }
 }
@@ -415,55 +426,34 @@ export class BarChartVisualization extends Visualization {
   buildQuery(): string {
     return super.buildOneDimensionalQuery();
   }
-  protected makeChart(xDimensionName: string, xDimensionLabel: string, _yDimensionName: string, _yDimensionLabel: string,measureName: string,measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): any {
+  protected makeChart(xDimensionName: string, xDimensionLabel: string, _yDimensionName: string, _yDimensionLabel: string,measureName: string,measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): VegaLiteSpec {
 
     const verticalAdjustment = 27;
     const rangeStep = (containerHeight + verticalAdjustment - (20 / data.values.length)) / data.values.length;
 
     const longestLabelSize = Math.min(BarChartVisualization.VEGA_LITE_MAX_LABEL_LENGTH, data.getLongestLabelSize(xDimensionName));
     const penalty = (BarChartVisualization.VEGA_LITE_MAX_LABEL_LENGTH-longestLabelSize)*1.35;
-    let width = containerWidth - longestLabelSize * Visualization.CHARACTER_WIDTH_IN_PIXELS - penalty;
 
-    const s: any = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-      "mark": "bar",
-      "encoding": {
-        "x": {
-            "field": measureName,
-            "type": "quantitative",
-            "axis": {
-                "title": measureLabel,
-                "grid": false,
-                "format": ".0%"
-            }
-        },
-        "y": {
-            "field": xDimensionName,
-            "type": "nominal",
-            "title": xDimensionLabel,
-            "sort": null
-        },
-      },
-      "height": {
-        "step": rangeStep
-      },
-      "config": {
-        "view": {"stroke": "transparent"},
-        "axis": {"domainWidth": 1}
-      }
-    };
-  
-    s.encoding.color = {
-      "field": "level",
-      "type": "nominal",
-      "legend": null
-    };
-    width = width - 20;
-  
-    s.data = this.transform(data);
-    s.width = width;
-  
-    return s;
+    const spec = new VegaLiteSpec();
+    spec.data = this.transform(data);
+    spec.mark = "bar";
+    spec.height = new SizeByStep();
+    spec.height.step = rangeStep;
+    spec.width = containerWidth - longestLabelSize * Visualization.CHARACTER_WIDTH_IN_PIXELS - penalty - 20;
+    spec.encoding = new Encoding();
+    spec.encoding.x = new EncodingSpec();
+    spec.encoding.x.field = measureName;
+    spec.encoding.x.type = "quantitative";
+    spec.encoding.x.axis = new Axis();
+    spec.encoding.x.axis.title = measureLabel;
+    spec.encoding.x.axis.grid = false;
+    spec.encoding.x.axis.format = ".0%";
+    spec.encoding.y = new EncodingSpec();
+    spec.encoding.y.field = xDimensionName;
+    spec.encoding.y.type = "nominal";
+    spec.encoding.y.title = xDimensionLabel;
+
+    return spec;
   
   }
   private transform(data: DataObject): DataObject {

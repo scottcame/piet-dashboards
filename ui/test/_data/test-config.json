@@ -47,19 +47,32 @@
     {
       "header": "Visualization Group 2",
       "visualizations": {
-        "viz-1-1": {
-          "panelTitle": "Heatgrid Visualization",
+        "viz-2-1": {
+          "panelTitle": "Heatgrid: Sq ft by store country x store type",
           "showEmpty": true,
-          "connection": "Test",
-          "cube": "[Test_F3]",
-          "measure": "F3_M1",
-          "xDimension": "[D1].[D1.D1].[D1_DESCRIPTION]",
+          "connection": "foodmart",
+          "cube": "[Store]",
+          "measure": "Store Sqft",
+          "measureLabel": "Store size in sq ft",
+          "xDimension": "[Store Type].[Store Type].[Store Type]",
           "xDimensionExcludes": [],
-          "yDimension": "[D2].[D2.D2].[D2_DESCRIPTION]",
+          "yDimension": "[Store].[Stores].[Store Country]",
           "yDimensionExcludes": [],
           "vizType": "heatgrid",
           "text": "These are the values of M1 for D1xD2"
+        },
+        "viz-2-2": {
+          "panelTitle": "Timeline: monthly sales",
+          "showEmpty": true,
+          "connection": "foodmart",
+          "cube": "[Sales]",
+          "measure": "Unit Sales",
+          "xDimension": "[Store].[Stores].[Store Country]",
+          "xDimensionExcludes": [],
+          "vizType": "timeline",
+          "text": "These are the values of M1 for D1xD2"
         }
+
       }
     }
   ]
