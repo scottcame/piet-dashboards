@@ -48,6 +48,7 @@ export class Axis {
 }
 
 export class DataObject {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   values: any[];
 }
 

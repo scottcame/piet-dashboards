@@ -67,7 +67,7 @@
       </div>
     </div>
   </div>
-  <div class="bg-gray-200 text-pf-blue italic text-xxs mx-px my-px pl-1">{viz.text}</div>
+  <div class="bg-gray-200 text-pf-blue italic text-xxs mx-px my-px pl-1">{viz.headerText}</div>
   <div class="overflow-x-hidden">
     <VegaViz vegaLiteSpec={vegaLiteSpec} exportOption={allowVizExport}/>
   </div>

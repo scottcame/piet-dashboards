@@ -8,7 +8,7 @@ export interface Repository {
   readonly label: string;
   readonly config: Config;
   init(): Promise<Config>;
-  executeQuery(mdx: string, connection: string, simplifyNames: boolean, levelNameTranslationMap: any): Promise<any>;
+  executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
   saveCurrentState(currentState: WidgetState[][]): Promise<void>;
   getSavedState(): Promise<UserInterfaceState>;
  }
@@ -19,7 +19,7 @@ abstract class AbstractRepository implements Repository {
     return this._config;
   }
   abstract init(): Promise<Config>;
-  abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean, levelNameTranslationMap: any): Promise<any>;
+  abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
   abstract saveCurrentState(currentState: WidgetState[][]);
   abstract get label(): string;
 
@@ -37,7 +37,7 @@ export class LocalRepository extends AbstractRepository {
     return Promise.resolve(this._config);
   }
 
-  async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean, _levelNameTranslationMap: any): Promise<any> {
+  async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
     
     let ret = Promise.resolve(null);
 
@@ -100,7 +100,7 @@ export class RemoteRepository extends AbstractRepository {
     return ret;
   }
 
-  async executeQuery(mdx: string, connection: string, simplifyNames: boolean, levelNameTranslationMap: any): Promise<any> {
+  async executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }> {
 
     const request: any = new Object();
 		request.connectionName = connection;
@@ -108,7 +108,6 @@ export class RemoteRepository extends AbstractRepository {
 		request.tidy = new Object();
 		request.tidy.enabled = true;
 		request.tidy.simplifyNames = simplifyNames;
-    request.tidy.levelNameTranslationMap = levelNameTranslationMap;
     
     let ret = Promise.resolve(null);
 

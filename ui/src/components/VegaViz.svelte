@@ -17,12 +17,10 @@
   } : false;
 
   $: if (vegaLiteSpec && container) {
-    console.log(vegaLiteSpec);
     vegaEmbed(container, vegaLiteSpec, {
       actions: actions,
       renderer: "canvas"
-    }).then((embedResult: Result): void => {
-      console.log(embedResult);
+    }).then((_embedResult: Result): void => {
       const canvasElement = container.querySelector(".vega-embed > canvas") as HTMLElement;
       canvasElement.style.margin = "auto";
       // todo: still need to figure out how to center vertically
