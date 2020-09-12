@@ -6,6 +6,6 @@
     "moduleResolution": "node",
     "downlevelIteration": true,
     "target": "ES6" ,
-    "types": ["jest"],
+    "types": ["jest","svelte"],
     "lib": ["ES2018", "dom"] }
 }
