@@ -10,6 +10,7 @@
 
   import GridRow from './GridRow.svelte';
   import VizMenu from "./VizMenu.svelte";
+  import VizWidget from "./VizWidget.svelte";
 
   export let repository: Repository;
 
@@ -53,11 +54,10 @@
       const viz = repository.config.findVisualization(htmlElement.dataset.vizId);
       const rowIndex = Number.parseInt(htmlTarget.dataset.rowIndex);
       const colIndex = Number.parseInt(htmlTarget.dataset.colIndex);
-      // populateViz(viz, target);
+      populateViz(viz, htmlTarget);
       initializeGrid();
       currentGridState[rowIndex][colIndex] = new WidgetState(viz.id);
       repository.saveCurrentState(currentGridState);
-      console.log("Dropped viz: " + JSON.stringify(viz));
     });
 
   function initializeGrid(rowCount=MINIMUM_ROWS): void {
@@ -108,17 +108,17 @@
         row.forEach((gridState: WidgetState, colIdx: number): void => {
           const viz: Visualization = config.findVisualization(gridState.vizId);
           if (viz) {
-            let target: Node = null;
+            let target: HTMLElement = null;
             targetNodes.forEach((node: Element): void => {
               let htmlElement: HTMLElement = node as HTMLElement;
               const nodeRowIndex: number = Number.parseInt(htmlElement.dataset.rowIndex);
               const nodeColumnIndex: number = Number.parseInt(htmlElement.dataset.colIndex);
               if (nodeRowIndex === rowIdx && nodeColumnIndex === colIdx) {
-                target = node;
+                target = htmlElement;
               }
             });
             if (target) {
-              //populateViz(viz, target);
+              populateViz(viz, target);
               currentGridState[rowIdx][colIdx] = new WidgetState(viz.id);
             }
           }
@@ -133,6 +133,40 @@
     });
 
   });
+
+  function populateViz(viz: Visualization, target: HTMLElement): void {
+
+    const existingWidget = target.querySelector('.viz-widget');
+
+    if (existingWidget) {
+      target.removeChild(existingWidget);
+    }
+
+    target.classList.add('dragula-occupied');
+    target.classList.remove('border-dashed');
+    target.classList.add('border-solid');
+
+    const rowIndex = Number.parseInt(target.dataset.rowIndex);
+    const colIndex = Number.parseInt(target.dataset.colIndex);
+
+    new VizWidget({
+      target: target,
+      props: {
+        viz: viz,
+        repository: repository,
+        rowIndex: rowIndex,
+        colIndex: colIndex
+      }
+    }).$on('closeWidget', (e: CustomEvent<{divId: string}>) => {
+      target.removeChild(document.getElementById(e.detail.divId));
+      target.classList.remove('dragula-occupied');
+      target.classList.add('border-dashed');
+      target.classList.remove('border-solid');
+      currentGridState[rowIndex][colIndex] = undefined;
+      repository.saveCurrentState(currentGridState);
+    });
+
+  }
 
 </script>
 

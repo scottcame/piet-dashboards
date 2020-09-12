@@ -429,16 +429,18 @@ export class BarChartVisualization extends Visualization {
   protected makeChart(xDimensionName: string, xDimensionLabel: string, _yDimensionName: string, _yDimensionLabel: string,measureName: string,measureLabel: string, containerHeight: number, containerWidth: number, data: DataObject): VegaLiteSpec {
 
     const verticalAdjustment = 27;
-    const rangeStep = (containerHeight + verticalAdjustment - (20 / data.values.length)) / data.values.length;
 
     const longestLabelSize = Math.min(BarChartVisualization.VEGA_LITE_MAX_LABEL_LENGTH, data.getLongestLabelSize(xDimensionName));
     const penalty = (BarChartVisualization.VEGA_LITE_MAX_LABEL_LENGTH-longestLabelSize)*1.35;
 
+    if (measureLabel === undefined) {
+      measureLabel = null;
+    }
+
     const spec = new VegaLiteSpec();
     spec.data = this.transform(data);
     spec.mark = "bar";
-    spec.height = new SizeByStep();
-    spec.height.step = rangeStep;
+    spec.height = containerHeight + verticalAdjustment;
     spec.width = containerWidth - longestLabelSize * Visualization.CHARACTER_WIDTH_IN_PIXELS - penalty - 20;
     spec.encoding = new Encoding();
     spec.encoding.x = new EncodingSpec();
