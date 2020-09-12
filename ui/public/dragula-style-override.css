@@ -5,3 +5,7 @@
   /* Don't display the dragged container in the target container */
   display: none;
 }
+.gu-mirror {
+  border-width: .1em;
+  border-color: darkblue;
+}
