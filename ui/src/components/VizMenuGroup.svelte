@@ -44,9 +44,9 @@
       {#each Object.keys(visualizations) as vizKey}
         <div
           data-viz-id={vizKey}
-          title={visualizations[vizKey].text}
+          title={visualizations[vizKey] ? visualizations[vizKey].text: null}
           class="w-full text-center bg-gray-200 p-1 my-px rounded">
-          <span>{visualizations[vizKey].panelTitle}</span>
+          <span>{visualizations[vizKey] ? visualizations[vizKey].panelTitle : null}</span>
         </div>
       {/each}
     </div>

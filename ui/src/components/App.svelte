@@ -98,6 +98,8 @@
 
       const restoredWidgetStateGrid: WidgetState[][] = uiState.widgetStateGrid;
       
+      initialized = true; // this goes here to indicate that state has been initialized, so ui components that need it can proceed
+
       initializeGrid(restoredWidgetStateGrid.length);
 
       const targetNodes: NodeListOf<Element> = document.querySelectorAll(".dragula-drop-target");
@@ -125,7 +127,6 @@
       });
 
       waiting = false;
-      initialized = true;
 
       return Promise.resolve();
 
