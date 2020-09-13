@@ -1,6 +1,6 @@
 import { LocalRepository, Repository } from '../src/Repository';
 import type { Config } from '../src/Config';
-import type { VegaLiteSpec } from '../src/VegaLiteSpec';
+import { VegaLiteSpec, RadialMarkSpec } from '../src/VegaLiteSpec';
 
 const repository: Repository = new LocalRepository();
 
@@ -32,7 +32,35 @@ test('bar viz with excludes', async () => {
 test('timeline viz', async () => {
   return repository.init().then(async (config: Config) => {
     const viz = config.findVisualization("viz-2-2");
-    expect(viz).toBeNull();
+    expect(viz).toBeUndefined();
+  });
+});
+
+test('pie viz', async () => {
+  return repository.init().then(async (config: Config) => {
+    const viz = config.findVisualization("viz-1-3");
+    await viz.render(repository, 200, 200).then((spec: VegaLiteSpec): void => {
+      
+      expect(spec.mark).toBeUndefined();
+      expect(spec.encoding.theta.field).toBe("Units Ordered");
+      expect(spec.encoding.theta.stack).toBe(true);
+      expect(spec.encoding.color.field).toBe("y");
+
+      expect(spec.layer[0].mark).toBeInstanceOf(RadialMarkSpec);
+      let arcMark = spec.layer[0].mark as RadialMarkSpec;
+      expect(arcMark.type).toBe("arc");
+      expect(arcMark.outerRadius).toBeTruthy();
+
+      expect(spec.layer[1].mark).toBeInstanceOf(RadialMarkSpec);
+      arcMark = spec.layer[1].mark as RadialMarkSpec;
+      expect(arcMark.type).toBe("text");
+      expect(arcMark.radius).toBeTruthy();
+
+      expect(spec.layer[1].encoding.text.field).toBe("Units Ordered");
+
+      expect(spec.data.values).toHaveLength(3);
+
+    });
   });
 });
 

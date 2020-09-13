@@ -1,4 +1,4 @@
-type Mark = "bar"|"line"|"circle"|"rect"|"text";
+type Mark = "bar"|"line"|"circle"|"rect"|"text"|"arc";
 
 export class VegaLiteSpec {
 
@@ -10,14 +10,20 @@ export class VegaLiteSpec {
   data: DataObject;
   height: number|SizeByStep;
   width: number|SizeByStep;
+  view?: ViewSpec;
 
+}
+
+export class ViewSpec {
+  stroke: string;
 }
 
 export class Encoding {
   x: EncodingSpec;
   y: EncodingSpec;
   color: ColorEncodingSpec;
-  text: EncodingSpec;
+  text: TextEncodingSpec;
+  theta: EncodingSpec;
 }
 
 export class EncodingSpec {
@@ -27,6 +33,7 @@ export class EncodingSpec {
   title: string;
   condition: Condition;
   value: string|number;
+  stack: boolean;
 }
 
 export class ColorEncodingSpec extends EncodingSpec {
@@ -48,7 +55,7 @@ export class Axis {
 }
 
 export class DataObject {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any[];
 }
 
@@ -57,7 +64,7 @@ export class SizeByStep {
 }
 
 export class Layer {
-  mark: Mark;
+  mark: Mark|RadialMarkSpec;
   encoding: Encoding;
 }
 
@@ -68,4 +75,15 @@ export class Condition {
 
 export class Legend {
   title: string;
+}
+
+export class RadialMarkSpec {
+  type: Mark;
+  radius: number;
+  outerRadius: number;
+  format?: string;
+}
+
+export class TextEncodingSpec extends EncodingSpec {
+  format: string;
 }

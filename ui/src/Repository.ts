@@ -45,8 +45,6 @@ export class LocalRepository extends AbstractRepository {
       ret = Promise.resolve(TestData.TEST_RESULTS_1D);
     } else if (mdx === TestData.TEST_QUERY_1D_EXCLUDES) {
       ret = Promise.resolve(TestData.TEST_RESULTS_1D_EXCLUDES);
-    } else if (mdx === TestData.TEST_QUERY_2D) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_2D);
     }
 
     return ret;
