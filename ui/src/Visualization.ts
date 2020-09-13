@@ -1,5 +1,5 @@
 import type { Repository } from "./Repository";
-import { VegaLiteSpec, SizeByStep, Encoding, Axis, EncodingSpec, Layer, ColorEncodingSpec, Condition, Legend, Scale, RadialMarkSpec, ViewSpec, TextEncodingSpec } from "./VegaLiteSpec";
+import { VegaLiteSpec, Encoding, Axis, EncodingSpec, Layer, ColorEncodingSpec, RadialMarkSpec, ViewSpec, TextEncodingSpec, LineMarkSpec } from "./VegaLiteSpec";
 
 export abstract class Visualization {
 
@@ -48,7 +48,7 @@ export abstract class Visualization {
       ret = new BarChartVisualization(id, json);
     } else if (json.vizType === "pie") {
       ret = new PieChartVisualization(id, json);
-    } else if (json.vizType === "timeline") {
+    } else if (json.vizType === "line") {
       ret = new LineChartVisualization(id, json);
     }
 
@@ -265,6 +265,10 @@ export class PieChartVisualization extends Visualization {
 }
 
 export class LineChartVisualization extends Visualization {
+  
+  readonly xDimension: string|TemporalAxis;
+  readonly showPoints: boolean;
+  readonly dateFormat: string;
 
   constructor(id: string, json: {
     id: string,
@@ -276,13 +280,141 @@ export class LineChartVisualization extends Visualization {
     includeGridValueText: boolean,
     measures: string[],
     measureLabels: string[],
-    measureFormats: string[]
+    measureFormats: string[],
+    xDimension: string|TemporalAxis,
+    showPoints: boolean,
+    dateFormat: string
   }) {
     super(id, json);
+    this.xDimension = typeof json.xDimension === "object" ? TemporalAxis.fromJson(json.xDimension) : json.xDimension;
+    this.showPoints = json.showPoints || false;
+    this.dateFormat = json.dateFormat;
   }
 
   protected makeChart(data: DataObject, containerHeight: number, containerWidth: number): VegaLiteSpec {
-    return null;
+
+    let spec: VegaLiteSpec = null;
+
+    let widthAdjustment = .9;
+    let xDimension: string;
+
+    const dataValues = this.cloneArray(data.values);
+
+    let xValueExtractor = (row: any): any => {
+      return row[xDimension];
+    };
+
+    let xAxisType: "quantitative"|"temporal" = "quantitative";
+    let xAxisTitle = undefined;
+    let xAxisFormat = this.dateFormat || undefined;
+
+    if (this.xDimension instanceof TemporalAxis) {
+
+      const temporalAxis = this.xDimension as TemporalAxis;
+
+      xAxisType = "temporal";
+      xDimension = "temporalx";
+      xAxisTitle = null;
+
+      dataValues.forEach((v: any): void => {
+        if (temporalAxis.dateDimension) {
+          v.temporalx = v[temporalAxis.dateDimension];
+        } else {
+          v.temporalx = v[temporalAxis.yearDimension];
+          if (temporalAxis.monthDimension) {
+            v.temporalx += ("-" + v[temporalAxis.monthDimension]);
+            if (temporalAxis.dayDimension) {
+              v.temporalx += ("-" + v[temporalAxis.dayDimension]);
+            }
+          }
+        }
+      });
+
+    } else {
+      xDimension = this.xDimension as string;
+    }
+
+    if (this.measures.length === 1) {
+
+      const measure = this.measures[0];
+      const measureLabel = this.measureLabels.length ? this.measureLabels[0] : undefined;
+
+      const transformedData = new DataObject();
+
+      transformedData.values = dataValues.filter((v: any): boolean => {
+        return v[xDimension] !== undefined;
+      });
+
+      transformedData.values.forEach((o: any): void => {
+        o.x = xValueExtractor(o);
+      });
+
+      spec = new VegaLiteSpec();
+
+      spec.data = transformedData;
+
+      spec.mark = new LineMarkSpec();
+      spec.mark.point = this.showPoints;
+      spec.encoding = new Encoding();
+      spec.encoding.x = new EncodingSpec();
+      spec.encoding.x.field = "x";
+      spec.encoding.x.type = xAxisType;
+      spec.encoding.x.axis = new Axis();
+      spec.encoding.x.axis.title = xAxisTitle;
+      spec.encoding.x.axis.format = xAxisFormat;
+      spec.encoding.y = new EncodingSpec();
+      spec.encoding.y.field = measure;
+      spec.encoding.y.type = "quantitative";
+      spec.encoding.y.title = measureLabel;
+
+    } else {
+
+      const transformedData = new DataObject();
+      transformedData.values = [];
+
+      data.values.forEach((o: any): void => {
+        this.measures.forEach((m: string): void => {
+          const row: any = {};
+          row.x = xValueExtractor(o);
+          row.measure = m;
+          row.y = o[m];
+          transformedData.values.push(row);
+        });
+      });
+
+      spec = new VegaLiteSpec();
+
+      spec.data = transformedData;
+
+      spec.mark = new LineMarkSpec();
+      spec.mark.point = this.showPoints;
+      spec.encoding = new Encoding();
+      spec.encoding.x = new EncodingSpec();
+      spec.encoding.x.field = "x";
+      spec.encoding.x.type = xAxisType;
+      spec.encoding.x.axis = new Axis();
+      spec.encoding.x.axis.title = xAxisTitle;
+      spec.encoding.x.axis.format = xAxisFormat;
+      spec.encoding.y = new EncodingSpec();
+      spec.encoding.y.field = "y";
+      spec.encoding.y.type = "quantitative";
+      spec.encoding.y.title = null;
+      spec.encoding.color = new ColorEncodingSpec();
+      spec.encoding.color.field = "measure";
+      spec.encoding.color.title = null;
+      spec.encoding.color.type = "nominal";
+
+      widthAdjustment = .82;
+
+    }
+
+    if (spec) {
+      spec.width = containerWidth * widthAdjustment;
+      spec.height = containerHeight;
+    }
+
+    return spec;
+
   }
 
 }
@@ -294,5 +426,21 @@ class DataObject {
       const label = v[variable];
       return Math.max(label ? label.length : 0, acc);
     }, 0);
+  }
+}
+
+export class TemporalAxis {
+  readonly yearDimension: string;
+  readonly monthDimension: string;
+  readonly dayDimension: string;
+  readonly dateDimension: string;
+  private constructor(json: any) {
+    this.yearDimension = json.yearDimension;
+    this.monthDimension = json.monthDimension;
+    this.dayDimension = json.dayDimension;
+    this.dateDimension = json.dateDimension;
+  }
+  static fromJson(json: any): TemporalAxis {
+    return new TemporalAxis(json);
   }
 }

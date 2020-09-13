@@ -1,6 +1,7 @@
 <script lang="ts">
 
-  import vegaEmbed, { Result } from 'vega-embed';
+  import vegaEmbed from 'vega-embed';
+  import type { Result } from 'vega-embed';
   import type { VegaLiteSpec } from '../VegaLiteSpec';
 
   export let vegaLiteSpec: VegaLiteSpec;

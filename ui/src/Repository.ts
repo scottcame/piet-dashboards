@@ -45,6 +45,18 @@ export class LocalRepository extends AbstractRepository {
       ret = Promise.resolve(TestData.TEST_RESULTS_1D);
     } else if (mdx === TestData.TEST_QUERY_1D_EXCLUDES) {
       ret = Promise.resolve(TestData.TEST_RESULTS_1D_EXCLUDES);
+    } else if (mdx === TestData.TEST_QUERY_LINE_SIMPLE) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_SIMPLE);
+    } else if (mdx === TestData.TEST_QUERY_LINE_2_MEASURES) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_2_MEASURES);
+    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR);
+    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH);
+    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY);
+    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_DATE) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_DATE);
     }
 
     return ret;

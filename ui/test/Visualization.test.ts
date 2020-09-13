@@ -29,10 +29,10 @@ test('bar viz with excludes', async () => {
   });
 });
 
-test('timeline viz', async () => {
+test('line viz', async () => {
   return repository.init().then(async (config: Config) => {
     const viz = config.findVisualization("viz-2-2");
-    expect(viz).toBeUndefined();
+    expect(viz).toBeTruthy();
   });
 });
 

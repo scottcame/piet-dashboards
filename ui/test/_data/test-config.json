@@ -38,6 +38,81 @@
           "xDimension": "[Store].[Stores].[Store State]"
         }
       }
+    },
+    {
+      "header": "Visualization Group 2",
+      "visualizations": {
+        "viz-2-1": {
+          "vizType": "line",
+          "panelTitle": "Line 1",
+          "headerText": "Line chart 1 (simple ordinal)",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_SIMPLE",
+          "measures": ["y"],
+          "xDimension": "x"
+        },
+        "viz-2-2": {
+          "vizType": "line",
+          "panelTitle": "Line 2",
+          "headerText": "Line chart 2 (two measures)",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_2_MEASURES",
+          "measures": ["y", "z"],
+          "xDimension": "x"
+        },
+        "viz-2-3": {
+          "vizType": "line",
+          "panelTitle": "Line Temporal Year",
+          "headerText": "Line Temporal Year",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR",
+          "measures": ["y"],
+          "xDimension": {
+            "yearDimension": "x"
+          }
+        },
+        "viz-2-4": {
+          "vizType": "line",
+          "panelTitle": "Line Temporal Year+Month",
+          "headerText": "Line Temporal Year+Month",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH",
+          "measures": ["y"],
+          "xDimension": {
+            "yearDimension": "yr",
+            "monthDimension": "month"
+          },
+          "showPoints": true
+        },
+        "viz-2-5": {
+          "vizType": "line",
+          "panelTitle": "Line Temporal Year+Month+Day",
+          "headerText": "Line Temporal Year+Month+Day",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY",
+          "measures": ["y"],
+          "xDimension": {
+            "yearDimension": "yr",
+            "monthDimension": "month",
+            "dayDimension": "da day"
+          },
+          "showPoints": true
+        },
+        "viz-2-6": {
+          "vizType": "line",
+          "panelTitle": "Line Temporal Date",
+          "headerText": "Line Temporal Date",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_DATE",
+          "measures": ["y"],
+          "measureLabels": ["Some Y"],
+          "xDimension": {
+            "dateDimension": "date"
+          },
+          "showPoints": true,
+          "dateFormat": "%m-%d"
+        }
+      }
     }
   ]
 }

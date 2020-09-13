@@ -4,7 +4,7 @@ export class VegaLiteSpec {
 
   $schema = "https://vega.github.io/schema/vega-lite/v4.json";
 
-  mark: Mark;
+  mark: Mark|LineMarkSpec;
   encoding: Encoding;
   layer: Layer[];
   data: DataObject;
@@ -28,7 +28,7 @@ export class Encoding {
 
 export class EncodingSpec {
   field: string;
-  type: "quantitative"|"nominal"|"ordinal";
+  type: "quantitative"|"nominal"|"ordinal"|"temporal";
   axis: Axis;
   title: string;
   condition: Condition;
@@ -82,6 +82,11 @@ export class RadialMarkSpec {
   radius: number;
   outerRadius: number;
   format?: string;
+}
+
+export class LineMarkSpec {
+  type = "line";
+  point: boolean;
 }
 
 export class TextEncodingSpec extends EncodingSpec {
