@@ -64,7 +64,7 @@ export abstract class Visualization {
     console.log(query);
 
     if (query) {
-      ret = repository.executeQuery(query, this.connection, true).then((data: { values: any[] }): Promise<any> => {
+      ret = repository.executeQuery(query, this.connection, false).then((data: { values: any[] }): Promise<any> => {
         let spec: VegaLiteSpec = null;
         if (data) {
           const dataObject = new DataObject();
