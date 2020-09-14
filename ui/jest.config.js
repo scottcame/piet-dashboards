@@ -14,5 +14,8 @@ module.exports = {
   ],
   "moduleDirectories": [
     "node_modules"
+  ],
+  "setupFiles": [
+    "fake-indexeddb/auto"
   ]
 }

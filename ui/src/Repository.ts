@@ -1,40 +1,87 @@
 import { TestData } from "../test/_data/TestData";
 import { Config } from "./Config";
 import { UserInterfaceState, WidgetState } from "./UserInterfaceState";
+import Dexie from 'dexie';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+const INDEXEDDB_NAME = "PietDashboardUiRepository";
+
+class UiStateDatabase extends Dexie {
+
+  uiStates: Dexie.Table<any, string>;
+
+  constructor() {
+    super(INDEXEDDB_NAME);
+    this.version(1).stores({
+      uiStates: 'name',
+    });
+  }
+
+}
 
 export interface Repository {
   readonly label: string;
   readonly config: Config;
+  readonly uiState: UserInterfaceState;
   init(): Promise<Config>;
   executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
-  saveCurrentState(currentState: WidgetState[][]): Promise<void>;
+  saveCurrentState(currentState: UserInterfaceState): Promise<void>;
   getSavedState(): Promise<UserInterfaceState>;
  }
 
 abstract class AbstractRepository implements Repository {
+
+  private uiStateDb: UiStateDatabase = new UiStateDatabase();
   protected _config: Config;
+  protected _uiState: UserInterfaceState;
+
   get config(): Config {
     return this._config;
   }
-  abstract init(): Promise<Config>;
-  abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
-  abstract saveCurrentState(currentState: WidgetState[][]);
-  abstract get label(): string;
+
+  get uiState(): UserInterfaceState {
+    return this._uiState;
+  }
+
+  async init(): Promise<Config> {
+    return Dexie.exists(INDEXEDDB_NAME).then(async exists => {
+      let ret = Promise.resolve(null);
+      if (exists) {
+        ret = this.uiStateDb.uiStates.toArray().then(async uiStates => {
+          if (uiStates[0]) {
+            this._uiState = UserInterfaceState.fromJson(uiStates[0]);
+          }
+        });
+      } else {
+        this._uiState = new UserInterfaceState();
+      }
+      return ret;
+    });
+  }
+
+  async saveCurrentState(currentState: UserInterfaceState): Promise<void> {
+    this._uiState = currentState;
+    return this.uiStateDb.uiStates.put(UserInterfaceState.toJson(this._uiState)).then((_key: string): void => {});
+  }
 
   async getSavedState(): Promise<UserInterfaceState> {
-    const ret = new UserInterfaceState();
-    ret.widgetStateGrid = [];
-    return Promise.resolve(ret);
+    // todo: if there is ever a way to get the saved state other than at init(), we'll want to implement the query here
+    return Promise.resolve(this._uiState);
   }
+
+  abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
+  abstract get label(): string;
+
 }
 
 export class LocalRepository extends AbstractRepository {
 
   async init(): Promise<Config> {
-    this._config = Config.fromJson(TestData.TEST_CONFIG);
-    return Promise.resolve(this._config);
+    return super.init().then(async () => {
+      this._config = Config.fromJson(TestData.TEST_CONFIG);
+      return Promise.resolve(this._config);
+    });
   }
 
   async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
@@ -63,18 +110,11 @@ export class LocalRepository extends AbstractRepository {
 
   }
 
-  async saveCurrentState(currentState: WidgetState[][]): Promise<void> {
-    const uiState = new UserInterfaceState();
-    uiState.widgetStateGrid = currentState;
-    // eslint-disable-next-line no-console
-    console.log("Saving current state");
-    // eslint-disable-next-line no-console
-    console.log(uiState);
-    return Promise.resolve();
-  }
-
-  async getSavedState(): Promise<UserInterfaceState> {
-    return super.getSavedState();
+  async saveCurrentState(currentState: UserInterfaceState): Promise<void> {
+    return super.saveCurrentState(currentState).then(() => {
+      // eslint-disable-next-line no-console
+      console.log(currentState);
+    });
   }
 
   get label(): string {
@@ -141,13 +181,11 @@ export class RemoteRepository extends AbstractRepository {
 
   }
 
-  async saveCurrentState(currentState: WidgetState[][]): Promise<void> {
-    const uiState = new UserInterfaceState();
-    uiState.widgetStateGrid = currentState;
+  async saveCurrentState(currentState: UserInterfaceState): Promise<void> {
     // eslint-disable-next-line no-console
     console.log("Saving current state");
     // eslint-disable-next-line no-console
-    console.log(uiState);
+    console.log(currentState);
     return Promise.resolve();
   }
 

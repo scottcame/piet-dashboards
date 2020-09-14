@@ -1,5 +1,16 @@
 export class UserInterfaceState {
-  widgetStateGrid: WidgetState[][];
+
+  widgetStateGrid: WidgetState[][] = [];
+  readonly name = "default";
+
+  static toJson(state: UserInterfaceState): any {
+    return JSON.parse(JSON.stringify(state));
+  }
+
+  static fromJson(json: any): UserInterfaceState {
+    return json as UserInterfaceState;
+  }
+
 }
 
 export class WidgetState {

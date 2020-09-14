@@ -23,7 +23,7 @@
   let headerTitle = "";
   let appLogoImageUrl: string;
   let footerText: string;
-  let currentGridState: WidgetState[][] = [];
+  let currentUiState: UserInterfaceState = new UserInterfaceState();
 
   document.title = DEFAULT_TITLE;
 
@@ -56,13 +56,13 @@
       const colIndex = Number.parseInt(htmlTarget.dataset.colIndex);
       populateViz(viz, htmlTarget);
       initializeGrid();
-      currentGridState[rowIndex][colIndex] = new WidgetState(viz.id);
-      repository.saveCurrentState(currentGridState);
+      currentUiState.widgetStateGrid[rowIndex][colIndex] = new WidgetState(viz.id);
+      repository.saveCurrentState(currentUiState);
     });
 
   function initializeGrid(rowCount=MINIMUM_ROWS): void {
     const addNewRow = function(rowIndex: number) {
-      currentGridState.push([]);
+      currentUiState.widgetStateGrid.push([]);
       new GridRow({ target: document.querySelector('#viz-container'), props: { columnCount: COLUMNS, rowIndex: rowIndex } });
       document.querySelectorAll('.dragula-container').forEach((el: Element): void => {
         if (!drake.containers.includes(el)) {
@@ -106,20 +106,22 @@
 
       restoredWidgetStateGrid.forEach((row: WidgetState[], rowIdx: number): void => {
         row.forEach((gridState: WidgetState, colIdx: number): void => {
-          const viz: Visualization = config.findVisualization(gridState.vizId);
-          if (viz) {
-            let target: HTMLElement = null;
-            targetNodes.forEach((node: Element): void => {
-              let htmlElement: HTMLElement = node as HTMLElement;
-              const nodeRowIndex: number = Number.parseInt(htmlElement.dataset.rowIndex);
-              const nodeColumnIndex: number = Number.parseInt(htmlElement.dataset.colIndex);
-              if (nodeRowIndex === rowIdx && nodeColumnIndex === colIdx) {
-                target = htmlElement;
+          if (gridState) {
+            const viz: Visualization = config.findVisualization(gridState.vizId);
+            if (viz) {
+              let target: HTMLElement = null;
+              targetNodes.forEach((node: Element): void => {
+                let htmlElement: HTMLElement = node as HTMLElement;
+                const nodeRowIndex: number = Number.parseInt(htmlElement.dataset.rowIndex);
+                const nodeColumnIndex: number = Number.parseInt(htmlElement.dataset.colIndex);
+                if (nodeRowIndex === rowIdx && nodeColumnIndex === colIdx) {
+                  target = htmlElement;
+                }
+              });
+              if (target) {
+                populateViz(viz, target);
+                currentUiState.widgetStateGrid[rowIdx][colIdx] = new WidgetState(viz.id);
               }
-            });
-            if (target) {
-              populateViz(viz, target);
-              currentGridState[rowIdx][colIdx] = new WidgetState(viz.id);
             }
           }
         });
@@ -162,8 +164,8 @@
       target.classList.remove('dragula-occupied');
       target.classList.add('border-dashed');
       target.classList.remove('border-solid');
-      currentGridState[rowIndex][colIndex] = undefined;
-      repository.saveCurrentState(currentGridState);
+      currentUiState.widgetStateGrid[rowIndex][colIndex] = undefined;
+      repository.saveCurrentState(currentUiState);
     });
 
   }
