@@ -1,6 +1,6 @@
 import { TestData } from "../test/_data/TestData";
-import { Config } from "./Config";
-import { UserInterfaceState, WidgetState } from "./UserInterfaceState";
+import { Config, FilterDimension } from "./Config";
+import { UserInterfaceState } from "./UserInterfaceState";
 import Dexie from 'dexie';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -24,6 +24,7 @@ export interface Repository {
   readonly label: string;
   readonly config: Config;
   readonly uiState: UserInterfaceState;
+  dimensionFilters: Map<string, Map<string, boolean>>;
   init(): Promise<Config>;
   executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
   saveCurrentState(currentState: UserInterfaceState): Promise<void>;
@@ -35,6 +36,7 @@ abstract class AbstractRepository implements Repository {
   private uiStateDb: UiStateDatabase = new UiStateDatabase();
   protected _config: Config;
   protected _uiState: UserInterfaceState;
+  dimensionFilters = new Map<string, Map<string, boolean>>();
 
   get config(): Config {
     return this._config;
@@ -73,19 +75,60 @@ abstract class AbstractRepository implements Repository {
   abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
   abstract get label(): string;
 
+  protected async populateDimensionFilters(): Promise<void> {
+    const promises: Promise<void>[] = this._config.filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
+      return this.executeQuery(filterDimension.query, filterDimension.connection, true).then((results: { values: any[] }): void => {
+        const levels: Map<string, boolean> = new Map<string, boolean>();
+        results.values.forEach((value: any): void => {
+          levels.set(value[filterDimension.dimension], true);
+        });
+        this.dimensionFilters.set(filterDimension.dimension, levels);
+      });
+    });
+    return Promise.all(promises).then();
+  }
+
+  protected replaceDimensionFilterPlaceholders(mdx: string): string {
+    const replacementMap = new Map<string, string>();
+    [...this.dimensionFilters.keys()].forEach((dimension: string): void => {
+      let allSelected = true;
+      let selectedLevels: string[] = [];
+      const selectionMap = this.dimensionFilters.get(dimension);
+      [...selectionMap.keys()].forEach((level: string): void => {
+        const value = selectionMap.get(level);
+        if (value) {
+          selectedLevels.push(dimension + ".[" + level + "]");
+        } else {
+          allSelected = false;
+        }
+      });
+      replacementMap.set(dimension, allSelected ? (dimension + ".Members") : selectedLevels.join(","));
+    });
+    [...replacementMap.keys()].forEach((dimension: string): void => {
+      const dimensionRegex = dimension.replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/\./g, "\\.");
+      mdx = mdx.replace(new RegExp("#" + dimensionRegex + "#", "g"), replacementMap.get(dimension));
+    });
+    return mdx;
+  }
+
 }
 
 export class LocalRepository extends AbstractRepository {
 
+  // todo: move this config setup stuff to superclass with populateConfig() template method...
   async init(): Promise<Config> {
     return super.init().then(async () => {
       this._config = Config.fromJson(TestData.TEST_CONFIG);
-      return Promise.resolve(this._config);
+      return this.populateDimensionFilters().then(async () => {
+        return Promise.resolve(this._config);
+      });
     });
   }
 
   async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
-    
+
+    mdx = this.replaceDimensionFilterPlaceholders(mdx);
+
     let ret = Promise.resolve(null);
 
     if (mdx === TestData.TEST_QUERY_1D) {
@@ -104,6 +147,10 @@ export class LocalRepository extends AbstractRepository {
       ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY);
     } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_DATE) {
       ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_DATE);
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_FILTER) {
+      ret = Promise.resolve(TestData.TEST_RESULTS_DIMENSION_FILTER);
+    } else {
+      return Promise.resolve(TestData.getFilteredData(mdx));
     }
 
     return ret;

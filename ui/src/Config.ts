@@ -11,6 +11,7 @@ import { Visualization } from "./Visualization";
   private _appLogoImageUrl: string;
   private _disclaimerFooterText: string;
   private _allowVizExport: boolean;
+  private _filterDimensions: FilterDimension[] = [];
 
   static fromJson(json: any): Config {
 
@@ -25,6 +26,12 @@ import { Visualization } from "./Visualization";
     ret._groups = json.groups.map((groupJson: any): Group => {
       return Group.fromJson(groupJson);
     });
+
+    if (json.filterDimensions) {
+      ret._filterDimensions = json.filterDimensions.map((filterDimension: any): FilterDimension => {
+        return FilterDimension.fromJson(filterDimension);
+      });
+    }
 
     return ret;
 
@@ -54,6 +61,10 @@ import { Visualization } from "./Visualization";
     return this._allowVizExport;
   }
 
+  get filterDimensions(): FilterDimension[] {
+    return this._filterDimensions;
+  }
+
   findVisualization(id: string): Visualization {
     let ret: Visualization = null;
     this.groups.forEach((group: Group): void => {
@@ -64,6 +75,32 @@ import { Visualization } from "./Visualization";
     return ret;
   }
 
+  getFilterDimensionLabel(dimension: string): string {
+    let ret: string = null;
+    this.filterDimensions.forEach((d: FilterDimension): void => {
+      if (d.dimension === dimension) {
+        ret = d.label;
+      }
+    });
+    return ret;
+  }
+
+}
+
+export class FilterDimension {
+  readonly query: string;
+  readonly dimension: string;
+  readonly connection: string;
+  readonly label: string;
+  private constructor(query: string, dimension: string, connection: string, label: string) {
+    this.query = query;
+    this.dimension = dimension;
+    this.connection = connection;
+    this.label = label;
+  }
+  static fromJson(json: { query: string, dimension: string, connection: string, label: string }): FilterDimension {
+    return new FilterDimension(json.query, json.dimension, json.connection, json.label);
+  }
 }
 
 export class Group {

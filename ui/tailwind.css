@@ -19,20 +19,12 @@
   font-size: .625rem;
 }
 
-.max-h-128 {
-  max-height: 128px;
+.h-screen-25 {
+  height: 25vh;
 }
 
-.max-h-screen-33 {
-  max-height: 33vh;
-}
-
-.h-screen-33 {
-  height: 33vh;
-}
-
-.h-screen-67 {
-  height: 67vh;
+.h-max-screen-25 {
+  max-height: 25vh;
 }
 
 /* custom style to set the height of the html body. 88px is the approximate height of the nav header. */

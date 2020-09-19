@@ -40,6 +40,10 @@ export abstract class Visualization {
     this.measureFormats = json.measureFormats || [];
   }
 
+  get hasFilteredQuery(): boolean {
+    return /#/.test(this.query);
+  }
+
   static fromJson(id: string, json: any): Visualization {
 
     let ret: Visualization = null;
@@ -61,7 +65,6 @@ export abstract class Visualization {
     let ret = Promise.resolve(null);
 
     const query = this.query;
-    console.log(query);
 
     if (query) {
       ret = repository.executeQuery(query, this.connection, false).then((data: { values: any[] }): Promise<any> => {

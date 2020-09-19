@@ -11,6 +11,7 @@
   import GridRow from './GridRow.svelte';
   import VizMenu from "./VizMenu.svelte";
   import VizWidget from "./VizWidget.svelte";
+  import DimensionFilterModal from "./DimensionFilterModal.svelte";
 
   export let repository: Repository;
 
@@ -24,6 +25,11 @@
   let appLogoImageUrl: string;
   let footerText: string;
   let currentUiState: UserInterfaceState = new UserInterfaceState();
+
+  let dimensionFilterModalVisible = false;
+  let dimensionFilterModel: Map<string, boolean>;
+  let dimensionFilterText: string;
+  let singleFilterDimension: string;
 
   document.title = DEFAULT_TITLE;
 
@@ -94,6 +100,11 @@
 
     footerText = config.disclaimerFooterText;
 
+    // in this first iteration, we only support a single dimension for filtering
+    singleFilterDimension = config.filterDimensions[0].dimension;
+
+    updateDimensionFilterText();
+
     return repository.getSavedState().then(async (uiState: UserInterfaceState): Promise<void> => {
 
       const restoredWidgetStateGrid: WidgetState[][] = uiState.widgetStateGrid;
@@ -103,6 +114,12 @@
       initializeGrid(restoredWidgetStateGrid.length);
 
       const targetNodes: NodeListOf<Element> = document.querySelectorAll(".dragula-drop-target");
+
+      currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
+      dimensionFilterModel = uiState.dimensionFilterModel;
+      repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
+      updateDimensionFilterText();
+      updateVisualizationsForFilterChange();
 
       restoredWidgetStateGrid.forEach((row: WidgetState[], rowIdx: number): void => {
         row.forEach((gridState: WidgetState, colIdx: number): void => {
@@ -136,6 +153,8 @@
 
   });
 
+  let widgets: VizWidget[] = [];
+
   function populateViz(viz: Visualization, target: HTMLElement): void {
 
     const existingWidget = target.querySelector('.viz-widget');
@@ -151,7 +170,7 @@
     const rowIndex = Number.parseInt(target.dataset.rowIndex);
     const colIndex = Number.parseInt(target.dataset.colIndex);
 
-    new VizWidget({
+    const widget = new VizWidget({
       target: target,
       props: {
         viz: viz,
@@ -159,15 +178,71 @@
         rowIndex: rowIndex,
         colIndex: colIndex
       }
-    }).$on('closeWidget', (e: CustomEvent<{divId: string}>) => {
+    });
+    
+    widget.$on('closeWidget', (e: CustomEvent<{divId: string}>) => {
       target.removeChild(document.getElementById(e.detail.divId));
       target.classList.remove('dragula-occupied');
       target.classList.add('border-dashed');
       target.classList.remove('border-solid');
       currentUiState.widgetStateGrid[rowIndex][colIndex] = undefined;
+      widgets = widgets.filter((w: VizWidget): boolean => {
+        return w.divId !== e.detail.divId;
+      })
       repository.saveCurrentState(currentUiState);
     });
 
+    widgets.push(widget);
+
+  }
+
+  function updateVisualizationsForFilterChange(): void {
+    widgets.forEach((widget: VizWidget): void => {
+      if (widget.hasFilteredVisualization()) {
+        widget.renderViz();
+      }
+    });
+  }
+
+  function updateDimensionFilterText(): void {
+    let text = "";
+    const keys = [...repository.dimensionFilters.keys()];
+    keys.forEach((dimension: string, idx: number): void => {
+      const label = repository.config.getFilterDimensionLabel(dimension);
+      const selectionMap = repository.dimensionFilters.get(dimension);
+      text += (label + ": ");
+      let allSelected = true;
+      let noneSelected = true;
+      let selectedLevels: string[] = [];
+      [...selectionMap.keys()].forEach((level: string): void => {
+        const selected = selectionMap.get(level);
+        allSelected = allSelected && selected;
+        if (selected) {
+          selectedLevels.push(level);
+          noneSelected = false;
+        }
+      });
+      text += allSelected ? "[All values included]" : (noneSelected ? "[No values included]" : selectedLevels.join(", "));
+      if (idx < keys.length - 1) {
+        text += "; ";
+      }
+    });
+    dimensionFilterText = text;
+  }
+
+  function showDimensionFilterModal(): void {
+    dimensionFilterModel = repository.dimensionFilters.get(singleFilterDimension);
+    dimensionFilterModalVisible = true;
+  }
+
+  function hideDimensionFilterModal(e: CustomEvent): void {
+    dimensionFilterModel = e.detail as Map<string, boolean>;
+    repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
+    currentUiState.dimensionFilterModel = dimensionFilterModel;
+    repository.saveCurrentState(currentUiState);
+    updateDimensionFilterText();
+    updateVisualizationsForFilterChange();
+    dimensionFilterModalVisible = false;
   }
 
 </script>
@@ -191,11 +266,29 @@
         <VizMenu groups={repository.config.groups}/>
       </div>
     {/if}
-    <div class="h-full w-4/5 overflow-y-auto" id="viz-container">
-      <!-- container for dashboard visualizations to go (added dynamically at repository init and when a widget is dropped in the current last row) -->
+    <div class="h-full w-4/5">
+      {#if initialized && repository.dimensionFilters.size}
+        <div class="flex flex-inline h-10 w-full m-1 mr-2 p-1 border rounded border-blue-800">
+          <button
+            class="bg-transparent hover:bg-blue-800 text-blue-800 font-semibold hover:text-white py-px px-4 border border-blue-800 hover:border-transparent rounded outline-none focus:outline-none"
+            on:click="{e => showDimensionFilterModal()}">
+            Filters...
+          </button>
+          <div class="ml-2 flex items-center">{dimensionFilterText}</div>
+        </div>
+      {/if}
+      <div class=" w-full overflow-y-auto" id="viz-container">
+        <!-- container for dashboard visualizations to go (added dynamically at repository init and when a widget is dropped in the current last row) -->
+      </div>
     </div>
   </div>
   {#if initialized && footerText}
     <div class="w-full text-xs italic px-20 mb-4 text-center">{footerText}</div>
   {/if}
 </div>
+
+<DimensionFilterModal
+  visible={dimensionFilterModalVisible}
+  dimensionLabel="State"
+  model={dimensionFilterModel}
+  on:close="{e => hideDimensionFilterModal(e)}"/>

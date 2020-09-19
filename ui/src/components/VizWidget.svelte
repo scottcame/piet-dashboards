@@ -40,12 +40,16 @@
     return (): void => window.removeEventListener('resize', resizeListener);
   });
 
-  function renderViz(): void {
+  export function renderViz(): void {
     const height = container.clientHeight * .65; // accounts for the card header
     const width = container.clientWidth;
     viz.render(repository, height, width).then((spec: VegaLiteSpec): void => {
       vegaLiteSpec = spec;
     });
+  }
+
+  export function hasFilteredVisualization(): boolean {
+    return viz.hasFilteredQuery;
   }
 
 </script>

@@ -148,5 +148,91 @@ export class TestData {
     ]
   };
 
+  // dimension filter query
+
+  static TEST_QUERY_DIMENSION_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Stores].[Store State].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_FILTER = {
+    "values": [
+      {
+        "[Store].[Stores].[Store State]": "BC",
+        "[Store].[Stores].[Store Country]": "Canada",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "DF",
+        "[Store].[Stores].[Store Country]": "Mexico",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "Guerrero",
+        "[Store].[Stores].[Store Country]": "Mexico",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "Jalisco",
+        "[Store].[Stores].[Store Country]": "Mexico",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "Veracruz",
+        "[Store].[Stores].[Store Country]": "Mexico",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "Yucatan",
+        "[Store].[Stores].[Store Country]": "Mexico",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "Zacatecas",
+        "[Store].[Stores].[Store Country]": "Mexico",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "CA",
+        "[Store].[Stores].[Store Country]": "USA",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "OR",
+        "[Store].[Stores].[Store Country]": "USA",
+        "Nul": null
+      },
+      {
+        "[Store].[Stores].[Store State]": "WA",
+        "[Store].[Stores].[Store Country]": "USA",
+        "Nul": null
+      }
+    ]
+  };
+
+  static getFilteredData(mdx: string): any {
+
+    let ret = null;
+
+    const regex = /^SELECT NON EMPTY {\[Measures\]\.\[Units Ordered\]} \* {(.+)} ON COLUMNS FROM \[Warehouse\]$/;
+    if (regex.test(mdx)) {
+      const states = mdx.replace(regex, "$1").split(",");
+      if (states.length === 1 && states[0] === "[Store].[Stores].[Store State].Members") {
+        ret = TestData.TEST_RESULTS_1D;
+      } else {
+        ret = {
+          values: []
+        };
+        states.forEach((level: string): void => {
+          const value = TestData.TEST_RESULTS_1D.values.filter((v: any): boolean => {
+            return v["[Store].[Stores].[Store State]"] === level.replace(/\[Store\]\.\[Stores\]\.\[Store State\]\.\[(.+)\]/, "$1");
+          });
+          if (value.length) {
+            ret.values.push(value[0]);
+          }
+        });
+      }
+    }
+
+    return ret;
+
+  }
 
 }
