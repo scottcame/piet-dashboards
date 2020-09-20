@@ -12,6 +12,10 @@ export class VegaLiteSpec {
   width: number|SizeByStep;
   view?: ViewSpec;
 
+  get hasData(): boolean {
+    return this.data.values.length > 0;
+  }
+
 }
 
 export class ViewSpec {

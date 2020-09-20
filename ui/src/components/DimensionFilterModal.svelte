@@ -1,7 +1,6 @@
 <script lang="ts">
 
   import { createEventDispatcher } from 'svelte';
-import LabeledCheckbox from './LabeledCheckbox.svelte';
 
   const dispatch: (event: string, detail: any) => void = createEventDispatcher();
 
@@ -50,10 +49,12 @@ import LabeledCheckbox from './LabeledCheckbox.svelte';
     visible = false;
   }
 
-  function toggleAll(e: CustomEvent): void {
-    const value = e.detail as boolean;
+  let toggleAllValue = true;
+
+  function toggleAll(): void {
+    toggleAllValue = !toggleAllValue;
     values.forEach((_value: boolean, idx: number): void => {
-      setRowValue(idx, value);
+      setRowValue(idx, toggleAllValue);
     });
   }
 
@@ -88,7 +89,7 @@ import LabeledCheckbox from './LabeledCheckbox.svelte';
           </div>
         </div>
         <div class="m-2 py-1">
-          <LabeledCheckbox label="Toggle all" on:click="{e => toggleAll(e)}"/>
+          <div on:click="{e => toggleAll()}" class="cursor-pointer hover:text-blue-900 pl-1 text-blue-700 underline">Toggle All</div>
         </div>
         <div class="flex flex-inline justify-center mb-4 mt-2 flex-none">
           <div class="border-2 border-gray-500 mr-2 p-2 hover:bg-gray-200" on:click={e => close(true)}>OK</div>

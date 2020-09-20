@@ -10,6 +10,8 @@
   let container: HTMLElement;
   let actions: boolean | {export: boolean, source: boolean, compiled: boolean, editor: boolean};
 
+  let showNoDataLabel = false;
+
   $: actions = exportOption ? {
         export: true,
         source: false,
@@ -17,7 +19,7 @@
         editor: false
   } : false;
 
-  $: if (vegaLiteSpec && container) {
+  $: if (vegaLiteSpec && vegaLiteSpec.hasData && container) {
     vegaEmbed(container, vegaLiteSpec, {
       actions: actions,
       renderer: "canvas"
@@ -26,8 +28,13 @@
       canvasElement.style.margin = "auto";
       // todo: still need to figure out how to center vertically
     });
+    showNoDataLabel = false;
+  } else {
+    showNoDataLabel = true;
   }
 
 </script>
 
-<div class="mt-px h-full w-full {vegaLiteSpec ? '' : 'hidden'}" bind:this={container}></div>
+<div class="mt-px h-full w-full {vegaLiteSpec && vegaLiteSpec.hasData ? '' : 'hidden'}" bind:this={container}></div>
+
+<div class="{showNoDataLabel ? '' : 'hidden'} italic mt-12 text-center">No data available</div>
