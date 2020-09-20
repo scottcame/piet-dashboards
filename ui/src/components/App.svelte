@@ -101,7 +101,7 @@
     footerText = config.disclaimerFooterText;
 
     // in this first iteration, we only support a single dimension for filtering
-    singleFilterDimension = config.filterDimensions[0].dimension;
+    singleFilterDimension = (config.filterDimensions && config.filterDimensions.length) ? config.filterDimensions[0].dimension : null;
 
     updateDimensionFilterText();
 
@@ -115,7 +115,7 @@
 
       const targetNodes: NodeListOf<Element> = document.querySelectorAll(".dragula-drop-target");
 
-      if (uiState.dimensionFilterModel) {
+      if (singleFilterDimension && uiState.dimensionFilterModel) {
         currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
         dimensionFilterModel = uiState.dimensionFilterModel;
         repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
@@ -208,29 +208,31 @@
   }
 
   function updateDimensionFilterText(): void {
-    let text = "";
-    const keys = [...repository.dimensionFilters.keys()];
-    keys.forEach((dimension: string, idx: number): void => {
-      const label = repository.config.getFilterDimensionLabel(dimension);
-      const selectionMap = repository.dimensionFilters.get(dimension);
-      text += (label + ": ");
-      let allSelected = true;
-      let noneSelected = true;
-      let selectedLevels: string[] = [];
-      [...selectionMap.keys()].forEach((level: string): void => {
-        const selected = selectionMap.get(level);
-        allSelected = allSelected && selected;
-        if (selected) {
-          selectedLevels.push(level);
-          noneSelected = false;
+    if (repository.dimensionFilters.size) {
+      let text = "";
+      const keys = [...repository.dimensionFilters.keys()];
+      keys.forEach((dimension: string, idx: number): void => {
+        const label = repository.config.getFilterDimensionLabel(dimension);
+        const selectionMap = repository.dimensionFilters.get(dimension);
+        text += (label + ": ");
+        let allSelected = true;
+        let noneSelected = true;
+        let selectedLevels: string[] = [];
+        [...selectionMap.keys()].forEach((level: string): void => {
+          const selected = selectionMap.get(level);
+          allSelected = allSelected && selected;
+          if (selected) {
+            selectedLevels.push(level);
+            noneSelected = false;
+          }
+        });
+        text += allSelected ? "[All values included]" : (noneSelected ? "[No values included]" : selectedLevels.join(", "));
+        if (idx < keys.length - 1) {
+          text += "; ";
         }
       });
-      text += allSelected ? "[All values included]" : (noneSelected ? "[No values included]" : selectedLevels.join(", "));
-      if (idx < keys.length - 1) {
-        text += "; ";
-      }
-    });
-    dimensionFilterText = text;
+      dimensionFilterText = text;
+    }
   }
 
   function showDimensionFilterModal(): void {
