@@ -25,7 +25,7 @@ export class AppFactory {
     return new App({
       target: document.body,
       props: {
-        repository: remote ? new RemoteRepository("api/") : new LocalRepository()
+        repository: remote ? new RemoteRepository("/piet-dashboards/") : new LocalRepository()
       }
     });
   }

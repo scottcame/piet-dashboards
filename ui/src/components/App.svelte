@@ -115,9 +115,12 @@
 
       const targetNodes: NodeListOf<Element> = document.querySelectorAll(".dragula-drop-target");
 
-      currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
-      dimensionFilterModel = uiState.dimensionFilterModel;
-      repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
+      if (uiState.dimensionFilterModel) {
+        currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
+        dimensionFilterModel = uiState.dimensionFilterModel;
+        repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
+      }
+
       updateDimensionFilterText();
       updateVisualizationsForFilterChange();
 
@@ -248,18 +251,18 @@
 </script>
 
 <nav class="flex items-center flex-wrap bg-gray-100 p-4 pt-2 pb-2 select-none">
-  <img src="{appLogoImageUrl}" class="h-16" alt="Logo"/>
-  <ul class="ml-4">
-    {#if initialized}
-      <li><span class="uppercase text-base">{headerTitle}</span></li>
-    {/if}
-  </ul>
+  {#if initialized}
+    <img src="{appLogoImageUrl}" class="h-16" alt="Logo"/>
+    <ul class="ml-4">
+        <li><span class="uppercase text-base">{headerTitle}</span></li>
+    </ul>
+  {/if}
 </nav>
 
 <div class="h-full flex flex-col">
   <div class="h-full flex flex-inline">
     <div class="h-full w-full absolute bg-gray-300 opacity-50 {waiting ? '' : 'hidden'}">
-      <!-- <div id="wait-spinner"/> -->
+      <div id="wait-spinner"/>
     </div>
     {#if initialized}
       <div class="flex flex-col w-1/5 h-full p-2">
@@ -292,3 +295,30 @@
   dimensionLabel="State"
   model={dimensionFilterModel}
   on:close="{e => hideDimensionFilterModal(e)}"/>
+
+<style>
+  #wait-spinner {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 100px;
+    height: 100px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+  
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>

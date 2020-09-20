@@ -1,5 +1,4 @@
 <!--
-Copyright 2020 National Police Foundation
 Copyright 2020 Scott Came Consulting LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,16 +38,12 @@ limitations under the License.
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-tomcat</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.retry</groupId>
-      <artifactId>spring-retry</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -75,13 +70,6 @@ limitations under the License.
   <build>
 
     <defaultGoal>install</defaultGoal>
-
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
 
     <plugins>
 
@@ -150,7 +138,7 @@ limitations under the License.
               <artifactId>${project.artifactId}</artifactId>
               <version>${project.version}</version>
               <type>${project.packaging}</type>
-              <destFileName>piet.war</destFileName>
+              <destFileName>piet-dashboards.war</destFileName>
             </artifactItem>
           </artifactItems>
           <outputDirectory>docker/piet-dashboards</outputDirectory>

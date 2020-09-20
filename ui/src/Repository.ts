@@ -47,7 +47,7 @@ abstract class AbstractRepository implements Repository {
   }
 
   async init(): Promise<Config> {
-    return Dexie.exists(INDEXEDDB_NAME).then(async exists => {
+    return Dexie.exists(INDEXEDDB_NAME).then(async (exists: boolean) => {
       let ret = Promise.resolve(null);
       if (exists) {
         ret = this.uiStateDb.uiStates.toArray().then(async uiStates => {
@@ -58,7 +58,14 @@ abstract class AbstractRepository implements Repository {
       } else {
         this._uiState = new UserInterfaceState();
       }
-      return ret;
+      return ret.then(async () => {
+        return this.fetchConfig().then(async (fetchedConfig: Config) => {
+          this._config = fetchedConfig;
+          return this.populateDimensionFilters().then(async () => {
+            return Promise.resolve(this._config);
+          });
+        });
+      }); 
     });
   }
 
@@ -75,9 +82,11 @@ abstract class AbstractRepository implements Repository {
   abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
   abstract get label(): string;
 
-  protected async populateDimensionFilters(): Promise<void> {
+  protected abstract fetchConfig(): Promise<Config>;
+
+  protected async populateDimensionFilters(): Promise<void[]> {
     const promises: Promise<void>[] = this._config.filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
-      return this.executeQuery(filterDimension.query, filterDimension.connection, true).then((results: { values: any[] }): void => {
+      return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
         const levels: Map<string, boolean> = new Map<string, boolean>();
         results.values.forEach((value: any): void => {
           levels.set(value[filterDimension.dimension], true);
@@ -85,7 +94,7 @@ abstract class AbstractRepository implements Repository {
         this.dimensionFilters.set(filterDimension.dimension, levels);
       });
     });
-    return Promise.all(promises).then();
+    return Promise.all(promises);
   }
 
   protected replaceDimensionFilterPlaceholders(mdx: string): string {
@@ -115,14 +124,8 @@ abstract class AbstractRepository implements Repository {
 
 export class LocalRepository extends AbstractRepository {
 
-  // todo: move this config setup stuff to superclass with populateConfig() template method...
-  async init(): Promise<Config> {
-    return super.init().then(async () => {
-      this._config = Config.fromJson(TestData.TEST_CONFIG);
-      return this.populateDimensionFilters().then(async () => {
-        return Promise.resolve(this._config);
-      });
-    });
+  protected fetchConfig(): Promise<Config> {
+    return Promise.resolve(Config.fromJson(TestData.TEST_CONFIG));
   }
 
   async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
@@ -179,25 +182,18 @@ export class RemoteRepository extends AbstractRepository {
     this.remoteApiUrl = remoteApiUrl;
   }
 
-  async init(): Promise<Config> {
-    let ret = Promise.resolve(null);
+  protected async fetchConfig(): Promise<Config> {
     const configUrl = this.remoteApiUrl + "config";
-    ret = fetch(configUrl).then(async (response: Response) => {
-      if (response.redirected) {
-        location.reload(true);
-        return Promise.resolve(null);
-      }
+    return fetch(configUrl).then(async (response: Response) => {
       return response.json().then(async (json: any): Promise<Config> => {
-        this._config = Config.fromJson(json);
-        return Promise.resolve(this._config);
+        return Promise.resolve(Config.fromJson(json));
       });
-    }).catch((reason: any) => {
-      throw new Error(reason);
     });
-    return ret;
   }
 
   async executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }> {
+
+    mdx = this.replaceDimensionFilterPlaceholders(mdx);
 
     const request: any = new Object();
 		request.connectionName = connection;
@@ -208,17 +204,13 @@ export class RemoteRepository extends AbstractRepository {
     
     let ret = Promise.resolve(null);
 
-    ret = fetch("/mondrian-rest-dashboard/query", {
+    ret = fetch(this.config.mondrianRestURL + "/query", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(request)
     }).then(async (response: Response) => {
-      if (response.redirected) {
-        location.reload(true);
-        return Promise.resolve(null);
-      }
       return response.json().then(async (vegaLiteSpec: any): Promise<any> => {
         return Promise.resolve(vegaLiteSpec);
       });
@@ -229,11 +221,7 @@ export class RemoteRepository extends AbstractRepository {
   }
 
   async saveCurrentState(currentState: UserInterfaceState): Promise<void> {
-    // eslint-disable-next-line no-console
-    console.log("Saving current state");
-    // eslint-disable-next-line no-console
-    console.log(currentState);
-    return Promise.resolve();
+    return super.saveCurrentState(currentState)
   }
 
   async getSavedState(): Promise<UserInterfaceState> {
