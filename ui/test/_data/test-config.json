@@ -139,6 +139,32 @@
           },
           "showPoints": true,
           "dateFormat": "%m-%d"
+        },
+        "viz-2-7": {
+          "vizType": "line",
+          "panelTitle": "Line Temporal R1",
+          "headerText": "Line Temporal R1",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_TEMPORAL_RANDOM1",
+          "measures": ["M1 Count", "M2 Count"],
+          "measureLabels": ["The M1", "M2 Too"],
+          "xDimension": {
+            "yearDimension": "[Date.DateYMD].[Year]"
+          },
+          "showPoints": true,
+          "dateFormat": "%Y",
+          "tickCount": "year"
+        },
+        "viz-2-8": {
+          "vizType": "line",
+          "panelTitle": "Line YZ",
+          "headerText": "Line chart 1 measure w Y dimension",
+          "connection": "foodmart",
+          "query": "TEST_QUERY_LINE_YZ",
+          "measures": ["z"],
+          "xDimension": "x",
+          "yDimension": "y",
+          "yDimensionLabel": "This is y"
         }
       }
     }

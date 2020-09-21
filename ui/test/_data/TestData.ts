@@ -148,6 +148,40 @@ export class TestData {
     ]
   };
 
+  static TEST_QUERY_LINE_TEMPORAL_RANDOM1 = "TEST_QUERY_LINE_TEMPORAL_RANDOM1";
+
+  static TEST_RESULTS_LINE_TEMPORAL_RANDOM1 = {
+    "values" : [ {
+      "M1 Count" : 26.0,
+      "[Date.DateYMD].[Year]" : "2014",
+      "M2 Count" : 16.0
+    }, {
+      "M1 Count" : 37.0,
+      "[Date.DateYMD].[Year]" : "2015",
+      "M2 Count" : 37.0
+    }, {
+      "M1 Count" : 244.0,
+      "[Date.DateYMD].[Year]" : "2016",
+      "M2 Count" : 238.0
+    }, {
+      "M1 Count" : 21348.0,
+      "[Date.DateYMD].[Year]" : "2017",
+      "M2 Count" : 20520.0
+    }, {
+      "M1 Count" : 20160.0,
+      "[Date.DateYMD].[Year]" : "2018",
+      "M2 Count" : 21049.0
+    }, {
+      "M1 Count" : 22833.0,
+      "[Date.DateYMD].[Year]" : "2019",
+      "M2 Count" : 22174.0
+    }, {
+      "M1 Count" : 9996.0,
+      "[Date.DateYMD].[Year]" : "2020",
+      "M2 Count" : 9571.0
+    } ]
+  };
+
   // dimension filter query
 
   static TEST_QUERY_DIMENSION_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Stores].[Store State].Members} ON COLUMNS FROM [Warehouse]";
@@ -204,6 +238,21 @@ export class TestData {
         "[Store].[Stores].[Store Country]": "USA",
         "Nul": null
       }
+    ]
+  };
+
+  static TEST_QUERY_LINE_YZ = "TEST_QUERY_LINE_YZ";
+
+  static TEST_RESULTS_LINE_YZ = {
+    "values":[
+      { "x": 10, "y": "foo", "z": 150 },
+      { "x": 12, "y": "foo", "z": 180 },
+      { "x": 13, "y": "foo", "z": 175 },
+      { "x": 16, "y": "foo", "z": 110 },
+      { "x": 10, "y": "bar", "z": 140 },
+      { "x": 12, "y": "bar", "z": 162 },
+      { "x": 13, "y": "bar", "z": 195 },
+      { "x": 16, "y": "bar", "z": 133 }
     ]
   };
 

@@ -1,5 +1,5 @@
 import type { Repository } from "./Repository";
-import { VegaLiteSpec, Encoding, Axis, EncodingSpec, Layer, ColorEncodingSpec, RadialMarkSpec, ViewSpec, TextEncodingSpec, LineMarkSpec } from "./VegaLiteSpec";
+import { VegaLiteSpec, Encoding, Axis, EncodingSpec, Layer, ColorEncodingSpec, RadialMarkSpec, ViewSpec, TextEncodingSpec, LineMarkSpec, Scale } from "./VegaLiteSpec";
 
 export abstract class Visualization {
 
@@ -16,6 +16,7 @@ export abstract class Visualization {
   readonly measureLabels: string[];
   readonly measureFormats: string[];
   readonly query: string;
+  readonly debug: boolean;
 
   constructor(id: string, json: {
     id: string,
@@ -27,7 +28,8 @@ export abstract class Visualization {
     includeGridValueText: boolean,
     measures: string[],
     measureLabels: string[],
-    measureFormats: string[]
+    measureFormats: string[],
+    debug: boolean
   }) {
     this.id = id;
     this.headerText = json.headerText;
@@ -38,6 +40,7 @@ export abstract class Visualization {
     this.measures = json.measures;
     this.measureLabels = json.measureLabels || [];
     this.measureFormats = json.measureFormats || [];
+    this.debug = json.debug || false;
   }
 
   get hasFilteredQuery(): boolean {
@@ -73,6 +76,10 @@ export abstract class Visualization {
           const dataObject = new DataObject();
           dataObject.values = data.values;
           spec = this.makeChart(dataObject, containerHeight, containerWidth);
+          if (this.debug) {
+            // eslint-disable-next-line no-console
+            console.log(spec);
+          }
         }
         return Promise.resolve(spec);
       });
@@ -105,7 +112,8 @@ export class BarChartVisualization extends Visualization {
     measures: string[],
     measureLabels: string[],
     measureFormats: string[],
-    xDimension: string
+    xDimension: string,
+    debug: boolean
   }) {
     super(id, json);
     this.xDimension = json.xDimension;
@@ -195,7 +203,8 @@ export class PieChartVisualization extends Visualization {
     measures: string[],
     measureLabels: string[],
     measureFormats: string[],
-    xDimension: string
+    xDimension: string,
+    debug: boolean
   }) {
     super(id, json);
     this.xDimension = json.xDimension;
@@ -270,8 +279,12 @@ export class PieChartVisualization extends Visualization {
 export class LineChartVisualization extends Visualization {
   
   readonly xDimension: string|TemporalAxis;
+  readonly yDimension: string;
+  readonly yDimensionLabel: string;
   readonly showPoints: boolean;
   readonly dateFormat: string;
+  readonly tickCount: string;
+  readonly zeroMeasureAxisOrigin: boolean;
 
   constructor(id: string, json: {
     id: string,
@@ -285,13 +298,22 @@ export class LineChartVisualization extends Visualization {
     measureLabels: string[],
     measureFormats: string[],
     xDimension: string|TemporalAxis,
+    yDimension: string,
+    yDimensionLabel: string,
     showPoints: boolean,
-    dateFormat: string
+    dateFormat: string,
+    tickCount: string,
+    zeroMeasureAxisOrigin: boolean,
+    debug: boolean
   }) {
     super(id, json);
     this.xDimension = typeof json.xDimension === "object" ? TemporalAxis.fromJson(json.xDimension) : json.xDimension;
     this.showPoints = json.showPoints || false;
     this.dateFormat = json.dateFormat;
+    this.tickCount = json.tickCount;
+    this.zeroMeasureAxisOrigin = json.zeroMeasureAxisOrigin;
+    this.yDimension = json.yDimension;
+    this.yDimensionLabel = json.yDimensionLabel;
   }
 
   protected makeChart(data: DataObject, containerHeight: number, containerWidth: number): VegaLiteSpec {
@@ -310,6 +332,7 @@ export class LineChartVisualization extends Visualization {
     let xAxisType: "quantitative"|"temporal" = "quantitative";
     let xAxisTitle = undefined;
     let xAxisFormat = this.dateFormat || undefined;
+    let xAxisTickCount = this.tickCount || undefined;
 
     if (this.xDimension instanceof TemporalAxis) {
 
@@ -337,6 +360,8 @@ export class LineChartVisualization extends Visualization {
       xDimension = this.xDimension as string;
     }
 
+    let legendPenalty = 0;
+
     if (this.measures.length === 1) {
 
       const measure = this.measures[0];
@@ -350,6 +375,9 @@ export class LineChartVisualization extends Visualization {
 
       transformedData.values.forEach((o: any): void => {
         o.x = xValueExtractor(o);
+        if (this.yDimension) {
+          o.y = o[this.yDimension];
+        }
       });
 
       spec = new VegaLiteSpec();
@@ -365,21 +393,46 @@ export class LineChartVisualization extends Visualization {
       spec.encoding.x.axis = new Axis();
       spec.encoding.x.axis.title = xAxisTitle;
       spec.encoding.x.axis.format = xAxisFormat;
+      spec.encoding.x.axis.tickCount = xAxisTickCount;
       spec.encoding.y = new EncodingSpec();
       spec.encoding.y.field = measure;
       spec.encoding.y.type = "quantitative";
       spec.encoding.y.title = measureLabel;
 
+      if (this.zeroMeasureAxisOrigin !== undefined) {
+        spec.encoding.y.scale = new Scale();
+        spec.encoding.y.scale.zero = this.zeroMeasureAxisOrigin;
+      }
+
+      if (this.yDimension) {
+        spec.encoding.color = new ColorEncodingSpec();
+        spec.encoding.color.field = "y";
+        spec.encoding.color.title = this.yDimensionLabel || null;
+        spec.encoding.color.type = "nominal";
+        const titleLength = this.yDimensionLabel ? this.yDimensionLabel.length : 0;
+        legendPenalty = Math.max(.08, titleLength*.01);
+      }
+
     } else {
+
+      if (this.yDimension) {
+        throw new Error("Error in configuration: you cannot have a y dimension with more than one measure");
+      }
 
       const transformedData = new DataObject();
       transformedData.values = [];
 
-      data.values.forEach((o: any): void => {
+      const measureLabelMap = new Map<string, string>();
+
+      this.measures.forEach((measure: string, idx: number): void => {
+        measureLabelMap.set(measure, this.measureLabels.length ? this.measureLabels[idx] : measure);
+      });
+
+      dataValues.forEach((o: any): void => {
         this.measures.forEach((m: string): void => {
           const row: any = {};
           row.x = xValueExtractor(o);
-          row.measure = m;
+          row.measure = measureLabelMap.get(m);
           row.y = o[m];
           transformedData.values.push(row);
         });
@@ -398,6 +451,7 @@ export class LineChartVisualization extends Visualization {
       spec.encoding.x.axis = new Axis();
       spec.encoding.x.axis.title = xAxisTitle;
       spec.encoding.x.axis.format = xAxisFormat;
+      spec.encoding.x.axis.tickCount = xAxisTickCount;
       spec.encoding.y = new EncodingSpec();
       spec.encoding.y.field = "y";
       spec.encoding.y.type = "quantitative";
@@ -407,12 +461,17 @@ export class LineChartVisualization extends Visualization {
       spec.encoding.color.title = null;
       spec.encoding.color.type = "nominal";
 
-      widthAdjustment = .82;
+      if (this.zeroMeasureAxisOrigin !== undefined) {
+        spec.encoding.y.scale = new Scale();
+        spec.encoding.y.scale.zero = this.zeroMeasureAxisOrigin;
+      }
+
+      legendPenalty = .08;
 
     }
 
     if (spec) {
-      spec.width = containerWidth * widthAdjustment;
+      spec.width = containerWidth * (widthAdjustment-legendPenalty);
       spec.height = containerHeight;
     }
 

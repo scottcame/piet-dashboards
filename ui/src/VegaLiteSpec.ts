@@ -38,6 +38,7 @@ export class EncodingSpec {
   condition: Condition;
   value: string|number;
   stack: boolean;
+  scale: Scale;
 }
 
 export class ColorEncodingSpec extends EncodingSpec {
@@ -46,8 +47,9 @@ export class ColorEncodingSpec extends EncodingSpec {
 }
 
 export class Scale {
-  type: "linear";
+  type: "linear"|"log";
   domain: number[];
+  zero: boolean;
 }
 
 export class Axis {
@@ -56,6 +58,7 @@ export class Axis {
   format: string;
   sort: string|string[];
   labelAngle: number;
+  tickCount: string;
 }
 
 export class DataObject {
