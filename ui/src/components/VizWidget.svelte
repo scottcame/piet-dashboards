@@ -18,6 +18,7 @@
   const RESIZE_RENDER_WAIT = 250;
   let vegaLiteSpec: VegaLiteSpec;
   let container: HTMLElement;
+  let rendering: boolean;
 
   let allowVizExport: boolean = repository.config.allowVizExport;
 
@@ -41,10 +42,12 @@
   });
 
   export function renderViz(): void {
+    rendering = true;
     const height = container.clientHeight * .65; // accounts for the card header
     const width = container.clientWidth;
     viz.render(repository, height, width).then((spec: VegaLiteSpec): void => {
       vegaLiteSpec = spec;
+      rendering = false;
     });
   }
 
@@ -73,6 +76,6 @@
   </div>
   <div class="bg-gray-200 text-pf-blue italic text-xxs mx-px my-px pl-1">{viz.headerText}</div>
   <div class="overflow-x-hidden">
-    <VegaViz vegaLiteSpec={vegaLiteSpec} exportOption={allowVizExport}/>
+    <VegaViz vegaLiteSpec={vegaLiteSpec} exportOption={allowVizExport} rendering={rendering}/>
   </div>
 </div>

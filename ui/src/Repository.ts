@@ -124,6 +124,13 @@ abstract class AbstractRepository implements Repository {
 
 export class LocalRepository extends AbstractRepository {
 
+  private simulatedDelay: number;
+
+  constructor(simulatedDelay=0) {
+    super();
+    this.simulatedDelay = simulatedDelay;
+  }
+
   protected fetchConfig(): Promise<Config> {
     return Promise.resolve(Config.fromJson(TestData.TEST_CONFIG));
   }
@@ -132,35 +139,39 @@ export class LocalRepository extends AbstractRepository {
 
     mdx = this.replaceDimensionFilterPlaceholders(mdx);
 
-    let ret = Promise.resolve(null);
+    let data: any = null;
 
     if (mdx === TestData.TEST_QUERY_1D) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_1D);
+      data = TestData.TEST_RESULTS_1D;
     } else if (mdx === TestData.TEST_QUERY_1D_EXCLUDES) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_1D_EXCLUDES);
+      data = TestData.TEST_RESULTS_1D_EXCLUDES;
     } else if (mdx === TestData.TEST_QUERY_LINE_SIMPLE) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_SIMPLE);
+      data = TestData.TEST_RESULTS_LINE_SIMPLE;
     } else if (mdx === TestData.TEST_QUERY_LINE_2_MEASURES) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_2_MEASURES);
+      data = TestData.TEST_RESULTS_LINE_2_MEASURES;
     } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR);
+      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR;
     } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH);
+      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH;
     } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY);
+      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY;
     } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_DATE) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_DATE);
+      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_DATE;
     } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_RANDOM1) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_TEMPORAL_RANDOM1);
+      data = TestData.TEST_RESULTS_LINE_TEMPORAL_RANDOM1;
     } else if (mdx === TestData.TEST_QUERY_LINE_YZ) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_LINE_YZ);
+      data = TestData.TEST_RESULTS_LINE_YZ;
     } else if (mdx === TestData.TEST_QUERY_DIMENSION_FILTER) {
-      ret = Promise.resolve(TestData.TEST_RESULTS_DIMENSION_FILTER);
+      data = TestData.TEST_RESULTS_DIMENSION_FILTER;
     } else {
-      return Promise.resolve(TestData.getFilteredData(mdx));
+      data = TestData.getFilteredData(mdx);
     }
 
-    return ret;
+    return new Promise((resolve: (value: { values: any[] }) => void) => {
+      setTimeout((_handler: TimerHandler): void => {
+        resolve(data);
+      }, this.simulatedDelay);
+    });
 
   }
 
