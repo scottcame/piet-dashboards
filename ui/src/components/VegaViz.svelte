@@ -20,13 +20,19 @@
   } : false;
 
   $: if (vegaLiteSpec && vegaLiteSpec.hasData && container) {
-    vegaEmbed(container, vegaLiteSpec, {
+    vegaEmbed(container, vegaLiteSpec as any, {
       actions: actions,
       renderer: "canvas"
     }).then((_embedResult: Result): void => {
-      const canvasElement = container.querySelector(".vega-embed > canvas") as HTMLElement;
-      canvasElement.style.margin = "auto";
-      // todo: still need to figure out how to center vertically
+      let canvasElement = container.querySelector(".vega-embed > canvas") as HTMLElement;
+      if (!canvasElement) {
+        // we'll get in here if the embed export button is shown
+        canvasElement = container.querySelector(".chart-wrapper > canvas") as HTMLElement;
+      }
+      if (canvasElement) {
+        canvasElement.style.margin = "auto";
+        // todo: still need to figure out how to center vertically
+      }
     });
     showNoDataLabel = false;
   } else {

@@ -33,6 +33,10 @@
   height: calc(100% - 88px);
 }
 
+.dashboard-grid-height {
+  height: calc(100% - 50px);
+}
+
 .h-80 {
   height: 21rem;
 }

@@ -17,6 +17,7 @@ export abstract class Visualization {
   readonly measureFormats: string[];
   readonly query: string;
   readonly debug: boolean;
+  readonly embedExport: boolean;
 
   constructor(id: string, json: {
     id: string,
@@ -30,8 +31,9 @@ export abstract class Visualization {
     measureLabels: string[],
     measureFormats: string[],
     debug: boolean
-  }) {
+  }, embedExport: boolean) {
     this.id = id;
+    this.embedExport = embedExport;
     this.headerText = json.headerText;
     this.panelTitle = json.panelTitle;
     this.connection = json.connection;
@@ -47,16 +49,16 @@ export abstract class Visualization {
     return /#/.test(this.query);
   }
 
-  static fromJson(id: string, json: any): Visualization {
+  static fromJson(id: string, json: any, embedExport: boolean): Visualization {
 
     let ret: Visualization = null;
     
     if (json.vizType === "bar") {
-      ret = new BarChartVisualization(id, json);
+      ret = new BarChartVisualization(id, json, embedExport);
     } else if (json.vizType === "pie") {
-      ret = new PieChartVisualization(id, json);
+      ret = new PieChartVisualization(id, json, embedExport);
     } else if (json.vizType === "line") {
-      ret = new LineChartVisualization(id, json);
+      ret = new LineChartVisualization(id, json, embedExport);
     }
 
     return ret;
@@ -114,8 +116,8 @@ export class BarChartVisualization extends Visualization {
     measureFormats: string[],
     xDimension: string,
     debug: boolean
-  }) {
-    super(id, json);
+  }, embedExport: boolean) {
+    super(id, json, embedExport);
     this.xDimension = json.xDimension;
   }
 
@@ -205,8 +207,8 @@ export class PieChartVisualization extends Visualization {
     measureFormats: string[],
     xDimension: string,
     debug: boolean
-  }) {
-    super(id, json);
+  }, embedExport: boolean) {
+    super(id, json, embedExport);
     this.xDimension = json.xDimension;
   }
 
@@ -305,8 +307,8 @@ export class LineChartVisualization extends Visualization {
     tickCount: string,
     zeroMeasureAxisOrigin: boolean,
     debug: boolean
-  }) {
-    super(id, json);
+  }, embedExport: boolean) {
+    super(id, json, embedExport);
     this.xDimension = typeof json.xDimension === "object" ? TemporalAxis.fromJson(json.xDimension) : json.xDimension;
     this.showPoints = json.showPoints || false;
     this.dateFormat = json.dateFormat;
@@ -470,8 +472,10 @@ export class LineChartVisualization extends Visualization {
 
     }
 
+    const exportSymbolPenalty = this.embedExport ? 30 : 0;
+
     if (spec) {
-      spec.width = containerWidth * (widthAdjustment-legendPenalty);
+      spec.width = containerWidth * (widthAdjustment-legendPenalty) - exportSymbolPenalty;
       spec.height = containerHeight;
     }
 

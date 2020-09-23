@@ -26,7 +26,7 @@ import { Visualization } from "./Visualization";
     ret._mondrianRestURL = json.mondrianRestURL;
 
     ret._groups = json.groups.map((groupJson: any): Group => {
-      return Group.fromJson(groupJson);
+      return Group.fromJson(groupJson, json.allowVizExport);
     });
 
     if (json.filterDimensions) {
@@ -118,10 +118,10 @@ export class Group {
     this.header = header;
   }
 
-  static fromJson(json: any): Group {
+  static fromJson(json: any, embedExport: boolean): Group {
     const ret = new Group(json.header);
     Object.keys(json.visualizations).forEach((key: string): void => {
-      ret._vizMap.set(key, Visualization.fromJson(key, json.visualizations[key]));
+      ret._vizMap.set(key, Visualization.fromJson(key, json.visualizations[key], embedExport));
     });
     return ret;
   }

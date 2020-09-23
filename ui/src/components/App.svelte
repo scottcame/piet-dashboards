@@ -282,8 +282,10 @@
           <div class="ml-2 flex items-center">{dimensionFilterText}</div>
         </div>
       {/if}
-      <div class=" w-full overflow-y-auto" id="viz-container">
-        <!-- container for dashboard visualizations to go (added dynamically at repository init and when a widget is dropped in the current last row) -->
+      <div class="w-full overflow-y-auto dashboard-grid-height">
+        <div class="w-full" id="viz-container">
+          <!-- container for dashboard visualizations to go (added dynamically at repository init and when a widget is dropped in the current last row) -->
+        </div>
       </div>
     </div>
   </div>
