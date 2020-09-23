@@ -3,8 +3,9 @@
     "short": "Piet Dashboard",
     "long": "Demo Piet Dashboard"
   },
-  "mondrianRestURL": "/mondrian-rest",
+  "mondrianRestUrl": "/mondrian-rest",
   "appLogoImageUrl": "img/piet-logo.jpg",
+  "aboutContentUrl": "about-content.html",
   "allowVizExport": false,
   "filterDimensions": [
     {

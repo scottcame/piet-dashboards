@@ -27,6 +27,14 @@
   max-height: 25vh;
 }
 
+.h-screen-50 {
+  height: 50vh;
+}
+
+.h-max-screen-50 {
+  max-height: 50vh;
+}
+
 /* custom style to set the height of the html body. 88px is the approximate height of the nav header. */
 
 .app-height {

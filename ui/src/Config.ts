@@ -13,6 +13,7 @@ import { Visualization } from "./Visualization";
   private _allowVizExport: boolean;
   private _filterDimensions: FilterDimension[] = [];
   private _mondrianRestURL: string;
+  private _aboutContentURL: string;
 
   static fromJson(json: any): Config {
 
@@ -23,7 +24,8 @@ import { Visualization } from "./Visualization";
     ret._appLogoImageUrl = json.appLogoImageUrl ? json.appLogoImageUrl : "img/app-logo.png";
     ret._disclaimerFooterText = json.disclaimerFooterText ? json.disclaimerFooterText : null;
     ret._allowVizExport = json.allowVizExport;
-    ret._mondrianRestURL = json.mondrianRestURL;
+    ret._mondrianRestURL = json.mondrianRestUrl;
+    ret._aboutContentURL = json.aboutContentUrl || "about-content.html";
 
     ret._groups = json.groups.map((groupJson: any): Group => {
       return Group.fromJson(groupJson, json.allowVizExport);
@@ -69,6 +71,10 @@ import { Visualization } from "./Visualization";
 
   get mondrianRestURL(): string {
     return this._mondrianRestURL;
+  }
+
+  get aboutContentURL(): string {
+    return this._aboutContentURL;
   }
 
   findVisualization(id: string): Visualization {

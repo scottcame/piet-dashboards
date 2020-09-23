@@ -12,6 +12,7 @@
   import VizMenu from "./VizMenu.svelte";
   import VizWidget from "./VizWidget.svelte";
   import DimensionFilterModal from "./DimensionFilterModal.svelte";
+import AboutModal from "./AboutModal.svelte";
 
   export let repository: Repository;
 
@@ -30,6 +31,9 @@
   let dimensionFilterModel: Map<string, boolean>;
   let dimensionFilterText: string;
   let singleFilterDimension: string;
+
+  let aboutModalVisible: boolean = false;
+  let aboutContentUrl: string;
 
   document.title = DEFAULT_TITLE;
 
@@ -99,6 +103,8 @@
     }
 
     footerText = config.disclaimerFooterText;
+    aboutContentUrl = config.aboutContentURL;
+    console.log(aboutContentUrl);
 
     // in this first iteration, we only support a single dimension for filtering
     singleFilterDimension = (config.filterDimensions && config.filterDimensions.length) ? config.filterDimensions[0].dimension : null;
@@ -250,14 +256,19 @@
     dimensionFilterModalVisible = false;
   }
 
+  function showAboutModal(): void {
+    aboutModalVisible = true;
+  }
+
 </script>
 
-<nav class="flex items-center flex-wrap bg-gray-100 p-4 pt-2 pb-2 select-none">
+<nav class="flex items-center justify-between flex-wrap bg-gray-100 p-4 pt-2 pb-2 select-none">
   {#if initialized}
     <img src="{appLogoImageUrl}" class="h-16" alt="Logo"/>
     <ul class="ml-4">
         <li><span class="uppercase text-base">{headerTitle}</span></li>
     </ul>
+    <div class="ml-auto hover:underline cursor-pointer" on:click="{ e => showAboutModal() }">About this dashboard</div>
   {/if}
 </nav>
 
@@ -299,6 +310,8 @@
   dimensionLabel="State"
   model={dimensionFilterModel}
   on:close="{e => hideDimensionFilterModal(e)}"/>
+
+<AboutModal visible={aboutModalVisible} contentUrl={aboutContentUrl}/>
 
 <style>
   #wait-spinner {
