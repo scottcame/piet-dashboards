@@ -130,6 +130,8 @@ export class BarChartVisualization extends Visualization {
     const longestLabelSize = this.calculateLongestLabelSize(data);
     const penalty = (BarChartVisualization.VEGA_LITE_MAX_LABEL_LENGTH-longestLabelSize)*1.35;
 
+    const exportSymbolPenalty = this.embedExport ? 30 : 0;
+
     if (this.measures.length > 1) {
       console.warn("We don't support multiple bar chart measures yet.");
     } else {
@@ -161,7 +163,7 @@ export class BarChartVisualization extends Visualization {
       spec.data = transformedData;
       spec.mark = "bar";
       spec.height = containerHeight + verticalAdjustment;
-      spec.width = containerWidth - longestLabelSize * Visualization.CHARACTER_WIDTH_IN_PIXELS - penalty - 20;
+      spec.width = containerWidth - longestLabelSize * Visualization.CHARACTER_WIDTH_IN_PIXELS - penalty - 20 - exportSymbolPenalty;
       spec.encoding = new Encoding();
       spec.encoding.x = new EncodingSpec();
       spec.encoding.x.field = measure;
