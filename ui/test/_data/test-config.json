@@ -6,6 +6,7 @@
   "mondrianRestUrl": "/mondrian-rest",
   "appLogoImageUrl": "img/piet-logo.jpg",
   "aboutContentUrl": "about-content.html",
+  "dataCaveatText": "Note: data depicted in this dashboard are blah blah",
   "allowVizExport": false,
   "filterDimensions": [
     {

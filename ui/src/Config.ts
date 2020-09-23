@@ -14,6 +14,7 @@ import { Visualization } from "./Visualization";
   private _filterDimensions: FilterDimension[] = [];
   private _mondrianRestURL: string;
   private _aboutContentURL: string;
+  private _dataCaveatText: string;
 
   static fromJson(json: any): Config {
 
@@ -26,6 +27,7 @@ import { Visualization } from "./Visualization";
     ret._allowVizExport = json.allowVizExport;
     ret._mondrianRestURL = json.mondrianRestUrl;
     ret._aboutContentURL = json.aboutContentUrl || "about-content.html";
+    ret._dataCaveatText = json.dataCaveatText;
 
     ret._groups = json.groups.map((groupJson: any): Group => {
       return Group.fromJson(groupJson, json.allowVizExport);
@@ -75,6 +77,10 @@ import { Visualization } from "./Visualization";
 
   get aboutContentURL(): string {
     return this._aboutContentURL;
+  }
+
+  get dataCaveatText(): string {
+    return this._dataCaveatText;
   }
 
   findVisualization(id: string): Visualization {

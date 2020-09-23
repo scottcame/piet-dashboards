@@ -35,6 +35,8 @@ import AboutModal from "./AboutModal.svelte";
   let aboutModalVisible: boolean = false;
   let aboutContentUrl: string;
 
+  let dataCaveatText: string;
+
   document.title = DEFAULT_TITLE;
 
   const dragulaOptions: DragulaOptions = {
@@ -104,7 +106,7 @@ import AboutModal from "./AboutModal.svelte";
 
     footerText = config.disclaimerFooterText;
     aboutContentUrl = config.aboutContentURL;
-    console.log(aboutContentUrl);
+    dataCaveatText = config.dataCaveatText;
 
     // in this first iteration, we only support a single dimension for filtering
     singleFilterDimension = (config.filterDimensions && config.filterDimensions.length) ? config.filterDimensions[0].dimension : null;
@@ -262,13 +264,18 @@ import AboutModal from "./AboutModal.svelte";
 
 </script>
 
-<nav class="flex items-center justify-between flex-wrap bg-gray-100 p-4 pt-2 pb-2 select-none">
+<nav class="bg-gray-100 p-4 pt-2 pb-2 select-none">
   {#if initialized}
-    <img src="{appLogoImageUrl}" class="h-16" alt="Logo"/>
-    <ul class="ml-4">
-        <li><span class="uppercase text-base">{headerTitle}</span></li>
-    </ul>
-    <div class="ml-auto hover:underline cursor-pointer" on:click="{ e => showAboutModal() }">About this dashboard</div>
+    <div class="flex items-center justify-between flex-wrap">
+      <img src="{appLogoImageUrl}" class="h-16" alt="Logo"/>
+      <ul class="ml-4">
+          <li><span class="uppercase text-xl">{headerTitle}</span></li>
+          {#if dataCaveatText}
+            <li class="mt-3 italic"><span>{dataCaveatText}</span></li>
+          {/if}
+      </ul>
+      <div class="ml-auto hover:underline cursor-pointer" on:click="{ e => showAboutModal() }">About this dashboard</div>
+    </div>
   {/if}
 </nav>
 
