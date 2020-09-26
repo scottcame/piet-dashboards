@@ -27,7 +27,8 @@
           "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Stores].[Store State]"
+          "xDimension": "[Store].[Stores].[Store State]",
+          "xAxisPercentages": true
         },
         "viz-1-2": {
           "vizType": "bar",
@@ -36,7 +37,8 @@
           "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {[Store].[Stores].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Stores].[Store State]"
+          "xDimension": "[Store].[Stores].[Store State]",
+          "xAxisPercentages": true
         },
         "viz-1-3": {
           "vizType": "pie",
@@ -65,7 +67,18 @@
           "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Stores].[Store State]#} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Stores].[Store State]"
+          "xDimension": "[Store].[Stores].[Store State]",
+          "xAxisPercentages": true
+        },
+        "viz-1-6": {
+          "vizType": "bar",
+          "panelTitle": "Bar: Demonstrating x axis counts",
+          "headerText": "Demonstrating x axis counts",
+          "connection": "foodmart",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
+          "measures": ["Units Ordered"],
+          "xDimension": "[Store].[Stores].[Store State]",
+          "xAxisPercentages": false
         }
       }
     },

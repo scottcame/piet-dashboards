@@ -102,6 +102,7 @@ export abstract class Visualization {
 export class BarChartVisualization extends Visualization {
 
   readonly xDimension: string;
+  readonly xAxisPercentages: boolean;
 
   constructor(id: string, json: {
     id: string,
@@ -115,10 +116,12 @@ export class BarChartVisualization extends Visualization {
     measureLabels: string[],
     measureFormats: string[],
     xDimension: string,
-    debug: boolean
+    debug: boolean,
+    xAxisPercentages: boolean
   }, embedExport: boolean) {
     super(id, json, embedExport);
     this.xDimension = json.xDimension;
+    this.xAxisPercentages = json.xAxisPercentages || false;
   }
 
   protected makeChart(data: DataObject, containerHeight: number, containerWidth: number): VegaLiteSpec {
@@ -156,7 +159,9 @@ export class BarChartVisualization extends Visualization {
   
       transformedData.values.forEach((o: any): void => {
         o.y = o[xDimension];
-        o[measure] = denom ? o[measure] / denom : 0;
+        if (this.xAxisPercentages) {
+          o[measure] = denom ? o[measure] / denom : 0;
+        }
       });
   
       const spec = new VegaLiteSpec();
@@ -171,7 +176,7 @@ export class BarChartVisualization extends Visualization {
       spec.encoding.x.axis = new Axis();
       spec.encoding.x.axis.title = measureLabel;
       spec.encoding.x.axis.grid = false;
-      spec.encoding.x.axis.format = ".0%";
+      spec.encoding.x.axis.format = (this.xAxisPercentages ? ".0%" : null);
       spec.encoding.y = new EncodingSpec();
       spec.encoding.y.field = "y";
       spec.encoding.y.type = "nominal";
