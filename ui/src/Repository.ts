@@ -236,7 +236,7 @@ export class RemoteRepository extends AbstractRepository {
   }
 
   async saveCurrentState(currentState: UserInterfaceState): Promise<void> {
-    return super.saveCurrentState(currentState)
+    return super.saveCurrentState(currentState);
   }
 
   async getSavedState(): Promise<UserInterfaceState> {
