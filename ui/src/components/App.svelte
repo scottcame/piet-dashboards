@@ -286,12 +286,12 @@ import AboutModal from "./AboutModal.svelte";
     </div>
     {#if initialized}
       <div class="flex flex-col w-1/5 h-full p-2">
-        <VizMenu groups={repository.config.groups}/>
+        <VizMenu groups={repository.config.groups} helpVisible={repository.firstVisit}/>
       </div>
     {/if}
     <div class="h-full w-4/5">
       {#if initialized && repository.dimensionFilters.size}
-        <div class="flex flex-inline h-10 w-full m-1 mr-2 p-1 border rounded border-blue-800">
+        <div class="flex flex-inline h-10 w-full m-1 mr-2 p-1 border rounded border-blue-800 select-none">
           <button
             class="bg-transparent hover:bg-blue-800 text-blue-800 font-semibold hover:text-white py-px px-4 border border-blue-800 hover:border-transparent rounded outline-none focus:outline-none"
             on:click="{e => showDimensionFilterModal()}">

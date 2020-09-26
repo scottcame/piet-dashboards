@@ -24,6 +24,7 @@ export interface Repository {
   readonly label: string;
   readonly config: Config;
   readonly uiState: UserInterfaceState;
+  readonly firstVisit: boolean;
   dimensionFilters: Map<string, Map<string, boolean>>;
   init(): Promise<Config>;
   executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
@@ -36,6 +37,7 @@ abstract class AbstractRepository implements Repository {
   private uiStateDb: UiStateDatabase = new UiStateDatabase();
   protected _config: Config;
   protected _uiState: UserInterfaceState;
+  private _firstVisit = true;
   dimensionFilters = new Map<string, Map<string, boolean>>();
 
   get config(): Config {
@@ -53,10 +55,12 @@ abstract class AbstractRepository implements Repository {
         ret = this.uiStateDb.uiStates.toArray().then(async uiStates => {
           if (uiStates[0]) {
             this._uiState = UserInterfaceState.fromJson(uiStates[0]);
+            this._firstVisit = false;
           }
         });
       } else {
         this._uiState = new UserInterfaceState();
+        ret = this.saveCurrentState(this._uiState);
       }
       return ret.then(async () => {
         return this.fetchConfig().then(async (fetchedConfig: Config) => {
@@ -77,6 +81,10 @@ abstract class AbstractRepository implements Repository {
   async getSavedState(): Promise<UserInterfaceState> {
     // todo: if there is ever a way to get the saved state other than at init(), we'll want to implement the query here
     return Promise.resolve(this._uiState);
+  }
+
+  get firstVisit(): boolean {
+    return this._firstVisit;
   }
 
   abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
