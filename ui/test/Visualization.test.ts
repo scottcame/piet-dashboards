@@ -1,6 +1,6 @@
 import { LocalRepository, Repository } from '../src/Repository';
 import type { Config } from '../src/Config';
-import { RadialMarkSpec } from '../src/VegaLiteSpec';
+import { RadialMarkSpec, TextMarkSpec } from '../src/VegaLiteSpec';
 import type { RenderedVisualization } from '../src/Visualization';
 
 const repository: Repository = new LocalRepository();
@@ -19,6 +19,30 @@ test('bar viz', async () => {
       expect(spec.encoding.y.type).toBe("nominal");
       expect(spec.data.values).toHaveLength(3);
       expect(renderedVisualization.visualization.totalN).toBe(227238);
+    });
+  });
+});
+
+test('bar viz with counts', async () => {
+  return repository.init().then(async (config: Config) => {
+    const viz = config.findVisualization("viz-1-6");
+    await viz.render(repository, 200, 200).then((renderedVisualization: RenderedVisualization): void => {
+      const spec = renderedVisualization.spec;
+      expect(spec.mark).toBeUndefined();
+      expect(spec.encoding).toBeTruthy();
+      expect(spec.encoding.x.field).toBe("Units Ordered");
+      expect(spec.encoding.x.type).toBe("quantitative");
+      expect(spec.encoding.x.scale.padding).toBe(48);
+      expect(spec.encoding.y.field).toBe("y");
+      expect(spec.encoding.y.type).toBe("nominal");
+      expect(spec.data.values).toHaveLength(3);
+      expect(renderedVisualization.visualization.totalN).toBe(227238);
+      expect(spec.layer[0].mark).toBe("bar");
+      const textMarkSpec = spec.layer[1].mark as TextMarkSpec;
+      expect(textMarkSpec.type).toBe("text");
+      expect(textMarkSpec.align).toBe("left");
+      expect(textMarkSpec.baseline).toBe("middle");
+      expect(spec.layer[1].encoding.text.field).toBe("Units Ordered");
     });
   });
 });

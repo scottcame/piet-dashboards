@@ -1,8 +1,9 @@
 import * as testConfig from './test-config.json';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export class TestData {
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static TEST_CONFIG: any = testConfig;
 
   /* mondrian rest message for the 1D query

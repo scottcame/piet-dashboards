@@ -5,7 +5,7 @@ import { UserInterfaceState, WidgetState } from "../src/UserInterfaceState";
 const repository = new LocalRepository();
 
 test('init', async () => {
-  return repository.init().then(async (config: Config) => {
+  return repository.init().then(async (_config: Config) => {
     expect(repository.uiState).toBeTruthy();
     expect(repository.uiState.widgetStateGrid).toHaveLength(0);
   });

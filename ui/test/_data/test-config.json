@@ -28,7 +28,8 @@
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "xDimension": "[Store].[Stores].[Store State]",
-          "xAxisPercentages": true
+          "xAxisPercentages": true,
+          "magnitudeLabels": false
         },
         "viz-1-2": {
           "vizType": "bar",
@@ -78,7 +79,8 @@
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "xDimension": "[Store].[Stores].[Store State]",
-          "xAxisPercentages": false
+          "xAxisPercentages": false,
+          "magnitudeLabels": true
         }
       }
     },

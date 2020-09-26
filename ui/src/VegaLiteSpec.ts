@@ -50,6 +50,7 @@ export class Scale {
   type: "linear"|"log";
   domain: number[];
   zero: boolean;
+  padding: number
 }
 
 export class Axis {
@@ -71,7 +72,7 @@ export class SizeByStep {
 }
 
 export class Layer {
-  mark: Mark|RadialMarkSpec;
+  mark: Mark|RadialMarkSpec|TextMarkSpec;
   encoding: Encoding;
 }
 
@@ -94,6 +95,13 @@ export class RadialMarkSpec {
 export class LineMarkSpec {
   type = "line";
   point: boolean;
+}
+
+export class TextMarkSpec {
+  type = "text";
+  align: "left"|"right";
+  baseline: "top"|"middle"|"bottom";
+  dx: number;
 }
 
 export class TextEncodingSpec extends EncodingSpec {

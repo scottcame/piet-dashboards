@@ -101,7 +101,7 @@ abstract class AbstractRepository implements Repository {
     const replacementMap = new Map<string, string>();
     [...this.dimensionFilters.keys()].forEach((dimension: string): void => {
       let allSelected = true;
-      let selectedLevels: string[] = [];
+      const selectedLevels: string[] = [];
       const selectionMap = this.dimensionFilters.get(dimension);
       [...selectionMap.keys()].forEach((level: string): void => {
         const value = selectionMap.get(level);

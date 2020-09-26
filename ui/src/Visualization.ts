@@ -1,5 +1,7 @@
 import type { Repository } from "./Repository";
-import { VegaLiteSpec, Encoding, Axis, EncodingSpec, Layer, ColorEncodingSpec, RadialMarkSpec, ViewSpec, TextEncodingSpec, LineMarkSpec, Scale } from "./VegaLiteSpec";
+import { VegaLiteSpec, Encoding, Axis, EncodingSpec, Layer, ColorEncodingSpec, RadialMarkSpec, ViewSpec, TextEncodingSpec, LineMarkSpec, Scale, TextMarkSpec } from "./VegaLiteSpec";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export abstract class Visualization {
 
@@ -51,6 +53,7 @@ export abstract class Visualization {
     return /#/.test(this.query);
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static fromJson(id: string, json: any, embedExport: boolean): Visualization {
 
     let ret: Visualization = null;
@@ -118,6 +121,7 @@ export class BarChartVisualization extends Visualization {
 
   readonly xDimension: string;
   readonly xAxisPercentages: boolean;
+  readonly magnitudeLabels: boolean;
 
   constructor(id: string, json: {
     id: string,
@@ -132,11 +136,13 @@ export class BarChartVisualization extends Visualization {
     measureFormats: string[],
     xDimension: string,
     debug: boolean,
-    xAxisPercentages: boolean
+    xAxisPercentages: boolean,
+    magnitudeLabels: boolean
   }, embedExport: boolean) {
     super(id, json, embedExport);
     this.xDimension = json.xDimension;
     this.xAxisPercentages = json.xAxisPercentages || false;
+    this.magnitudeLabels = json.magnitudeLabels !== undefined && json.magnitudeLabels;
   }
 
   protected makeChart(data: DataObject, containerHeight: number, containerWidth: number): VegaLiteSpec {
@@ -151,6 +157,7 @@ export class BarChartVisualization extends Visualization {
     const exportSymbolPenalty = this.embedExport ? 30 : 0;
 
     if (this.measures.length > 1) {
+      // eslint-disable-next-line no-console
       console.warn("We don't support multiple bar chart measures yet.");
     } else {
 
@@ -178,10 +185,21 @@ export class BarChartVisualization extends Visualization {
           o[measure] = denom ? o[measure] / denom : 0;
         }
       });
-  
+
+      let xScale: Scale = undefined;
+
+      if (this.magnitudeLabels) {
+        const labelRadix = transformedData.values.reduce((accum: number, o: any): number => {
+          const radix = Math.ceil(Math.log10(o[measure]));
+          return radix > accum ? radix : accum;
+        }, 1);
+        xScale = new Scale();
+        xScale.padding = labelRadix * 8;
+      }
+
       const spec = new VegaLiteSpec();
       spec.data = transformedData;
-      spec.mark = "bar";
+      spec.mark = this.magnitudeLabels ? undefined : "bar";
       spec.height = containerHeight + verticalAdjustment;
       spec.width = containerWidth - longestLabelSize * Visualization.CHARACTER_WIDTH_IN_PIXELS - penalty - 20 - exportSymbolPenalty;
       spec.encoding = new Encoding();
@@ -190,13 +208,29 @@ export class BarChartVisualization extends Visualization {
       spec.encoding.x.type = "quantitative";
       spec.encoding.x.axis = new Axis();
       spec.encoding.x.axis.title = measureLabel;
-      spec.encoding.x.axis.grid = false;
-      spec.encoding.x.axis.format = (this.xAxisPercentages ? ".0%" : null);
+      spec.encoding.x.axis.format = (this.xAxisPercentages ? ".0%" : undefined);
+      spec.encoding.x.scale = xScale;
       spec.encoding.y = new EncodingSpec();
       spec.encoding.y.field = "y";
       spec.encoding.y.type = "nominal";
       spec.encoding.y.axis = new Axis();
       spec.encoding.y.axis.title = null;
+
+      if (this.magnitudeLabels) {
+        spec.layer = [];
+        spec.layer[0] = new Layer();
+        spec.layer[0].mark = "bar";
+        spec.layer[1] = new Layer();
+        spec.layer[1].mark = new TextMarkSpec();
+        spec.layer[1].mark.align = "left";
+        spec.layer[1].mark.baseline = "middle";
+        spec.layer[1].mark.dx = 5;
+        spec.layer[1].encoding = new Encoding();
+        spec.layer[1].encoding.text = new TextEncodingSpec();
+        spec.layer[1].encoding.text.field = measure;
+        spec.layer[1].encoding.text.type = "quantitative";
+        spec.layer[1].encoding.text.format = (this.xAxisPercentages ? ".0%" : ",");
+      }
 
       ret = spec;
 
@@ -240,9 +274,8 @@ export class PieChartVisualization extends Visualization {
 
     let ret: VegaLiteSpec = null;
 
-    const verticalAdjustment = 27;
-
     if (this.measures.length > 1) {
+      // eslint-disable-next-line no-console
       console.warn("We don't support multiple pie chart measures yet.");
     } else {
 
@@ -349,19 +382,19 @@ export class LineChartVisualization extends Visualization {
 
     let spec: VegaLiteSpec = null;
 
-    let widthAdjustment = .9;
+    const widthAdjustment = .9;
     let xDimension: string;
 
     const dataValues = this.cloneArray(data.values);
 
-    let xValueExtractor = (row: any): any => {
+    const xValueExtractor = (row: any): any => {
       return row[xDimension];
     };
 
     let xAxisType: "quantitative"|"temporal" = "quantitative";
     let xAxisTitle = undefined;
-    let xAxisFormat = this.dateFormat || undefined;
-    let xAxisTickCount = this.tickCount || undefined;
+    const xAxisFormat = this.dateFormat || undefined;
+    const xAxisTickCount = this.tickCount || undefined;
 
     if (this.xDimension instanceof TemporalAxis) {
 
@@ -528,13 +561,23 @@ export class TemporalAxis {
   readonly monthDimension: string;
   readonly dayDimension: string;
   readonly dateDimension: string;
-  private constructor(json: any) {
+  private constructor(json: {
+    yearDimension: string,
+    monthDimension: string,
+    dayDimension: string,
+    dateDimension: string
+  }) {
     this.yearDimension = json.yearDimension;
     this.monthDimension = json.monthDimension;
     this.dayDimension = json.dayDimension;
     this.dateDimension = json.dateDimension;
   }
-  static fromJson(json: any): TemporalAxis {
+  static fromJson(json: {
+    yearDimension: string,
+    monthDimension: string,
+    dayDimension: string,
+    dateDimension: string
+  }): TemporalAxis {
     return new TemporalAxis(json);
   }
 }
