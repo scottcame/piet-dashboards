@@ -5,7 +5,7 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import type { VegaLiteSpec } from '../VegaLiteSpec';
   import type { Repository } from '../Repository';
-  import type { Visualization } from '../Visualization';
+  import type { RenderedVisualization, Visualization } from '../Visualization';
 
   const dispatch: (event: string, detail: any) => void = createEventDispatcher();
 
@@ -19,6 +19,7 @@
   let vegaLiteSpec: VegaLiteSpec;
   let container: HTMLElement;
   let rendering: boolean;
+  let N: number = 12345;
 
   let allowVizExport: boolean = repository.config.allowVizExport;
 
@@ -45,8 +46,9 @@
     rendering = true;
     const height = container.clientHeight * .65; // accounts for the card header
     const width = container.clientWidth;
-    viz.render(repository, height, width).then((spec: VegaLiteSpec): void => {
-      vegaLiteSpec = spec;
+    viz.render(repository, height, width).then((renderedVisualization: RenderedVisualization): void => {
+      vegaLiteSpec = renderedVisualization.spec;
+      N = renderedVisualization.visualization.totalN;
       rendering = false;
     });
   }
@@ -74,7 +76,10 @@
       </div>
     </div>
   </div>
-  <div class="bg-gray-200 text-pf-blue italic text-xxs mx-px my-px pl-1">{viz.headerText}</div>
+  <div class="bg-gray-200 text-pf-blue italic text-xs mx-px my-px pl-1 flex justify-between">
+    <div>{viz.headerText}</div>
+    <div class="px-1 {N === undefined || N === null ? 'hidden' : ''}">N={N ? N.toLocaleString() : N}</div>
+  </div>
   <div class="overflow-x-hidden">
     <VegaViz vegaLiteSpec={vegaLiteSpec} exportOption={allowVizExport} rendering={rendering}/>
   </div>

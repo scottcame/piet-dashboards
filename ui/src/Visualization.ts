@@ -18,6 +18,8 @@ export abstract class Visualization {
   readonly query: string;
   readonly debug: boolean;
   readonly embedExport: boolean;
+  
+  protected _totalN: number = null;
 
   constructor(id: string, json: {
     id: string,
@@ -65,9 +67,9 @@ export abstract class Visualization {
 
   }
 
-  render(repository: Repository, containerHeight: number, containerWidth: number): Promise<VegaLiteSpec> {
+  render(repository: Repository, containerHeight: number, containerWidth: number): Promise<RenderedVisualization> {
 
-    let ret = Promise.resolve(null);
+    let ret = Promise.resolve(new RenderedVisualization(this, null));
 
     const query = this.query;
 
@@ -83,7 +85,7 @@ export abstract class Visualization {
             console.log(spec);
           }
         }
-        return Promise.resolve(spec);
+        return Promise.resolve(new RenderedVisualization(this, spec));
       });
     }
 
@@ -97,6 +99,19 @@ export abstract class Visualization {
     return JSON.parse(JSON.stringify(a));
   }
 
+  get totalN(): number {
+    return this._totalN;
+  }
+
+}
+
+export class RenderedVisualization {
+  readonly visualization: Visualization = null;
+  readonly spec: VegaLiteSpec = null;
+  constructor(visualization: Visualization, spec: VegaLiteSpec) {
+    this.visualization = visualization;
+    this.spec = spec;
+  }
 }
 
 export class BarChartVisualization extends Visualization {
@@ -185,6 +200,8 @@ export class BarChartVisualization extends Visualization {
 
       ret = spec;
 
+      this._totalN = denom;
+
     }
 
     return ret;
@@ -241,8 +258,11 @@ export class PieChartVisualization extends Visualization {
         return v[xDimension] !== undefined;
       });
 
+      this._totalN = 0;
+
       transformedData.values.forEach((o: any): void => {
         o.y = o[xDimension];
+        this._totalN += o[measure];
       });
   
       const spec = new VegaLiteSpec();

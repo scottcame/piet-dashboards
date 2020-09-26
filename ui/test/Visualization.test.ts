@@ -1,13 +1,15 @@
 import { LocalRepository, Repository } from '../src/Repository';
 import type { Config } from '../src/Config';
-import { VegaLiteSpec, RadialMarkSpec } from '../src/VegaLiteSpec';
+import { RadialMarkSpec } from '../src/VegaLiteSpec';
+import type { RenderedVisualization } from '../src/Visualization';
 
 const repository: Repository = new LocalRepository();
 
 test('bar viz', async () => {
   return repository.init().then(async (config: Config) => {
     const viz = config.findVisualization("viz-1-1");
-    await viz.render(repository, 200, 200).then((spec: VegaLiteSpec): void => {
+    await viz.render(repository, 200, 200).then((renderedVisualization: RenderedVisualization): void => {
+      const spec = renderedVisualization.spec;
       expect(spec.mark).toBe("bar");
       expect(spec.encoding).toBeTruthy();
       expect(spec.encoding.x.field).toBe("Units Ordered");
@@ -16,6 +18,7 @@ test('bar viz', async () => {
       expect(spec.encoding.y.field).toBe("y");
       expect(spec.encoding.y.type).toBe("nominal");
       expect(spec.data.values).toHaveLength(3);
+      expect(renderedVisualization.visualization.totalN).toBe(227238);
     });
   });
 });
@@ -23,7 +26,8 @@ test('bar viz', async () => {
 test('bar viz with excludes', async () => {
   return repository.init().then(async (config: Config) => {
     const viz = config.findVisualization("viz-1-2");
-    await viz.render(repository, 200, 200).then((spec: VegaLiteSpec): void => {
+    await viz.render(repository, 200, 200).then((renderedVisualization: RenderedVisualization): void => {
+      const spec = renderedVisualization.spec;
       expect(spec.data.values).toHaveLength(2);
     });
   });
@@ -39,8 +43,10 @@ test('line viz', async () => {
 test('pie viz', async () => {
   return repository.init().then(async (config: Config) => {
     const viz = config.findVisualization("viz-1-3");
-    await viz.render(repository, 200, 200).then((spec: VegaLiteSpec): void => {
+    await viz.render(repository, 200, 200).then((renderedVisualization: RenderedVisualization): void => {
       
+      const spec = renderedVisualization.spec;
+
       expect(spec.mark).toBeUndefined();
       expect(spec.encoding.theta.field).toBe("Units Ordered");
       expect(spec.encoding.theta.stack).toBe(true);
