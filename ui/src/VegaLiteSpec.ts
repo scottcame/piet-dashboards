@@ -25,6 +25,7 @@ export class ViewSpec {
 export class Encoding {
   x: EncodingSpec;
   y: EncodingSpec;
+  tooltip: EncodingSpec;
   color: ColorEncodingSpec;
   text: TextEncodingSpec;
   theta: EncodingSpec;

@@ -475,6 +475,12 @@ export class LineChartVisualization extends Visualization {
         legendPenalty = Math.max(.08, titleLength*.01);
       }
 
+      if (this.showPoints) {
+        spec.encoding.tooltip = new EncodingSpec();
+        spec.encoding.tooltip.field = measure;
+        spec.encoding.tooltip.type = "quantitative";
+      }
+
     } else {
 
       if (this.yDimension) {
@@ -526,6 +532,12 @@ export class LineChartVisualization extends Visualization {
       if (this.zeroMeasureAxisOrigin !== undefined) {
         spec.encoding.y.scale = new Scale();
         spec.encoding.y.scale.zero = this.zeroMeasureAxisOrigin;
+      }
+
+      if (this.showPoints) {
+        spec.encoding.tooltip = new EncodingSpec();
+        spec.encoding.tooltip.field = "y";
+        spec.encoding.tooltip.type = "quantitative";
       }
 
       legendPenalty = .08;
