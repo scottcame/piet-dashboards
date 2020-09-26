@@ -82,7 +82,7 @@ export abstract class Visualization {
           spec = this.makeChart(dataObject, containerHeight, containerWidth);
           if (this.debug) {
             // eslint-disable-next-line no-console
-            console.log(spec);
+            console.log(JSON.stringify(spec, null, 2));
           }
         }
         return Promise.resolve(new RenderedVisualization(this, spec));
@@ -500,10 +500,11 @@ export class LineChartVisualization extends Visualization {
     }
 
     const exportSymbolPenalty = this.embedExport ? 30 : 0;
+    const extraHeight = xAxisTitle === null ? 25 : 8;
 
     if (spec) {
       spec.width = containerWidth * (widthAdjustment-legendPenalty) - exportSymbolPenalty;
-      spec.height = containerHeight;
+      spec.height = containerHeight + extraHeight;
     }
 
     return spec;
