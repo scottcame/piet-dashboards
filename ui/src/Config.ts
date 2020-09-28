@@ -14,7 +14,8 @@ import { Visualization } from "./Visualization";
   private _filterDimensions: FilterDimension[] = [];
   private _mondrianRestURL: string;
   private _aboutContentURL: string;
-  private _dataCaveatText: string;
+  dataCaveatText: string;
+  private _propertyPlaceholders: PropertyPlaceholder[] = [];
 
   static fromJson(json: any): Config {
 
@@ -27,7 +28,7 @@ import { Visualization } from "./Visualization";
     ret._allowVizExport = json.allowVizExport;
     ret._mondrianRestURL = json.mondrianRestUrl;
     ret._aboutContentURL = json.aboutContentUrl || "about-content.html";
-    ret._dataCaveatText = json.dataCaveatText;
+    ret.dataCaveatText = json.dataCaveatText;
 
     ret._groups = json.groups.map((groupJson: any): Group => {
       return Group.fromJson(groupJson, json.allowVizExport);
@@ -36,6 +37,12 @@ import { Visualization } from "./Visualization";
     if (json.filterDimensions) {
       ret._filterDimensions = json.filterDimensions.map((filterDimension: any): FilterDimension => {
         return FilterDimension.fromJson(filterDimension);
+      });
+    }
+
+    if (json.initProperties) {
+      ret._propertyPlaceholders = Object.keys(json.initProperties).map((propertyName: string): PropertyPlaceholder => {
+        return PropertyPlaceholder.fromJson(json.initProperties[propertyName], propertyName);
       });
     }
 
@@ -71,16 +78,16 @@ import { Visualization } from "./Visualization";
     return this._filterDimensions;
   }
 
+  get propertyPlaceholders(): PropertyPlaceholder[] {
+    return this._propertyPlaceholders;
+  }
+
   get mondrianRestURL(): string {
     return this._mondrianRestURL;
   }
 
   get aboutContentURL(): string {
     return this._aboutContentURL;
-  }
-
-  get dataCaveatText(): string {
-    return this._dataCaveatText;
   }
 
   findVisualization(id: string): Visualization {
@@ -118,6 +125,22 @@ export class FilterDimension {
   }
   static fromJson(json: { query: string, dimension: string, connection: string, label: string }): FilterDimension {
     return new FilterDimension(json.query, json.dimension, json.connection, json.label);
+  }
+}
+
+export class PropertyPlaceholder {
+  readonly connection: string;
+  readonly query: string;
+  readonly dimension: string;
+  readonly propertyName: string;
+  private constructor(connection: string, query: string, dimension: string, propertyName: string) {
+    this.connection = connection;
+    this.query = query;
+    this.propertyName = propertyName;
+    this.dimension = dimension;
+  }
+  static fromJson(json: {connection: string, query: string, dimension: string}, propertyName: string): PropertyPlaceholder {
+    return new PropertyPlaceholder(json.connection, json.query, json.dimension, propertyName);
   }
 }
 

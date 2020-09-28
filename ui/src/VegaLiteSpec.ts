@@ -51,7 +51,8 @@ export class Scale {
   type: "linear"|"log";
   domain: number[];
   zero: boolean;
-  padding: number
+  padding: number;
+  domainMin: number;
 }
 
 export class Axis {

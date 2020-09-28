@@ -195,6 +195,7 @@ export class BarChartVisualization extends Visualization {
         }, 1);
         xScale = new Scale();
         xScale.padding = labelRadix * 8;
+        xScale.domainMin = 0; // weird that we need to specify this. perhaps investigate.
       }
 
       const spec = new VegaLiteSpec();

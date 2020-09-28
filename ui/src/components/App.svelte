@@ -34,7 +34,6 @@ import AboutModal from "./AboutModal.svelte";
 
   let aboutModalVisible: boolean = false;
   let aboutContentUrl: string;
-
   let dataCaveatText: string;
 
   document.title = DEFAULT_TITLE;
@@ -266,15 +265,13 @@ import AboutModal from "./AboutModal.svelte";
 
 <nav class="bg-gray-100 p-4 pt-2 pb-2 select-none">
   {#if initialized}
-    <div class="flex items-center justify-between flex-wrap">
+    <div class="flex items-center justify-between flex-row">
       <img src="{appLogoImageUrl}" class="h-16" alt="Logo"/>
-      <ul class="ml-4">
+      <ul class="border-r-2 ml-4 mr-2 pr-10">
           <li><span class="uppercase text-xl">{headerTitle}</span></li>
-          {#if dataCaveatText}
-            <li class="mt-3 italic"><span>{dataCaveatText}</span></li>
-          {/if}
+          <li class="mt-3 italic"><span class="data-caveat-text">{@html dataCaveatText}</span></li>
       </ul>
-      <div class="ml-auto hover:underline cursor-pointer" on:click="{ e => showAboutModal() }">About this dashboard</div>
+      <div class="ml-auto hover:underline cursor-pointer flex-none" on:click="{ e => showAboutModal() }">About this dashboard</div>
     </div>
   {/if}
 </nav>
@@ -345,4 +342,10 @@ import AboutModal from "./AboutModal.svelte";
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  /* have to put the :global() here to force the svelte compiler to include this, since the text is dynamically inserted */
+  :global(span.data-caveat-text > a) {
+    text-decoration: underline;
+  }
+
 </style>

@@ -1,5 +1,5 @@
 import { TestData } from "../test/_data/TestData";
-import { Config, FilterDimension } from "./Config";
+import { Config, FilterDimension, PropertyPlaceholder } from "./Config";
 import { UserInterfaceState } from "./UserInterfaceState";
 import Dexie from 'dexie';
 
@@ -63,10 +63,13 @@ abstract class AbstractRepository implements Repository {
         ret = this.saveCurrentState(this._uiState);
       }
       return ret.then(async () => {
-        return this.fetchConfig().then(async (fetchedConfig: Config) => {
+        return this.fetchConfig().then(async (fetchedConfig: Config): Promise<Config> => {
           this._config = fetchedConfig;
-          return this.populateDimensionFilters().then(async () => {
-            return Promise.resolve(this._config);
+          return this.replacePropertyPlaceholders(fetchedConfig).then(async (editedConfig: Config): Promise<Config> => {
+            this._config = editedConfig;
+            return this.populateDimensionFilters().then(async () => {
+              return Promise.resolve(this._config);
+            });
           });
         });
       }); 
@@ -122,12 +125,46 @@ abstract class AbstractRepository implements Repository {
       replacementMap.set(dimension, allSelected ? (dimension + ".Members") : selectedLevels.join(","));
     });
     [...replacementMap.keys()].forEach((dimension: string): void => {
-      const dimensionRegex = dimension.replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/\./g, "\\.");
-      mdx = mdx.replace(new RegExp("#" + dimensionRegex + "#", "g"), replacementMap.get(dimension));
+      const dimensionRegex = this.makeDoubleHashRegex(dimension);
+      mdx = mdx.replace(dimensionRegex, replacementMap.get(dimension));
     });
     return mdx;
   }
 
+  private makeDoubleHashRegex(dimension: string): RegExp {
+    return new RegExp("#" + dimension.replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/\./g, "\\.") + "#", "g")
+  }
+
+  private async replacePropertyPlaceholders(config: Config): Promise<Config> {
+    // for now, we just replace properties in the dataCaveatText...could do other things later
+    const promises: Promise<PropertyPlaceholderReplacement>[] = [];
+    config.propertyPlaceholders.forEach((propertyPlaceholder: PropertyPlaceholder): void => {
+      promises.push(this.executeQuery(propertyPlaceholder.query, propertyPlaceholder.connection, false).then((data: { values: any[] }): Promise<PropertyPlaceholderReplacement> => {
+        if (data) {
+          const propertyPlaceholderReplacement: PropertyPlaceholderReplacement = new PropertyPlaceholderReplacement();
+          propertyPlaceholderReplacement.values = data.values;
+          propertyPlaceholderReplacement.propertyPlaceholder = propertyPlaceholder;
+          return Promise.resolve(propertyPlaceholderReplacement);
+        }
+        return Promise.resolve(null);
+      }));
+    });
+    return Promise.all(promises).then((propertyPlaceholderReplacements: PropertyPlaceholderReplacement[]): Promise<Config> => {
+      propertyPlaceholderReplacements.forEach((propertyPlaceholderReplacement: PropertyPlaceholderReplacement): void => {
+        if (propertyPlaceholderReplacement) {
+          const value = propertyPlaceholderReplacement.values[0][propertyPlaceholderReplacement.propertyPlaceholder.dimension];
+          config.dataCaveatText = config.dataCaveatText.replace(this.makeDoubleHashRegex(propertyPlaceholderReplacement.propertyPlaceholder.propertyName), value);
+        }
+      });
+      return Promise.resolve(config);
+    });
+  }
+
+}
+
+class PropertyPlaceholderReplacement {
+  propertyPlaceholder: PropertyPlaceholder;
+  values: any[];
 }
 
 export class LocalRepository extends AbstractRepository {
@@ -171,6 +208,10 @@ export class LocalRepository extends AbstractRepository {
       data = TestData.TEST_RESULTS_LINE_YZ;
     } else if (mdx === TestData.TEST_QUERY_DIMENSION_FILTER) {
       data = TestData.TEST_RESULTS_DIMENSION_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_FOR_BIGGEST_STATE) {
+      data = TestData.TEST_RESULTS_FOR_BIGGEST_STATE;
+    } else if (mdx === TestData.TEST_QUERY_FOR_SMALLEST_STATE) {
+      data = TestData.TEST_RESULTS_FOR_SMALLEST_STATE;
     } else {
       data = TestData.getFilteredData(mdx);
     }

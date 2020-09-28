@@ -6,8 +6,20 @@
   "mondrianRestUrl": "/mondrian-rest",
   "appLogoImageUrl": "img/piet-logo.jpg",
   "aboutContentUrl": "about-content.html",
-  "dataCaveatText": "Note: data depicted in this dashboard are blah blah",
+  "dataCaveatText": "Note: the biggest state is #biggestState# and the smallest is #smallestState#. data depicted in this <a href='https://google.com'>dashboard</a> are blah blah data depicted in this dashboard are blah blah data depicted in this dashboard are blah blah data depicted in this dashboard are blah blah data depicted in this dashboard are blah blah",
   "allowVizExport": false,
+  "initProperties": {
+    "biggestState": {
+      "connection": "foodmart",
+      "dimension": "[Store].[Stores].[Store State]",
+      "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY HEAD(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
+    },
+    "smallestState": {
+      "connection": "foodmart",
+      "dimension": "[Store].[Stores].[Store State]",
+      "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY TAIL(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
+    }
+  },
   "filterDimensions": [
     {
       "connection": "foodmart",

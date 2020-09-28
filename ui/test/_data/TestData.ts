@@ -257,6 +257,30 @@ export class TestData {
     ]
   };
 
+  static TEST_QUERY_FOR_BIGGEST_STATE = "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY HEAD(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_FOR_BIGGEST_STATE = {
+    "values": [
+      {
+        "[Store].[Stores].[Store State]": "WA",
+        "[Store].[Stores].[Store Country]": "USA",
+        "Units Ordered": 116025.0
+      }
+    ]
+  };
+
+  static TEST_QUERY_FOR_SMALLEST_STATE = "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY TAIL(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_FOR_SMALLEST_STATE = {
+    "values": [
+      {
+        "[Store].[Stores].[Store State]": "OR",
+        "[Store].[Stores].[Store Country]": "USA",
+        "Units Ordered": 44906.0
+      }
+    ]
+  };
+
   static getFilteredData(mdx: string): any {
 
     let ret = null;
