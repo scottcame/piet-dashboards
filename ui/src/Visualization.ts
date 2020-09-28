@@ -411,10 +411,52 @@ export class LineChartVisualization extends Visualization {
         } else {
           v.temporalx = v[temporalAxis.yearDimension];
           if (temporalAxis.monthDimension) {
-            v.temporalx += ("-" + v[temporalAxis.monthDimension]);
-            if (temporalAxis.dayDimension) {
-              v.temporalx += ("-" + v[temporalAxis.dayDimension]);
+            let monthVal: string = v[temporalAxis.monthDimension];
+            // obvs not locale-aware, but works for now
+            // this is to work around non-Chrome browsers' inability to parse dates like "2018-March". Seems
+            // to have to be YYYY-MM-DD.
+            if (!/[0-9]+/.test(monthVal)) {
+              if (/^Jan.*/.test(monthVal)) {
+                monthVal = "1";
+              } else if (/^Feb.*/.test(monthVal)) {
+                monthVal = "2";
+              } else if (/^Mar.*/.test(monthVal)) {
+                monthVal = "3";
+              } else if (/^Apr.*/.test(monthVal)) {
+                monthVal = "4";
+              } else if (/^May$/.test(monthVal)) {
+                monthVal = "5";
+              } else if (/^Jun.*/.test(monthVal)) {
+                monthVal = "6";
+              } else if (/^Jul.*/.test(monthVal)) {
+                monthVal = "7";
+              } else if (/^Aug.*/.test(monthVal)) {
+                monthVal = "8";
+              } else if (/^Sep.*/.test(monthVal)) {
+                monthVal = "9";
+              } else if (/^Oct.*/.test(monthVal)) {
+                monthVal = "10";
+              } else if (/^Nov.*/.test(monthVal)) {
+                monthVal = "11";
+              } else if (/^Dec.*/.test(monthVal)) {
+                monthVal = "12";
+              }
             }
+            if (monthVal.length == 1) {
+              monthVal = "0" + monthVal;
+            }
+            v.temporalx += ("-" + monthVal);
+            if (temporalAxis.dayDimension) {
+              let dayVal: string = v[temporalAxis.dayDimension];
+              if (dayVal.length == 1) {
+                dayVal = "0" + dayVal;
+              }
+              v.temporalx += ("-" + dayVal);
+            } else {
+              v.temporalx += "-01";
+            }
+          } else {
+            v.temporalx += "-01-01";
           }
         }
       });
