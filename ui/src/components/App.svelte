@@ -123,8 +123,16 @@ import AboutModal from "./AboutModal.svelte";
       const targetNodes: NodeListOf<Element> = document.querySelectorAll(".dragula-drop-target");
 
       if (singleFilterDimension && uiState.dimensionFilterModel) {
-        currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
-        dimensionFilterModel = uiState.dimensionFilterModel;
+        // currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
+        currentUiState.dimensionFilterModel = new Map<string, boolean>();
+        [...repository.dimensionFilters.get(singleFilterDimension).keys()].forEach((key: string): void => {
+          if (uiState.dimensionFilterModel.has(key)) {
+            currentUiState.dimensionFilterModel.set(key, uiState.dimensionFilterModel.get(key));
+          } else {
+            currentUiState.dimensionFilterModel.set(key, false);
+          }
+        });
+        dimensionFilterModel = currentUiState.dimensionFilterModel;
         repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
       }
 
@@ -261,6 +269,10 @@ import AboutModal from "./AboutModal.svelte";
     aboutModalVisible = true;
   }
 
+  function hideAboutModal(): void {
+    aboutModalVisible = false;
+  }
+
 </script>
 
 <nav class="bg-gray-100 p-4 pt-2 pb-2 select-none">
@@ -315,7 +327,7 @@ import AboutModal from "./AboutModal.svelte";
   model={dimensionFilterModel}
   on:close="{e => hideDimensionFilterModal(e)}"/>
 
-<AboutModal visible={aboutModalVisible} contentUrl={aboutContentUrl}/>
+<AboutModal visible={aboutModalVisible} contentUrl={aboutContentUrl} on:close="{e => hideAboutModal()}"/>
 
 <style>
   #wait-spinner {

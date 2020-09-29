@@ -1,9 +1,14 @@
 <script lang="ts">
 
-  export let visible: boolean = false;
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch: (event: string, detail?: any) => void = createEventDispatcher();
+
+  export let visible: boolean;
   export let contentUrl: string;
 
   function close() {
+    dispatch('close');
     visible = false;
   }
 
