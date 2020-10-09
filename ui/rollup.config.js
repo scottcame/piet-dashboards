@@ -73,16 +73,21 @@ export default {
     production && babel({
       extensions: ['.js', '.svelte', '.ts', '.mjs'],
       include: [
-        'src/**', 'node_modules/svelte/**',
+        'src/*.ts',
+        'src/components/*',
+        'test/**/*.ts',
+        'node_modules/svelte/**',
         // the following are required for vega / vega-lite, as they utilize es6 features that are not available in IE11 (ugh!)
-				'node_modules/fast-json-patch/**', 'node_modules/d3-array/**', 'node_modules/d3-scale/**', 'node_modules/d3-force/**', 'node_modules/d3-delaunay/**', 'node_modules/delaunator/**',
+        'node_modules/fast-json-patch/**',
+        'node_modules/d3-*/**',
+        'node_modules/delaunator/**',
         'node_modules/vega*/**',
         // end vega dependencies
       ],
       babelHelpers: 'runtime',
       presets: [
         [
-          "@babel/env",
+          "@babel/preset-env",
           {
             targets: {
               ie: '11',
@@ -106,7 +111,7 @@ export default {
     watch && livereload('public'),
 
     // If we're building for production (npm run build instead of npm run dev), minify
-    production && terser(),
+    //production && terser(),
 
   ],
   watch: {
