@@ -22,6 +22,7 @@ import { LocalRepository, RemoteRepository } from './Repository';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import "whatwg-fetch";
+import "@webcomponents/webcomponentsjs";
 
 // import the dragula css so containers are rendered (mirrored) in transit
 // this import will get resolved by the rollup css-only plugin into bundle.css

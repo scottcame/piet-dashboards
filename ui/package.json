@@ -33,6 +33,7 @@
     "@types/jest": "^26.0.13",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
+    "@webcomponents/webcomponentsjs": "^2.4.4",
     "autoprefixer": "^9.8.6",
     "core-js": "^3.6.5",
     "dexie": "^3.0.2",
