@@ -14,7 +14,7 @@
 
 package com.cascadia_analytics.piet.dashboards;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
