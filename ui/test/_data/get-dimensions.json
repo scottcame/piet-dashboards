@@ -1,0 +1,310 @@
+[
+  {
+      "name": "Measures",
+      "caption": "Measures",
+      "type": "",
+      "hierarchies": [
+          {
+              "name": "Measures",
+              "caption": "Measures",
+              "levels": [
+                  {
+                      "name": "MeasuresLevel",
+                      "caption": "MeasuresLevel",
+                      "depth": 0,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": false
+          }
+      ]
+  },
+  {
+      "name": "Store",
+      "caption": "Store",
+      "type": "",
+      "hierarchies": [
+          {
+              "name": "Store",
+              "caption": "Store",
+              "levels": [
+                  {
+                      "name": "(All)",
+                      "caption": "(All)",
+                      "depth": 0,
+                      "cardinality": 1,
+                      "populated": true
+                  },
+                  {
+                      "name": "Store Country",
+                      "caption": "Store Country",
+                      "depth": 1,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Store State",
+                      "caption": "Store State",
+                      "depth": 2,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Store City",
+                      "caption": "Store City",
+                      "depth": 3,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Store Name",
+                      "caption": "Store Name",
+                      "depth": 4,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": true
+          }
+      ]
+  },
+  {
+      "name": "Store Size in SQFT",
+      "caption": "Store Size in SQFT",
+      "type": "",
+      "hierarchies": [
+          {
+              "name": "Store Size in SQFT",
+              "caption": "Store Size in SQFT",
+              "levels": [
+                  {
+                      "name": "(All)",
+                      "caption": "(All)",
+                      "depth": 0,
+                      "cardinality": 1,
+                      "populated": true
+                  },
+                  {
+                      "name": "Store Sqft",
+                      "caption": "Store Sqft",
+                      "depth": 1,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": true
+          }
+      ]
+  },
+  {
+      "name": "Store Type",
+      "caption": "Store Type",
+      "type": "",
+      "hierarchies": [
+          {
+              "name": "Store Type",
+              "caption": "Store Type",
+              "levels": [
+                  {
+                      "name": "(All)",
+                      "caption": "(All)",
+                      "depth": 0,
+                      "cardinality": 1,
+                      "populated": true
+                  },
+                  {
+                      "name": "Store Type",
+                      "caption": "Store Type",
+                      "depth": 1,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": true
+          }
+      ]
+  },
+  {
+      "name": "Time",
+      "caption": "Time",
+      "type": "",
+      "hierarchies": [
+          {
+              "name": "Time",
+              "caption": "Time",
+              "levels": [
+                  {
+                      "name": "Year",
+                      "caption": "Year",
+                      "depth": 0,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Quarter",
+                      "caption": "Quarter",
+                      "depth": 1,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Month",
+                      "caption": "Month",
+                      "depth": 2,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": false
+          },
+          {
+              "name": "Time.Weekly",
+              "caption": "Weekly",
+              "levels": [
+                  {
+                      "name": "(All)",
+                      "caption": "(All)",
+                      "depth": 0,
+                      "cardinality": 1,
+                      "populated": true
+                  },
+                  {
+                      "name": "Year",
+                      "caption": "Year",
+                      "depth": 1,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Week",
+                      "caption": "Week",
+                      "depth": 2,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Day",
+                      "caption": "Day",
+                      "depth": 3,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": true
+          }
+      ]
+  },
+  {
+      "name": "Product",
+      "caption": "Product",
+      "type": "",
+      "hierarchies": [
+          {
+              "name": "Product",
+              "caption": "Product",
+              "levels": [
+                  {
+                      "name": "(All)",
+                      "caption": "(All)",
+                      "depth": 0,
+                      "cardinality": 1,
+                      "populated": true
+                  },
+                  {
+                      "name": "Product Family",
+                      "caption": "Product Family",
+                      "depth": 1,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Product Department",
+                      "caption": "Product Department",
+                      "depth": 2,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Product Category",
+                      "caption": "Product Category",
+                      "depth": 3,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Product Subcategory",
+                      "caption": "Product Subcategory",
+                      "depth": 4,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Brand Name",
+                      "caption": "Brand Name",
+                      "depth": 5,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Product Name",
+                      "caption": "Product Name",
+                      "depth": 6,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": true
+          }
+      ]
+  },
+  {
+      "name": "Warehouse",
+      "caption": "Warehouse",
+      "type": "",
+      "hierarchies": [
+          {
+              "name": "Warehouse",
+              "caption": "Warehouse",
+              "levels": [
+                  {
+                      "name": "(All)",
+                      "caption": "(All)",
+                      "depth": 0,
+                      "cardinality": 1,
+                      "populated": true
+                  },
+                  {
+                      "name": "Country",
+                      "caption": "Country",
+                      "depth": 1,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "State Province",
+                      "caption": "State Province",
+                      "depth": 2,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "City",
+                      "caption": "City",
+                      "depth": 3,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  },
+                  {
+                      "name": "Warehouse Name",
+                      "caption": "Warehouse Name",
+                      "depth": 4,
+                      "cardinality": -2147483648,
+                      "populated": true
+                  }
+              ],
+              "hasAll": true
+          }
+      ]
+  }
+]

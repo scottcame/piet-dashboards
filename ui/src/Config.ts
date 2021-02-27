@@ -28,6 +28,7 @@ import { Visualization } from "./Visualization";
   private _allowVizExport: boolean;
   private _filterDimensions: FilterDimension[] = [];
   private _mondrianRestURL: string;
+  private _connection: string;
   private _aboutContentURL: string;
   dataCaveatText: string;
   private _propertyPlaceholders: PropertyPlaceholder[] = [];
@@ -44,20 +45,21 @@ import { Visualization } from "./Visualization";
     ret._mondrianRestURL = json.mondrianRestUrl;
     ret._aboutContentURL = json.aboutContentUrl || "about-content.html";
     ret.dataCaveatText = json.dataCaveatText;
+    ret._connection = json.connection;
 
     ret._groups = json.groups.map((groupJson: any): Group => {
-      return Group.fromJson(groupJson, json.allowVizExport);
+      return Group.fromJson(groupJson, json.allowVizExport, json.connection);
     });
 
     if (json.filterDimensions) {
       ret._filterDimensions = json.filterDimensions.map((filterDimension: any): FilterDimension => {
-        return FilterDimension.fromJson(filterDimension);
+        return FilterDimension.fromJson(filterDimension, json.connection);
       });
     }
 
     if (json.initProperties) {
       ret._propertyPlaceholders = Object.keys(json.initProperties).map((propertyName: string): PropertyPlaceholder => {
-        return PropertyPlaceholder.fromJson(json.initProperties[propertyName], propertyName);
+        return PropertyPlaceholder.fromJson(json.initProperties[propertyName], propertyName, json.connection);
       });
     }
 
@@ -101,6 +103,10 @@ import { Visualization } from "./Visualization";
     return this._mondrianRestURL;
   }
 
+  get connection(): string {
+    return this._connection;
+  }
+
   get aboutContentURL(): string {
     return this._aboutContentURL;
   }
@@ -135,11 +141,11 @@ export class FilterDimension {
   private constructor(query: string, dimension: string, connection: string, label: string) {
     this.query = query;
     this.dimension = dimension;
-    this.connection = connection;
     this.label = label;
+    this.connection = connection;
   }
-  static fromJson(json: { query: string, dimension: string, connection: string, label: string }): FilterDimension {
-    return new FilterDimension(json.query, json.dimension, json.connection, json.label);
+  static fromJson(json: { query: string, dimension: string, label: string }, connection: string): FilterDimension {
+    return new FilterDimension(json.query, json.dimension, connection, json.label);
   }
 }
 
@@ -154,8 +160,8 @@ export class PropertyPlaceholder {
     this.propertyName = propertyName;
     this.dimension = dimension;
   }
-  static fromJson(json: {connection: string, query: string, dimension: string}, propertyName: string): PropertyPlaceholder {
-    return new PropertyPlaceholder(json.connection, json.query, json.dimension, propertyName);
+  static fromJson(json: {query: string, dimension: string}, propertyName: string, connection: string): PropertyPlaceholder {
+    return new PropertyPlaceholder(connection, json.query, json.dimension, propertyName);
   }
 }
 
@@ -168,10 +174,10 @@ export class Group {
     this.header = header;
   }
 
-  static fromJson(json: any, embedExport: boolean): Group {
+  static fromJson(json: any, embedExport: boolean, connection: string): Group {
     const ret = new Group(json.header);
     Object.keys(json.visualizations).forEach((key: string): void => {
-      ret._vizMap.set(key, Visualization.fromJson(key, json.visualizations[key], embedExport));
+      ret._vizMap.set(key, Visualization.fromJson(key, json.visualizations[key], embedExport, connection));
     });
     return ret;
   }

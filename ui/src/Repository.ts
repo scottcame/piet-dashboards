@@ -110,17 +110,26 @@ abstract class AbstractRepository implements Repository {
 
   protected abstract fetchConfig(): Promise<Config>;
 
+  protected abstract fetchDimensions(): Promise<FilterDimension[]>;
+
   protected async populateDimensionFilters(): Promise<void[]> {
-    const promises: Promise<void>[] = this._config.filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
-      return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
-        const levels: Map<string, boolean> = new Map<string, boolean>();
-        results.values.forEach((value: any): void => {
-          levels.set(value[filterDimension.dimension], true);
+
+    // todo: get dimensions from API and merge with custom-specified _config.filterDimensions
+
+    return this.fetchDimensions().then((filterDimensions: FilterDimension[]): Promise<void[]> => {
+      console.log(filterDimensions);
+      const promises: Promise<void>[] = this._config.filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
+        return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
+          const levels: Map<string, boolean> = new Map<string, boolean>();
+          results.values.forEach((value: any): void => {
+            levels.set(value[filterDimension.dimension], true);
+          });
+          this.dimensionFilters.set(filterDimension.dimension, levels);
         });
-        this.dimensionFilters.set(filterDimension.dimension, levels);
       });
+      return Promise.all(promises);
     });
-    return Promise.all(promises);
+    
   }
 
   protected replaceDimensionFilterPlaceholders(mdx: string): string {
@@ -193,6 +202,10 @@ export class LocalRepository extends AbstractRepository {
 
   protected fetchConfig(): Promise<Config> {
     return Promise.resolve(Config.fromJson(TestData.TEST_CONFIG));
+  }
+
+  protected async fetchDimensions(): Promise<FilterDimension[]> {
+    return Promise.resolve(TestData.TEST_DIMENSIONS);
   }
 
   async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
@@ -268,6 +281,10 @@ export class RemoteRepository extends AbstractRepository {
         return Promise.resolve(Config.fromJson(json));
       });
     });
+  }
+
+  protected async fetchDimensions(): Promise<FilterDimension[]> {
+    return Promise.resolve([]);
   }
 
   async executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }> {

@@ -28,7 +28,7 @@ export abstract class Visualization {
   readonly panelTitle: string;
   readonly headerText: string;
   readonly includeGridValueText: boolean;
-  readonly connection: string;
+  private _connection: string;
   readonly measures: string[];
   readonly measureLabels: string[];
   readonly measureFormats: string[];
@@ -43,7 +43,6 @@ export abstract class Visualization {
     vizType: string,
     headerText: string,
     panelTitle: string,
-    connection: string,
     query: string,
     includeGridValueText: boolean,
     measures: string[],
@@ -55,7 +54,6 @@ export abstract class Visualization {
     this.embedExport = embedExport;
     this.headerText = json.headerText;
     this.panelTitle = json.panelTitle;
-    this.connection = json.connection;
     this.query = json.query;
     this.includeGridValueText = json.includeGridValueText;
     this.measures = json.measures;
@@ -68,8 +66,12 @@ export abstract class Visualization {
     return /#/.test(this.query);
   }
 
+  get connection(): string {
+    return this._connection;
+  }
+
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  static fromJson(id: string, json: any, embedExport: boolean): Visualization {
+  static fromJson(id: string, json: any, embedExport: boolean, connection: string): Visualization {
 
     let ret: Visualization = null;
     
@@ -80,6 +82,8 @@ export abstract class Visualization {
     } else if (json.vizType === "line") {
       ret = new LineChartVisualization(id, json, embedExport);
     }
+
+    ret._connection = connection;
 
     return ret;
 

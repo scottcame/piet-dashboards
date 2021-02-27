@@ -14,12 +14,14 @@
   limitations under the License.
 */
 import * as testConfig from './test-config.json';
+import * as testDimensions from './get-dimensions.json';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export class TestData {
 
   static TEST_CONFIG: any = testConfig;
+  static TEST_DIMENSIONS: any = testDimensions;
 
   /* mondrian rest message for the 1D query
   {

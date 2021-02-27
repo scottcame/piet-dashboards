@@ -3,6 +3,7 @@
     "short": "Piet Dashboard",
     "long": "Demo Piet Dashboard"
   },
+  "connection": "foodmart",
   "mondrianRestUrl": "/mondrian-rest",
   "appLogoImageUrl": "img/piet-logo.jpg",
   "aboutContentUrl": "about-content.html",
@@ -10,19 +11,16 @@
   "allowVizExport": false,
   "initProperties": {
     "biggestState": {
-      "connection": "foodmart",
       "dimension": "[Store].[Stores].[Store State]",
       "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY HEAD(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
     },
     "smallestState": {
-      "connection": "foodmart",
       "dimension": "[Store].[Stores].[Store State]",
       "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY TAIL(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
     }
   },
   "filterDimensions": [
     {
-      "connection": "foodmart",
       "dimension": "[Store].[Stores].[Store State]",
       "query": "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Stores].[Store State].Members} ON COLUMNS FROM [Warehouse]",
       "label": "State"
@@ -36,7 +34,6 @@
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state",
           "headerText": "Units Ordered by state (bar chart)",
-          "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "xDimension": "[Store].[Stores].[Store State]",
@@ -47,7 +44,6 @@
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state excluding Oregon",
           "headerText": "Units Ordered by state (bar chart), excluding Oregon",
-          "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {[Store].[Stores].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "xDimension": "[Store].[Stores].[Store State]",
@@ -57,7 +53,6 @@
           "vizType": "pie",
           "panelTitle": "Pie: Units Ordered by state ",
           "headerText": "Units Ordered by state (pie chart)",
-          "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "measureFormats": [","],
@@ -67,7 +62,6 @@
           "vizType": "pie",
           "panelTitle": "Pie: Units Ordered by state for filtering",
           "headerText": "Units Ordered by state (pie chart), to test filtering",
-          "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Stores].[Store State]#} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "measureFormats": [","],
@@ -77,7 +71,6 @@
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state for filtering",
           "headerText": "Units Ordered by state (bar chart), for testing filtering",
-          "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Stores].[Store State]#} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "xDimension": "[Store].[Stores].[Store State]",
@@ -87,7 +80,6 @@
           "vizType": "bar",
           "panelTitle": "Bar: Demonstrating x axis counts",
           "headerText": "Demonstrating x axis counts",
-          "connection": "foodmart",
           "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "xDimension": "[Store].[Stores].[Store State]",
@@ -103,7 +95,6 @@
           "vizType": "line",
           "panelTitle": "Line 1",
           "headerText": "Line chart 1 (simple ordinal)",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_SIMPLE",
           "measures": ["y"],
           "xDimension": "x"
@@ -112,7 +103,6 @@
           "vizType": "line",
           "panelTitle": "Line 2",
           "headerText": "Line chart 2 (two measures)",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_2_MEASURES",
           "measures": ["y", "z"],
           "xDimension": "x"
@@ -121,7 +111,6 @@
           "vizType": "line",
           "panelTitle": "Line Temporal Year",
           "headerText": "Line Temporal Year",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR",
           "measures": ["y"],
           "xDimension": {
@@ -132,7 +121,6 @@
           "vizType": "line",
           "panelTitle": "Line Temporal Year+Month",
           "headerText": "Line Temporal Year+Month",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH",
           "measures": ["y"],
           "xDimension": {
@@ -145,7 +133,6 @@
           "vizType": "line",
           "panelTitle": "Line Temporal Year+Month+Day",
           "headerText": "Line Temporal Year+Month+Day",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY",
           "measures": ["y"],
           "xDimension": {
@@ -159,7 +146,6 @@
           "vizType": "line",
           "panelTitle": "Line Temporal Date",
           "headerText": "Line Temporal Date",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_TEMPORAL_1_MEASURE_DATE",
           "measures": ["y"],
           "measureLabels": ["Some Y"],
@@ -173,7 +159,6 @@
           "vizType": "line",
           "panelTitle": "Line Temporal R1",
           "headerText": "Line Temporal R1",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_TEMPORAL_RANDOM1",
           "measures": ["M1 Count", "M2 Count"],
           "measureLabels": ["The M1", "M2 Too"],
@@ -188,7 +173,6 @@
           "vizType": "line",
           "panelTitle": "Line YZ",
           "headerText": "Line chart 1 measure w Y dimension",
-          "connection": "foodmart",
           "query": "TEST_QUERY_LINE_YZ",
           "measures": ["z"],
           "xDimension": "x",
