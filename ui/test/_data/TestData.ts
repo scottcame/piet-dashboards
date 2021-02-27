@@ -30,11 +30,11 @@ export class TestData {
       "enabled": true,
       "simplifyNames": false
     },
-    "query" : "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]"
+    "query" : "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]"
   }
   */
 
-  static TEST_QUERY_1D = "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]";
+  static TEST_QUERY_1D = "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]";
 
   static TEST_RESULTS_1D = {
     "values": [
@@ -42,17 +42,17 @@ export class TestData {
         "Units Ordered": 227238.0
       },
       {
-        "[Store].[Stores].[Store State]": "CA",
+        "[Store].[Store].[Store State]": "CA",
         "[Store].[Stores].[Store Country]": "USA",
         "Units Ordered": 66307.0
       },
       {
-        "[Store].[Stores].[Store State]": "OR",
+        "[Store].[Store].[Store State]": "OR",
         "[Store].[Stores].[Store Country]": "USA",
         "Units Ordered": 44906.0
       },
       {
-        "[Store].[Stores].[Store State]": "WA",
+        "[Store].[Store].[Store State]": "WA",
         "[Store].[Stores].[Store Country]": "USA",
         "Units Ordered": 116025.0
       }
@@ -66,11 +66,11 @@ export class TestData {
       "enabled": true,
       "simplifyNames": false
     },
-    "query" : "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {[Store].[Stores].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]"
+    "query" : "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {[Store].[Store].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]"
   }
   */
 
-  static TEST_QUERY_1D_EXCLUDES = "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {[Store].[Stores].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]";
+  static TEST_QUERY_1D_EXCLUDES = "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {[Store].[Store].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]";
 
   static TEST_RESULTS_1D_EXCLUDES = {
     "values": [
@@ -78,12 +78,12 @@ export class TestData {
         "Units Ordered": 227238.0
       },
       {
-        "[Store].[Stores].[Store State]": "CA",
+        "[Store].[Store].[Store State]": "CA",
         "[Store].[Stores].[Store Country]": "USA",
         "Units Ordered": 66307.0
       },
       {
-        "[Store].[Stores].[Store State]": "WA",
+        "[Store].[Store].[Store State]": "WA",
         "[Store].[Stores].[Store Country]": "USA",
         "Units Ordered": 116025.0
       }
@@ -202,57 +202,57 @@ export class TestData {
 
   // dimension filter query
 
-  static TEST_QUERY_DIMENSION_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Stores].[Store State].Members} ON COLUMNS FROM [Warehouse]";
+  static TEST_QUERY_DIMENSION_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]";
 
   static TEST_RESULTS_DIMENSION_FILTER = {
     "values": [
       {
-        "[Store].[Stores].[Store State]": "BC",
+        "[Store].[Store].[Store State]": "BC",
         "[Store].[Stores].[Store Country]": "Canada",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "DF",
+        "[Store].[Store].[Store State]": "DF",
         "[Store].[Stores].[Store Country]": "Mexico",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "Guerrero",
+        "[Store].[Store].[Store State]": "Guerrero",
         "[Store].[Stores].[Store Country]": "Mexico",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "Jalisco",
+        "[Store].[Store].[Store State]": "Jalisco",
         "[Store].[Stores].[Store Country]": "Mexico",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "Veracruz",
+        "[Store].[Store].[Store State]": "Veracruz",
         "[Store].[Stores].[Store Country]": "Mexico",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "Yucatan",
+        "[Store].[Store].[Store State]": "Yucatan",
         "[Store].[Stores].[Store Country]": "Mexico",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "Zacatecas",
+        "[Store].[Store].[Store State]": "Zacatecas",
         "[Store].[Stores].[Store Country]": "Mexico",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "CA",
+        "[Store].[Store].[Store State]": "CA",
         "[Store].[Stores].[Store Country]": "USA",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "OR",
+        "[Store].[Store].[Store State]": "OR",
         "[Store].[Stores].[Store Country]": "USA",
         "Nul": null
       },
       {
-        "[Store].[Stores].[Store State]": "WA",
+        "[Store].[Store].[Store State]": "WA",
         "[Store].[Stores].[Store Country]": "USA",
         "Nul": null
       }
@@ -274,24 +274,24 @@ export class TestData {
     ]
   };
 
-  static TEST_QUERY_FOR_BIGGEST_STATE = "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY HEAD(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]";
+  static TEST_QUERY_FOR_BIGGEST_STATE = "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY HEAD(ORDER({[Store].[Store].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]";
 
   static TEST_RESULTS_FOR_BIGGEST_STATE = {
     "values": [
       {
-        "[Store].[Stores].[Store State]": "WA",
+        "[Store].[Store].[Store State]": "WA",
         "[Store].[Stores].[Store Country]": "USA",
         "Units Ordered": 116025.0
       }
     ]
   };
 
-  static TEST_QUERY_FOR_SMALLEST_STATE = "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY TAIL(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]";
+  static TEST_QUERY_FOR_SMALLEST_STATE = "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY TAIL(ORDER({[Store].[Store].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]";
 
   static TEST_RESULTS_FOR_SMALLEST_STATE = {
     "values": [
       {
-        "[Store].[Stores].[Store State]": "OR",
+        "[Store].[Store].[Store State]": "OR",
         "[Store].[Stores].[Store Country]": "USA",
         "Units Ordered": 44906.0
       }
@@ -305,7 +305,7 @@ export class TestData {
     const regex = /^SELECT NON EMPTY {\[Measures\]\.\[Units Ordered\]} \* {(.+)} ON COLUMNS FROM \[Warehouse\]$/;
     if (regex.test(mdx)) {
       const states = mdx.replace(regex, "$1").split(",");
-      if (states.length === 1 && states[0] === "[Store].[Stores].[Store State].Members") {
+      if (states.length === 1 && states[0] === "[Store].[Store].[Store State].Members") {
         ret = TestData.TEST_RESULTS_1D;
       } else {
         ret = {
@@ -313,7 +313,7 @@ export class TestData {
         };
         states.forEach((level: string): void => {
           const value = TestData.TEST_RESULTS_1D.values.filter((v: any): boolean => {
-            return v["[Store].[Stores].[Store State]"] === level.replace(/\[Store\]\.\[Stores\]\.\[Store State\]\.\[(.+)\]/, "$1");
+            return v["[Store].[Store].[Store State]"] === level.replace(/\[Store\]\.\[Stores\]\.\[Store State\]\.\[(.+)\]/, "$1");
           });
           if (value.length) {
             ret.values.push(value[0]);

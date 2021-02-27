@@ -123,7 +123,7 @@ import AboutModal from "./AboutModal.svelte";
     dataCaveatText = config.dataCaveatText;
 
     // in this first iteration, we only support a single dimension for filtering
-    singleFilterDimension = (config.filterDimensions && config.filterDimensions.length) ? config.filterDimensions[0].dimension : null;
+    singleFilterDimension = null; // (config.filterDimensions && config.filterDimensions.length) ? config.filterDimensions[0].dimension : null;
 
     updateDimensionFilterText();
 

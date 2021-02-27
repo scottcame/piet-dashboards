@@ -29,6 +29,7 @@ import { Visualization } from "./Visualization";
   private _filterDimensions: FilterDimension[] = [];
   private _mondrianRestURL: string;
   private _connection: string;
+  private _cube: string;
   private _aboutContentURL: string;
   dataCaveatText: string;
   private _propertyPlaceholders: PropertyPlaceholder[] = [];
@@ -46,6 +47,7 @@ import { Visualization } from "./Visualization";
     ret._aboutContentURL = json.aboutContentUrl || "about-content.html";
     ret.dataCaveatText = json.dataCaveatText;
     ret._connection = json.connection;
+    ret._cube = json.cube;
 
     ret._groups = json.groups.map((groupJson: any): Group => {
       return Group.fromJson(groupJson, json.allowVizExport, json.connection);
@@ -107,6 +109,10 @@ import { Visualization } from "./Visualization";
     return this._connection;
   }
 
+  get cube(): string {
+    return this._cube;
+  }
+
   get aboutContentURL(): string {
     return this._aboutContentURL;
   }
@@ -134,19 +140,64 @@ import { Visualization } from "./Visualization";
 }
 
 export class FilterDimension {
-  readonly query: string;
+
+  private _query: string;
   readonly dimension: string;
   readonly connection: string;
-  readonly label: string;
+  private _label: string;
+  private _hierarchy: string;
+
   private constructor(query: string, dimension: string, connection: string, label: string) {
-    this.query = query;
+    this._query = query;
     this.dimension = dimension;
-    this.label = label;
+    this._label = label;
     this.connection = connection;
+    this._hierarchy = dimension.replace(/(.+)\.\[.+\]$/, "$1");
   }
+
   static fromJson(json: { query: string, dimension: string, label: string }, connection: string): FilterDimension {
     return new FilterDimension(json.query, json.dimension, connection, json.label);
   }
+
+  static fromGetDimensionsJson(json: {name: string, caption: string, hierarchies: [{name: string, caption: string, levels: [{name: string, caption: string}]}]}[], connection: string, cube: string): FilterDimension[] {
+    const ret: FilterDimension[] = [];
+    json["default"].forEach(dimension => {
+      if (dimension.name !== "Measures") {
+        dimension.hierarchies.forEach(hierarchy => {
+          hierarchy.levels.forEach(level => {
+            if (level.name !== "(All)") {
+              const levelText = "[" + dimension.name + "].[" + hierarchy.name + "].[" + level.name + "]";
+              const queryText = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{" + levelText + ".Members} ON COLUMNS FROM [" + cube + "]";
+              ret.push(new FilterDimension(queryText, levelText, connection, level.caption));
+            }
+          });
+        });
+      }
+    });
+    return ret;
+  }
+
+  get label(): string {
+    return this._label;
+  }
+
+  get query(): string {
+    return this._query;
+  }
+
+  get hierarchy(): string {
+    return this._hierarchy;
+  }
+
+  updateFrom(d: FilterDimension): void {
+    if (d.label && d.label !== this.label) {
+      this._label = d.label;
+    }
+    if (d.query && d.query !== this.query) {
+      this._query = d.query;
+    }
+  }
+
 }
 
 export class PropertyPlaceholder {

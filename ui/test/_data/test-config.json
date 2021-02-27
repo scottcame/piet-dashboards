@@ -4,6 +4,7 @@
     "long": "Demo Piet Dashboard"
   },
   "connection": "foodmart",
+  "cube": "Warehouse",
   "mondrianRestUrl": "/mondrian-rest",
   "appLogoImageUrl": "img/piet-logo.jpg",
   "aboutContentUrl": "about-content.html",
@@ -11,19 +12,19 @@
   "allowVizExport": false,
   "initProperties": {
     "biggestState": {
-      "dimension": "[Store].[Stores].[Store State]",
-      "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY HEAD(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
+      "dimension": "[Store].[Store].[Store State]",
+      "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY HEAD(ORDER({[Store].[Store].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
     },
     "smallestState": {
-      "dimension": "[Store].[Stores].[Store State]",
-      "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY TAIL(ORDER({[Store].[Stores].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
+      "dimension": "[Store].[Store].[Store State]",
+      "query": "SELECT {[Measures].[Units Ordered]} ON ROWS, NON EMPTY TAIL(ORDER({[Store].[Store].[Store State].Members}, [Measures].[Units Ordered], DESC)) ON COLUMNS FROM [Warehouse]"
     }
   },
   "filterDimensions": [
     {
-      "dimension": "[Store].[Stores].[Store State]",
-      "query": "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Stores].[Store State].Members} ON COLUMNS FROM [Warehouse]",
-      "label": "State"
+      "dimension": "[Store].[Store].[Store State]",
+      "query": "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
+      "label": "State (Custom)"
     }
   ],
   "groups": [
@@ -34,9 +35,9 @@
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state",
           "headerText": "Units Ordered by state (bar chart)",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Stores].[Store State]",
+          "xDimension": "[Store].[Store].[Store State]",
           "xAxisPercentages": true,
           "magnitudeLabels": false
         },
@@ -44,45 +45,45 @@
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state excluding Oregon",
           "headerText": "Units Ordered by state (bar chart), excluding Oregon",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {[Store].[Stores].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {[Store].[Store].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Stores].[Store State]",
+          "xDimension": "[Store].[Store].[Store State]",
           "xAxisPercentages": true
         },
         "viz-1-3": {
           "vizType": "pie",
           "panelTitle": "Pie: Units Ordered by state ",
           "headerText": "Units Ordered by state (pie chart)",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "measureFormats": [","],
-          "xDimension": "[Store].[Stores].[Store State]"
+          "xDimension": "[Store].[Store].[Store State]"
         },
         "viz-1-4": {
           "vizType": "pie",
           "panelTitle": "Pie: Units Ordered by state for filtering",
           "headerText": "Units Ordered by state (pie chart), to test filtering",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Stores].[Store State]#} ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Store].[Store State]#} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "measureFormats": [","],
-          "xDimension": "[Store].[Stores].[Store State]"
+          "xDimension": "[Store].[Store].[Store State]"
         },
         "viz-1-5": {
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state for filtering",
           "headerText": "Units Ordered by state (bar chart), for testing filtering",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Stores].[Store State]#} ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Store].[Store State]#} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Stores].[Store State]",
+          "xDimension": "[Store].[Store].[Store State]",
           "xAxisPercentages": true
         },
         "viz-1-6": {
           "vizType": "bar",
           "panelTitle": "Bar: Demonstrating x axis counts",
           "headerText": "Demonstrating x axis counts",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Stores].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Stores].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Stores].[Store State]",
+          "xDimension": "[Store].[Store].[Store State]",
           "xAxisPercentages": false,
           "magnitudeLabels": true
         }

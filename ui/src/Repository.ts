@@ -40,6 +40,7 @@ export interface Repository {
   readonly config: Config;
   readonly uiState: UserInterfaceState;
   readonly firstVisit: boolean;
+  readonly filterDimensions: FilterDimension[];
   dimensionFilters: Map<string, Map<string, boolean>>;
   init(): Promise<Config>;
   executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
@@ -53,6 +54,7 @@ abstract class AbstractRepository implements Repository {
   protected _config: Config;
   protected _uiState: UserInterfaceState;
   private _firstVisit = true;
+  private _filterDimensions: FilterDimension[] = [];
   dimensionFilters = new Map<string, Map<string, boolean>>();
 
   get config(): Config {
@@ -61,6 +63,10 @@ abstract class AbstractRepository implements Repository {
 
   get uiState(): UserInterfaceState {
     return this._uiState;
+  }
+
+  get filterDimensions(): FilterDimension[] {
+    return this._filterDimensions;
   }
 
   async init(): Promise<Config> {
@@ -114,10 +120,18 @@ abstract class AbstractRepository implements Repository {
 
   protected async populateDimensionFilters(): Promise<void[]> {
 
-    // todo: get dimensions from API and merge with custom-specified _config.filterDimensions
-
     return this.fetchDimensions().then((filterDimensions: FilterDimension[]): Promise<void[]> => {
-      console.log(filterDimensions);
+      this._filterDimensions = filterDimensions.map((d: FilterDimension): FilterDimension => {
+        const matchingDimensions: FilterDimension[] = this._config.filterDimensions
+          .filter((customDimension: FilterDimension): boolean => {
+            return customDimension.dimension === d.dimension;
+          });
+        if (matchingDimensions.length) {
+          d.updateFrom(matchingDimensions[0]);
+        }
+        return d;
+      });
+      console.log(this.filterDimensions);
       const promises: Promise<void>[] = this._config.filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
         return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
           const levels: Map<string, boolean> = new Map<string, boolean>();
@@ -127,7 +141,7 @@ abstract class AbstractRepository implements Repository {
           this.dimensionFilters.set(filterDimension.dimension, levels);
         });
       });
-      return Promise.all(promises);
+      return Promise.all([]);
     });
     
   }
@@ -205,7 +219,7 @@ export class LocalRepository extends AbstractRepository {
   }
 
   protected async fetchDimensions(): Promise<FilterDimension[]> {
-    return Promise.resolve(TestData.TEST_DIMENSIONS);
+    return Promise.resolve(FilterDimension.fromGetDimensionsJson(TestData.TEST_DIMENSIONS, this.config.connection, this.config.cube));
   }
 
   async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
