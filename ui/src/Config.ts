@@ -127,16 +127,6 @@ import { Visualization } from "./Visualization";
     return ret;
   }
 
-  getFilterDimensionLabel(dimension: string): string {
-    let ret: string = null;
-    this.filterDimensions.forEach((d: FilterDimension): void => {
-      if (d.dimension === dimension) {
-        ret = d.label;
-      }
-    });
-    return ret;
-  }
-
 }
 
 export class FilterDimension {
@@ -159,14 +149,14 @@ export class FilterDimension {
     return new FilterDimension(json.query, json.dimension, connection, json.label);
   }
 
-  static fromGetDimensionsJson(json: {name: string, caption: string, hierarchies: [{name: string, caption: string, levels: [{name: string, caption: string}]}]}[], connection: string, cube: string): FilterDimension[] {
+  static fromGetDimensionsJson(json: {name: string, caption: string, hierarchies: [{name: string, caption: string, levels: [{name: string, uniqueName: string, caption: string}]}]}[], connection: string, cube: string): FilterDimension[] {
     const ret: FilterDimension[] = [];
     json["default"].forEach(dimension => {
       if (dimension.name !== "Measures") {
         dimension.hierarchies.forEach(hierarchy => {
           hierarchy.levels.forEach(level => {
             if (level.name !== "(All)") {
-              const levelText = "[" + dimension.name + "].[" + hierarchy.name + "].[" + level.name + "]";
+              const levelText = level.uniqueName;
               const queryText = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{" + levelText + ".Members} ON COLUMNS FROM [" + cube + "]";
               ret.push(new FilterDimension(queryText, levelText, connection, level.caption));
             }

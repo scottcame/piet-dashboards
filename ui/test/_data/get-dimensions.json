@@ -10,6 +10,7 @@
               "levels": [
                   {
                       "name": "MeasuresLevel",
+                      "uniqueName": "[Measures].[MeasuresLevel]",
                       "caption": "MeasuresLevel",
                       "depth": 0,
                       "cardinality": -2147483648,
@@ -31,6 +32,7 @@
               "levels": [
                   {
                       "name": "(All)",
+                      "uniqueName": "[Store].[(All)]",
                       "caption": "(All)",
                       "depth": 0,
                       "cardinality": 1,
@@ -38,6 +40,7 @@
                   },
                   {
                       "name": "Store Country",
+                      "uniqueName": "[Store].[Store Country]",
                       "caption": "Store Country",
                       "depth": 1,
                       "cardinality": -2147483648,
@@ -45,6 +48,7 @@
                   },
                   {
                       "name": "Store State",
+                      "uniqueName": "[Store].[Store State]",
                       "caption": "Store State",
                       "depth": 2,
                       "cardinality": -2147483648,
@@ -52,6 +56,7 @@
                   },
                   {
                       "name": "Store City",
+                      "uniqueName": "[Store].[Store City]",
                       "caption": "Store City",
                       "depth": 3,
                       "cardinality": -2147483648,
@@ -59,6 +64,7 @@
                   },
                   {
                       "name": "Store Name",
+                      "uniqueName": "[Store].[Store Name]",
                       "caption": "Store Name",
                       "depth": 4,
                       "cardinality": -2147483648,
@@ -80,6 +86,7 @@
               "levels": [
                   {
                       "name": "(All)",
+                      "uniqueName": "[Store Size in SQFT].[(All)]",
                       "caption": "(All)",
                       "depth": 0,
                       "cardinality": 1,
@@ -87,35 +94,8 @@
                   },
                   {
                       "name": "Store Sqft",
+                      "uniqueName": "[Store Size in SQFT].[Store Sqft]",
                       "caption": "Store Sqft",
-                      "depth": 1,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  }
-              ],
-              "hasAll": true
-          }
-      ]
-  },
-  {
-      "name": "Store Type",
-      "caption": "Store Type",
-      "type": "",
-      "hierarchies": [
-          {
-              "name": "Store Type",
-              "caption": "Store Type",
-              "levels": [
-                  {
-                      "name": "(All)",
-                      "caption": "(All)",
-                      "depth": 0,
-                      "cardinality": 1,
-                      "populated": true
-                  },
-                  {
-                      "name": "Store Type",
-                      "caption": "Store Type",
                       "depth": 1,
                       "cardinality": -2147483648,
                       "populated": true
@@ -136,6 +116,7 @@
               "levels": [
                   {
                       "name": "Year",
+                      "uniqueName": "[Time].[Year]",
                       "caption": "Year",
                       "depth": 0,
                       "cardinality": -2147483648,
@@ -143,6 +124,7 @@
                   },
                   {
                       "name": "Quarter",
+                      "uniqueName": "[Time].[Quarter]",
                       "caption": "Quarter",
                       "depth": 1,
                       "cardinality": -2147483648,
@@ -150,6 +132,7 @@
                   },
                   {
                       "name": "Month",
+                      "uniqueName": "[Time].[Month]",
                       "caption": "Month",
                       "depth": 2,
                       "cardinality": -2147483648,
@@ -164,6 +147,7 @@
               "levels": [
                   {
                       "name": "(All)",
+                      "uniqueName": "[Time.Weekly].[(All)]",
                       "caption": "(All)",
                       "depth": 0,
                       "cardinality": 1,
@@ -171,6 +155,7 @@
                   },
                   {
                       "name": "Year",
+                      "uniqueName": "[Time.Weekly].[Year]",
                       "caption": "Year",
                       "depth": 1,
                       "cardinality": -2147483648,
@@ -178,6 +163,7 @@
                   },
                   {
                       "name": "Week",
+                      "uniqueName": "[Time.Weekly].[Week]",
                       "caption": "Week",
                       "depth": 2,
                       "cardinality": -2147483648,
@@ -185,120 +171,9 @@
                   },
                   {
                       "name": "Day",
+                      "uniqueName": "[Time.Weekly].[Day]",
                       "caption": "Day",
                       "depth": 3,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  }
-              ],
-              "hasAll": true
-          }
-      ]
-  },
-  {
-      "name": "Product",
-      "caption": "Product",
-      "type": "",
-      "hierarchies": [
-          {
-              "name": "Product",
-              "caption": "Product",
-              "levels": [
-                  {
-                      "name": "(All)",
-                      "caption": "(All)",
-                      "depth": 0,
-                      "cardinality": 1,
-                      "populated": true
-                  },
-                  {
-                      "name": "Product Family",
-                      "caption": "Product Family",
-                      "depth": 1,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "Product Department",
-                      "caption": "Product Department",
-                      "depth": 2,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "Product Category",
-                      "caption": "Product Category",
-                      "depth": 3,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "Product Subcategory",
-                      "caption": "Product Subcategory",
-                      "depth": 4,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "Brand Name",
-                      "caption": "Brand Name",
-                      "depth": 5,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "Product Name",
-                      "caption": "Product Name",
-                      "depth": 6,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  }
-              ],
-              "hasAll": true
-          }
-      ]
-  },
-  {
-      "name": "Warehouse",
-      "caption": "Warehouse",
-      "type": "",
-      "hierarchies": [
-          {
-              "name": "Warehouse",
-              "caption": "Warehouse",
-              "levels": [
-                  {
-                      "name": "(All)",
-                      "caption": "(All)",
-                      "depth": 0,
-                      "cardinality": 1,
-                      "populated": true
-                  },
-                  {
-                      "name": "Country",
-                      "caption": "Country",
-                      "depth": 1,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "State Province",
-                      "caption": "State Province",
-                      "depth": 2,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "City",
-                      "caption": "City",
-                      "depth": 3,
-                      "cardinality": -2147483648,
-                      "populated": true
-                  },
-                  {
-                      "name": "Warehouse Name",
-                      "caption": "Warehouse Name",
-                      "depth": 4,
                       "cardinality": -2147483648,
                       "populated": true
                   }

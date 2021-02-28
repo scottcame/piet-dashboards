@@ -17,7 +17,7 @@ limitations under the License.
 
   import type { Repository } from "../Repository";
   import type { Drake, DragulaOptions } from 'dragula';
-  import type { Config } from "../Config";
+  import type { Config, FilterDimension } from "../Config";
   import type { Visualization } from "../Visualization";
   import { UserInterfaceState, WidgetState } from "../UserInterfaceState";
 
@@ -27,7 +27,7 @@ limitations under the License.
   import VizMenu from "./VizMenu.svelte";
   import VizWidget from "./VizWidget.svelte";
   import DimensionFilterModal from "./DimensionFilterModal.svelte";
-import AboutModal from "./AboutModal.svelte";
+  import AboutModal from "./AboutModal.svelte";
 
   export let repository: Repository;
 
@@ -43,15 +43,15 @@ import AboutModal from "./AboutModal.svelte";
   let currentUiState: UserInterfaceState = new UserInterfaceState();
 
   let dimensionFilterModalVisible = false;
-  let dimensionFilterModel: Map<string, boolean>;
   let dimensionFilterText: string;
-  let singleFilterDimension: string;
 
   let aboutModalVisible: boolean = false;
   let aboutContentUrl: string;
   let dataCaveatText: string;
 
   document.title = DEFAULT_TITLE;
+
+  console.log("In App.svelte");
 
   const dragulaOptions: DragulaOptions = {
     revertOnSpill: true,
@@ -106,6 +106,8 @@ import AboutModal from "./AboutModal.svelte";
 
   repository.init().then(async (config: Config): Promise<void> => {
 
+    console.log("In App.svelte init()");
+
     if (config.shortTitle) {
       document.title = config.shortTitle;
     }
@@ -122,9 +124,6 @@ import AboutModal from "./AboutModal.svelte";
     aboutContentUrl = config.aboutContentURL;
     dataCaveatText = config.dataCaveatText;
 
-    // in this first iteration, we only support a single dimension for filtering
-    singleFilterDimension = null; // (config.filterDimensions && config.filterDimensions.length) ? config.filterDimensions[0].dimension : null;
-
     updateDimensionFilterText();
 
     return repository.getSavedState().then(async (uiState: UserInterfaceState): Promise<void> => {
@@ -137,19 +136,12 @@ import AboutModal from "./AboutModal.svelte";
 
       const targetNodes: NodeListOf<Element> = document.querySelectorAll(".dragula-drop-target");
 
-      if (singleFilterDimension && uiState.dimensionFilterModel) {
-        // currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
-        currentUiState.dimensionFilterModel = new Map<string, boolean>();
-        [...repository.dimensionFilters.get(singleFilterDimension).keys()].forEach((key: string): void => {
-          if (uiState.dimensionFilterModel.has(key)) {
-            currentUiState.dimensionFilterModel.set(key, uiState.dimensionFilterModel.get(key));
-          } else {
-            currentUiState.dimensionFilterModel.set(key, false);
-          }
-        });
-        dimensionFilterModel = currentUiState.dimensionFilterModel;
-        repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
+      if (uiState.dimensionFilterModel) {
+        currentUiState.dimensionFilterModel = uiState.dimensionFilterModel;
+        repository.dimensionFilterModel = uiState.dimensionFilterModel;
       }
+
+      repository.dimensionFilterModel.selectedDimensionIndex = 0;
 
       updateDimensionFilterText();
       updateVisualizationsForFilterChange();
@@ -238,42 +230,18 @@ import AboutModal from "./AboutModal.svelte";
   }
 
   function updateDimensionFilterText(): void {
-    if (repository.dimensionFilters.size) {
-      let text = "";
-      const keys = [...repository.dimensionFilters.keys()];
-      keys.forEach((dimension: string, idx: number): void => {
-        const label = repository.config.getFilterDimensionLabel(dimension);
-        const selectionMap = repository.dimensionFilters.get(dimension);
-        text += (label + ": ");
-        let allSelected = true;
-        let noneSelected = true;
-        let selectedLevels: string[] = [];
-        [...selectionMap.keys()].forEach((level: string): void => {
-          const selected = selectionMap.get(level);
-          allSelected = allSelected && selected;
-          if (selected) {
-            selectedLevels.push(level);
-            noneSelected = false;
-          }
-        });
-        text += allSelected ? "[All values included]" : (noneSelected ? "[No values included]" : selectedLevels.join(", "));
-        if (idx < keys.length - 1) {
-          text += "; ";
-        }
-      });
-      dimensionFilterText = text;
+    console.log("Updating dimension filter text");
+    if (repository.dimensionFilterModel) {
+      dimensionFilterText = repository.dimensionFilterModel.dimensionStateDescriptions.join("; ");
     }
   }
 
   function showDimensionFilterModal(): void {
-    dimensionFilterModel = repository.dimensionFilters.get(singleFilterDimension);
     dimensionFilterModalVisible = true;
   }
 
   function hideDimensionFilterModal(e: CustomEvent): void {
-    dimensionFilterModel = e.detail as Map<string, boolean>;
-    repository.dimensionFilters.set(singleFilterDimension, dimensionFilterModel);
-    currentUiState.dimensionFilterModel = dimensionFilterModel;
+    currentUiState.dimensionFilterModel = repository.dimensionFilterModel;
     repository.saveCurrentState(currentUiState);
     updateDimensionFilterText();
     updateVisualizationsForFilterChange();
@@ -314,7 +282,7 @@ import AboutModal from "./AboutModal.svelte";
       </div>
     {/if}
     <div class="h-full w-4/5">
-      {#if initialized && repository.dimensionFilters.size}
+      {#if initialized}
         <div class="flex flex-inline h-10 w-full m-1 mr-2 p-1 border rounded border-blue-800 select-none">
           <button
             class="bg-transparent hover:bg-blue-800 text-blue-800 font-semibold hover:text-white py-px px-4 border border-blue-800 hover:border-transparent rounded outline-none focus:outline-none"
@@ -338,8 +306,7 @@ import AboutModal from "./AboutModal.svelte";
 
 <DimensionFilterModal
   visible={dimensionFilterModalVisible}
-  dimensionLabel="State"
-  model={dimensionFilterModel}
+  model={repository.dimensionFilterModel}
   on:close="{e => hideDimensionFilterModal(e)}"/>
 
 <AboutModal visible={aboutModalVisible} contentUrl={aboutContentUrl} on:close="{e => hideAboutModal()}"/>

@@ -202,9 +202,9 @@ export class TestData {
 
   // dimension filter query
 
-  static TEST_QUERY_DIMENSION_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]";
+  static TEST_QUERY_DIMENSION_STATE_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]";
 
-  static TEST_RESULTS_DIMENSION_FILTER = {
+  static TEST_RESULTS_DIMENSION_STATE_FILTER = {
     "values": [
       {
         "[Store].[Store].[Store State]": "BC",
@@ -258,6 +258,2763 @@ export class TestData {
       }
     ]
   };
+
+  static TEST_QUERY_DIMENSION_NAME_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store Name].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_NAME_FILTER = {
+      "values": [
+          {
+              "[Store].[Store Country]": "Canada",
+              "[Store].[Store State]": "BC",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 19",
+              "[Store].[Store City]": "Vancouver"
+          },
+          {
+              "[Store].[Store Country]": "Canada",
+              "[Store].[Store State]": "BC",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 20",
+              "[Store].[Store City]": "Victoria"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "DF",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 9",
+              "[Store].[Store City]": "Mexico City"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "DF",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 21",
+              "[Store].[Store City]": "San Andres"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "Guerrero",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 1",
+              "[Store].[Store City]": "Acapulco"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "Jalisco",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 5",
+              "[Store].[Store City]": "Guadalajara"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "Veracruz",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 10",
+              "[Store].[Store City]": "Orizaba"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "Yucatan",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 8",
+              "[Store].[Store City]": "Merida"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "Zacatecas",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 4",
+              "[Store].[Store City]": "Camacho"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "Zacatecas",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 12",
+              "[Store].[Store City]": "Hidalgo"
+          },
+          {
+              "[Store].[Store Country]": "Mexico",
+              "[Store].[Store State]": "Zacatecas",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 18",
+              "[Store].[Store City]": "Hidalgo"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "CA",
+              "Nul": null,
+              "[Store].[Store Name]": "HQ",
+              "[Store].[Store City]": "Alameda"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "CA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 6",
+              "[Store].[Store City]": "Beverly Hills"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "CA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 7",
+              "[Store].[Store City]": "Los Angeles"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "CA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 24",
+              "[Store].[Store City]": "San Diego"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "CA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 14",
+              "[Store].[Store City]": "San Francisco"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "OR",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 11",
+              "[Store].[Store City]": "Portland"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "OR",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 13",
+              "[Store].[Store City]": "Salem"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "WA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 2",
+              "[Store].[Store City]": "Bellingham"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "WA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 3",
+              "[Store].[Store City]": "Bremerton"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "WA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 15",
+              "[Store].[Store City]": "Seattle"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "WA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 16",
+              "[Store].[Store City]": "Spokane"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "WA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 17",
+              "[Store].[Store City]": "Tacoma"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "WA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 22",
+              "[Store].[Store City]": "Walla Walla"
+          },
+          {
+              "[Store].[Store Country]": "USA",
+              "[Store].[Store State]": "WA",
+              "Nul": null,
+              "[Store].[Store Name]": "Store 23",
+              "[Store].[Store City]": "Yakima"
+          }
+      ]
+  };
+
+  static TEST_QUERY_DIMENSION_CITY_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store City].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_CITY_FILTER = {
+    "values": [
+        {
+            "[Store].[Store Country]": "Canada",
+            "[Store].[Store State]": "BC",
+            "Nul": null,
+            "[Store].[Store City]": "Vancouver"
+        },
+        {
+            "[Store].[Store Country]": "Canada",
+            "[Store].[Store State]": "BC",
+            "Nul": null,
+            "[Store].[Store City]": "Victoria"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "DF",
+            "Nul": null,
+            "[Store].[Store City]": "Mexico City"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "DF",
+            "Nul": null,
+            "[Store].[Store City]": "San Andres"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "Guerrero",
+            "Nul": null,
+            "[Store].[Store City]": "Acapulco"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "Jalisco",
+            "Nul": null,
+            "[Store].[Store City]": "Guadalajara"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "Veracruz",
+            "Nul": null,
+            "[Store].[Store City]": "Orizaba"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "Yucatan",
+            "Nul": null,
+            "[Store].[Store City]": "Merida"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "Zacatecas",
+            "Nul": null,
+            "[Store].[Store City]": "Camacho"
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "[Store].[Store State]": "Zacatecas",
+            "Nul": null,
+            "[Store].[Store City]": "Hidalgo"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "CA",
+            "Nul": null,
+            "[Store].[Store City]": "Alameda"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "CA",
+            "Nul": null,
+            "[Store].[Store City]": "Beverly Hills"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "CA",
+            "Nul": null,
+            "[Store].[Store City]": "Los Angeles"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "CA",
+            "Nul": null,
+            "[Store].[Store City]": "San Diego"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "CA",
+            "Nul": null,
+            "[Store].[Store City]": "San Francisco"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "OR",
+            "Nul": null,
+            "[Store].[Store City]": "Portland"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "OR",
+            "Nul": null,
+            "[Store].[Store City]": "Salem"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "WA",
+            "Nul": null,
+            "[Store].[Store City]": "Bellingham"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "WA",
+            "Nul": null,
+            "[Store].[Store City]": "Bremerton"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "WA",
+            "Nul": null,
+            "[Store].[Store City]": "Seattle"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "WA",
+            "Nul": null,
+            "[Store].[Store City]": "Spokane"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "WA",
+            "Nul": null,
+            "[Store].[Store City]": "Tacoma"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "WA",
+            "Nul": null,
+            "[Store].[Store City]": "Walla Walla"
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "[Store].[Store State]": "WA",
+            "Nul": null,
+            "[Store].[Store City]": "Yakima"
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_COUNTRY_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store Country].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_COUNTRY_FILTER = {
+    "values": [
+        {
+            "[Store].[Store Country]": "Canada",
+            "Nul": null
+        },
+        {
+            "[Store].[Store Country]": "Mexico",
+            "Nul": null
+        },
+        {
+            "[Store].[Store Country]": "USA",
+            "Nul": null
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_TIME_YEAR_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Time].[Year].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_TIME_YEAR_FILTER = {
+    "values": [
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null
+        },
+        {
+            "[Time].[Year]": "1998",
+            "Nul": null
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_TIME_QUARTER_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Time].[Quarter].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_TIME_QUARTER_FILTER = {
+    "values": [
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q1"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q2"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q3"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q4"
+        },
+        {
+            "[Time].[Year]": "1998",
+            "Nul": null,
+            "[Time].[Quarter]": "Q1"
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_TIME_MONTH_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Time].[Month].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_TIME_MONTH_FILTER = {
+    "values": [
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q1",
+            "[Time].[Month]": "1"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q1",
+            "[Time].[Month]": "2"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q1",
+            "[Time].[Month]": "3"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q2",
+            "[Time].[Month]": "4"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q2",
+            "[Time].[Month]": "5"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q2",
+            "[Time].[Month]": "6"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q3",
+            "[Time].[Month]": "7"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q3",
+            "[Time].[Month]": "8"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q3",
+            "[Time].[Month]": "9"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q4",
+            "[Time].[Month]": "10"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q4",
+            "[Time].[Month]": "11"
+        },
+        {
+            "[Time].[Year]": "1997",
+            "Nul": null,
+            "[Time].[Quarter]": "Q4",
+            "[Time].[Month]": "12"
+        },
+        {
+            "[Time].[Year]": "1998",
+            "Nul": null,
+            "[Time].[Quarter]": "Q1",
+            "[Time].[Month]": "1"
+        },
+        {
+            "[Time].[Year]": "1998",
+            "Nul": null,
+            "[Time].[Quarter]": "Q2",
+            "[Time].[Month]": "4"
+        },
+        {
+            "[Time].[Year]": "1998",
+            "Nul": null,
+            "[Time].[Quarter]": "Q3",
+            "[Time].[Month]": "7"
+        },
+        {
+            "[Time].[Year]": "1998",
+            "Nul": null,
+            "[Time].[Quarter]": "Q4",
+            "[Time].[Month]": "10"
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_TIME_WEEKLY_YEAR_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Time.Weekly].[Year].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_TIME_WEEKLY_YEAR_FILTER = {
+    "values": [
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "Nul": null
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_TIME_WEEKLY_WEEK_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Time.Weekly].[Week].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_TIME_WEEKLY_WEEK_FILTER = {
+    "values": [
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "4",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "5",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "7",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "9",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "13",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "14",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "15",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "16",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "17",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "18",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "19",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "21",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "22",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "23",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "24",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "25",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "26",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "27",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "28",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "29",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "32",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "34",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "35",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "36",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "38",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "39",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "40",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "43",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "45",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "49",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "52",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "17",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "19",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "28",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "39",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_TIME_WEEKLY_DAY_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Time.Weekly].[Day].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_TIME_WEEKLY_DAY_FILTER = {
+    "values": [
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "18"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "22"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "23"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "7"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "3",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "4",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "4",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "4",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "4",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "18"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "5",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "5",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "5",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "29"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "7",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "7",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "7",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "7",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "11"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "13"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "14"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "9",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "9",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "9",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "9",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "22"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "23"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "7"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "11",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "11"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "12"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "13"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "14"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "13",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "13",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "13",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "14",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "15",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "15",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "15",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "16",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "16",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "16",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "16",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "16",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "12"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "17",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "17",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "17",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "18"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "18",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "19",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "19",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "19",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "19",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "19",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "7"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "21",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "11"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "22",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "22",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "22",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "22"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "22",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "23"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "22",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "23",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "23",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "23",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "23",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "23",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "24",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "24",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "24",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "24",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "24",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "7"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "25",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "25",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "26",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "26",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "27",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "27",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "27",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "28",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "28",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "28",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "29",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "29",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "29",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "14"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "18"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "22"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "23"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "31",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "32",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "32",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "32",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "32",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "32",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "32",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "7"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "34",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "13"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "35",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "35",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "35",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "22"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "35",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "23"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "36",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "36",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "36",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "36",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "36",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "36",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "38",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "38",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "40",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "40",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "23"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "40",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "40",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "40",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "40",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "22"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "23"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "45",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "45",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "45",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "45",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "45",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "45",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "7"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "11"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "12"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "13"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "14"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "22"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "49",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "49",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "49",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "11"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "12"
+        },
+        {
+            "[Time.Weekly].[Year]": "1997",
+            "[Time.Weekly].[Week]": "52",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "14"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "1",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "12"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "2",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "18"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "4",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "4",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "6",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "21"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "8",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "9",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "18"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "19"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "10",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "12",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "13",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "13"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "13",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "14"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "17",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "17",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "20",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "21",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "28",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "26"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "7"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "30",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "33",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "34",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "37",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "29"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "39",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "39",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "41",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "20"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "2"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "27"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "42",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "43",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "16"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "44",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "17"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "46",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "31"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "47",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "1"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "8"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "9"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "10"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "48",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "14"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "49",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "15"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "24"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "25"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "50",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "28"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "3"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "4"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "5"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "51",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "30"
+        },
+        {
+            "[Time.Weekly].[Year]": "1998",
+            "[Time.Weekly].[Week]": "52",
+            "Nul": null,
+            "[Time.Weekly].[Day]": "6"
+        }
+    ]
+  };
+
+  static TEST_QUERY_DIMENSION_SIZE_FILTER = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store Size in SQFT].[Store Sqft].Members} ON COLUMNS FROM [Warehouse]";
+
+  static TEST_RESULTS_DIMENSION_SIZE_FILTER = {
+    "values": [
+        {
+            "[Store Size in SQFT].[Store Sqft]": "#null",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "20319",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "21215",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "22478",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "23112",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "23593",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "23598",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "23688",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "23759",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "24597",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "27694",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "28206",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "30268",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "30584",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "30797",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "33858",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "34452",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "34791",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "36509",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "38382",
+            "Nul": null
+        },
+        {
+            "[Store Size in SQFT].[Store Sqft]": "39696",
+            "Nul": null
+        }
+    ]
+  };
+
 
   static TEST_QUERY_LINE_YZ = "TEST_QUERY_LINE_YZ";
 

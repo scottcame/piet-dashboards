@@ -16,12 +16,13 @@ limitations under the License.
 <script lang="ts">
 
   import { createEventDispatcher } from 'svelte';
+  import type { DimensionFilterModel } from '../DimensionFilterModel';
+  import Dropdown from './Dropdown.svelte';
 
   const dispatch: (event: string, detail: any) => void = createEventDispatcher();
 
   export let visible: boolean = false;
-  export let model: Map<string, boolean>;
-  export let dimensionLabel: string;
+  export let model: DimensionFilterModel;
 
   let searchText = "";
   let searchRegex: RegExp;
@@ -33,58 +34,61 @@ limitations under the License.
       searchRegex = new RegExp(searchText);
     } catch(error: any) {
     }
-    labels = [];
-    values = [];
-    if (model) {
-      [...model.keys()].forEach((key: string): void => {
-        labels.push(key);
-        values.push(model.get(key));
-      });
-    }
   }
 
   function toggleRow(rowIndex: number): void {
-    setRowValue(rowIndex, !model.get(labels[rowIndex]));
+    model.toggleSelectedDimensionValue(labels[rowIndex]);
+    updateModelView();
   }
 
-  function setRowValue(rowIndex: number, value: boolean): void {
-    model.set(labels[rowIndex], value);
-    model = model; // reactivity
-  }
-
-  function close(updateModel: boolean) : void {
-    let newModel = model;
-    if (updateModel) {
-      newModel = new Map<string, boolean>();
-      labels.forEach((label: string, idx: number): void => {
-        newModel.set(label, values[idx]);
-      });
-    }
-    dispatch('close', newModel);
+  function close() : void {
+    dispatch('close', {});
     visible = false;
   }
 
-  let toggleAllValue = true;
-
   function toggleAll(): void {
-    toggleAllValue = !toggleAllValue;
-    values.forEach((_value: boolean, idx: number): void => {
-      setRowValue(idx, toggleAllValue);
-    });
+    model.toggleAllSelectedDimensionLevelValues();
+    updateModelView();
+  }
+
+  function dimensionSelected(e: CustomEvent<{selectedIndex: number, selectedItem: string}>): void {
+    console.log("Dimension " + e.detail.selectedItem + " selected");
+    model.selectedDimensionIndex = e.detail.selectedIndex;
+  }
+
+  function updateModelView(): void {
+    labels = [];
+    values = [];
+    if (model && model.selectedDimensionLevelValues) {
+      model.selectedDimensionLevelValues.forEach((value: boolean, key: string): void => {
+        labels.push(key);
+        values.push(value);
+      });
+    }
+  }
+
+  $: {
+    if (model) {
+      updateModelView();
+    }
   }
 
 </script>
 
-{#if model} <!-- needed because when first mounted the model doesn't exist yet -->
+{#if model && model.dimensions.length} <!-- needed because when first mounted the model doesn't exist yet -->
   <div class="{visible ? '' : 'hidden'}">
     <div class="h-full w-full fixed top-0 left-0 bg-gray-300 border-gray-500 opacity-75 z-0">
+      <!-- modal background -->
     </div>
     <div class="h-full w-full fixed flex items-center justify-center top-0 left-0 z-10">
       <div class="bg-white rounded shadow w-1/3 max-h-full select-none border border-gray-500">
         <div class="bg-gray-300 p-2 font-semibold">
-            <div name="header">Filter dashboard for the following {dimensionLabel} values:</div>
+            <div name="header">Dashboard Filters</div>
         </div>
         <div class="mx-2 my-2 text-xs">
+          <div class="flex flex-inline items-center w-full border border-gray-500 p-1 mb-1">
+            Dimension: <Dropdown labels={model.labels} selectedIndex={model.selectedDimensionIndex} on:itemSelected={e => dimensionSelected(e)}/>
+          </div>
           <div class="flex flex-inline items-center w-full border border-gray-500 p-1 mb-1">
             <input class="text-xs w-full outline-none" type="search" placeholder="Search..." bind:value={searchText}>
           </div>
@@ -107,7 +111,7 @@ limitations under the License.
           <div on:click="{e => toggleAll()}" class="cursor-pointer hover:text-blue-900 pl-1 text-blue-700 underline">Toggle All</div>
         </div>
         <div class="flex flex-inline justify-center mb-4 mt-2 flex-none">
-          <div class="border-2 border-gray-500 mr-2 p-2 hover:bg-gray-200" on:click={e => close(true)}>OK</div>
+          <div class="border-2 border-gray-500 mr-2 p-2 hover:bg-gray-200" on:click={e => close()}>OK</div>
         </div>
       </div>
     </div>

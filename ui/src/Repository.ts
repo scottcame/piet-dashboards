@@ -17,6 +17,7 @@ import { TestData } from "../test/_data/TestData";
 import { Config, FilterDimension, PropertyPlaceholder } from "./Config";
 import { UserInterfaceState } from "./UserInterfaceState";
 import Dexie from 'dexie';
+import { DimensionFilterModel } from "./DimensionFilterModel";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -41,11 +42,13 @@ export interface Repository {
   readonly uiState: UserInterfaceState;
   readonly firstVisit: boolean;
   readonly filterDimensions: FilterDimension[];
-  dimensionFilters: Map<string, Map<string, boolean>>;
+  // dimensionFilters: Map<string, Map<string, boolean>>;
+  dimensionFilterModel: DimensionFilterModel;
   init(): Promise<Config>;
   executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
   saveCurrentState(currentState: UserInterfaceState): Promise<void>;
   getSavedState(): Promise<UserInterfaceState>;
+  getFilterDimensionLabel(dimension: string): string;
  }
 
 abstract class AbstractRepository implements Repository {
@@ -55,7 +58,9 @@ abstract class AbstractRepository implements Repository {
   protected _uiState: UserInterfaceState;
   private _firstVisit = true;
   private _filterDimensions: FilterDimension[] = [];
-  dimensionFilters = new Map<string, Map<string, boolean>>();
+  // dimensionFilters = new Map<string, Map<string, boolean>>();
+  dimensionFilterModel = new DimensionFilterModel();
+  dimensionFilters: any;
 
   get config(): Config {
     return this._config;
@@ -67,6 +72,16 @@ abstract class AbstractRepository implements Repository {
 
   get filterDimensions(): FilterDimension[] {
     return this._filterDimensions;
+  }
+
+  getFilterDimensionLabel(dimension: string): string {
+    let ret: string = null;
+    this.filterDimensions.forEach((d: FilterDimension): void => {
+      if (d.dimension === dimension) {
+        ret = d.label;
+      }
+    });
+    return ret;
   }
 
   async init(): Promise<Config> {
@@ -131,41 +146,40 @@ abstract class AbstractRepository implements Repository {
         }
         return d;
       });
-      console.log(this.filterDimensions);
-      const promises: Promise<void>[] = this._config.filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
+      const promises: Promise<void>[] = this._filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
         return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
           const levels: Map<string, boolean> = new Map<string, boolean>();
           results.values.forEach((value: any): void => {
             levels.set(value[filterDimension.dimension], true);
           });
-          this.dimensionFilters.set(filterDimension.dimension, levels);
+          this.dimensionFilterModel.addDimensionLevels(filterDimension.dimension, filterDimension.label, levels);
         });
       });
-      return Promise.all([]);
+      return Promise.all(promises);
     });
     
   }
 
   protected replaceDimensionFilterPlaceholders(mdx: string): string {
-    const replacementMap = new Map<string, string>();
-    [...this.dimensionFilters.keys()].forEach((dimension: string): void => {
-      let allSelected = true;
-      const selectedLevels: string[] = [];
-      const selectionMap = this.dimensionFilters.get(dimension);
-      [...selectionMap.keys()].forEach((level: string): void => {
-        const value = selectionMap.get(level);
-        if (value) {
-          selectedLevels.push(dimension + ".[" + level + "]");
-        } else {
-          allSelected = false;
-        }
-      });
-      replacementMap.set(dimension, allSelected ? (dimension + ".Members") : selectedLevels.join(","));
-    });
-    [...replacementMap.keys()].forEach((dimension: string): void => {
-      const dimensionRegex = this.makeDoubleHashRegex(dimension);
-      mdx = mdx.replace(dimensionRegex, replacementMap.get(dimension));
-    });
+    // const replacementMap = new Map<string, string>();
+    // [...this.dimensionFilters.keys()].forEach((dimension: string): void => {
+    //   let allSelected = true;
+    //   const selectedLevels: string[] = [];
+    //   const selectionMap = this.dimensionFilters.get(dimension);
+    //   [...selectionMap.keys()].forEach((level: string): void => {
+    //     const value = selectionMap.get(level);
+    //     if (value) {
+    //       selectedLevels.push(dimension + ".[" + level + "]");
+    //     } else {
+    //       allSelected = false;
+    //     }
+    //   });
+    //   replacementMap.set(dimension, allSelected ? (dimension + ".Members") : selectedLevels.join(","));
+    // });
+    // [...replacementMap.keys()].forEach((dimension: string): void => {
+    //   const dimensionRegex = this.makeDoubleHashRegex(dimension);
+    //   mdx = mdx.replace(dimensionRegex, replacementMap.get(dimension));
+    // });
     return mdx;
   }
 
@@ -248,8 +262,28 @@ export class LocalRepository extends AbstractRepository {
       data = TestData.TEST_RESULTS_LINE_TEMPORAL_RANDOM1;
     } else if (mdx === TestData.TEST_QUERY_LINE_YZ) {
       data = TestData.TEST_RESULTS_LINE_YZ;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_COUNTRY_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_COUNTRY_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_STATE_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_STATE_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_CITY_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_CITY_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_NAME_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_NAME_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_SIZE_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_SIZE_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_YEAR_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_TIME_YEAR_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_QUARTER_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_TIME_QUARTER_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_MONTH_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_TIME_MONTH_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_WEEKLY_YEAR_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_TIME_WEEKLY_YEAR_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_WEEKLY_WEEK_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_TIME_WEEKLY_WEEK_FILTER;
+    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_WEEKLY_DAY_FILTER) {
+      data = TestData.TEST_RESULTS_DIMENSION_TIME_WEEKLY_DAY_FILTER;
     } else if (mdx === TestData.TEST_QUERY_FOR_BIGGEST_STATE) {
       data = TestData.TEST_RESULTS_FOR_BIGGEST_STATE;
     } else if (mdx === TestData.TEST_QUERY_FOR_SMALLEST_STATE) {
