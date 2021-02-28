@@ -22,7 +22,7 @@ import { terser } from 'rollup-plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import json from 'rollup-plugin-json';
 import css from 'rollup-plugin-css-only'
-import autoPreprocess from 'svelte-preprocess';
+import sveltePreprocess from 'svelte-preprocess';
 
 const production = process.env.DEV !== "true";
 const watch = process.env.ROLLUP_WATCH;
@@ -48,7 +48,7 @@ export default {
   input: remote ? 'src/index-remote.ts' : 'src/index-local.ts',
 
   output: {
-    sourcemap: true,
+    sourcemap: !production,
     format: 'iife',
     name: 'app',
     file: 'public/bundle.js'
@@ -59,15 +59,14 @@ export default {
     json(),
     css(),
     svelte({
-      preprocess: autoPreprocess()
-    }
-    ),
+      preprocess: sveltePreprocess({ sourceMap: !production })
+    }),
     resolve({
 			browser: true,
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
     commonjs(),
-    typescript(),
+    typescript({ sourceMap: !production, inlineSources: !production }),
 
     // don't transpile in dev mode, as Chrome (our dev browser) handles es6 javascript just fine, and transpiling doubles the rollup bundling time
     production && babel({
