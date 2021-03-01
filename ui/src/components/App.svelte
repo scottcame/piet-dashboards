@@ -51,8 +51,6 @@ limitations under the License.
 
   document.title = DEFAULT_TITLE;
 
-  console.log("In App.svelte");
-
   const dragulaOptions: DragulaOptions = {
     revertOnSpill: true,
     copy: true,
@@ -105,8 +103,6 @@ limitations under the License.
   }
 
   repository.init().then(async (config: Config): Promise<void> => {
-
-    console.log("In App.svelte init()");
 
     if (config.shortTitle) {
       document.title = config.shortTitle;
@@ -230,7 +226,6 @@ limitations under the License.
   }
 
   function updateDimensionFilterText(): void {
-    console.log("Updating dimension filter text");
     if (repository.dimensionFilterModel) {
       dimensionFilterText = repository.dimensionFilterModel.dimensionStateDescriptions.join("; ");
     }

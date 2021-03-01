@@ -42,7 +42,6 @@ export interface Repository {
   readonly uiState: UserInterfaceState;
   readonly firstVisit: boolean;
   readonly filterDimensions: FilterDimension[];
-  // dimensionFilters: Map<string, Map<string, boolean>>;
   dimensionFilterModel: DimensionFilterModel;
   init(): Promise<Config>;
   executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
@@ -58,7 +57,6 @@ abstract class AbstractRepository implements Repository {
   protected _uiState: UserInterfaceState;
   private _firstVisit = true;
   private _filterDimensions: FilterDimension[] = [];
-  // dimensionFilters = new Map<string, Map<string, boolean>>();
   dimensionFilterModel = new DimensionFilterModel();
   dimensionFilters: any;
 
@@ -104,12 +102,33 @@ abstract class AbstractRepository implements Repository {
           return this.replacePropertyPlaceholders(fetchedConfig).then(async (editedConfig: Config): Promise<Config> => {
             this._config = editedConfig;
             return this.populateDimensionFilters().then(async () => {
-              return Promise.resolve(this._config);
+              return this.syncDimensionFilterModel().then(async () => {
+                return Promise.resolve(this._config);
+              });
             });
           });
         });
       }); 
     });
+  }
+
+  private syncDimensionFilterModel(): Promise<void> {
+    this.dimensionFilterModel.dimensions.forEach((dimension: string, rowIndex: number): void => {
+      if (this._uiState && this._uiState.dimensionFilterModel) {
+        this._uiState.dimensionFilterModel.dimensions.forEach((savedDimension: string, savedRowIndex: number): void => {
+          if (dimension === savedDimension) {
+            const savedValueMap = this._uiState.dimensionFilterModel.dimensionLevelValues[savedRowIndex];
+            savedValueMap.forEach((value: boolean, key: string): void => {
+              if (this.dimensionFilterModel.dimensionLevelValues[rowIndex].has(key)) {
+                this.dimensionFilterModel.dimensionLevelValues[rowIndex].set(key, value);
+              }
+            });
+          }
+        });
+      }
+    });
+    this._uiState.dimensionFilterModel = this.dimensionFilterModel;
+    return this.saveCurrentState(this._uiState);
   }
 
   async saveCurrentState(currentState: UserInterfaceState): Promise<void> {
@@ -149,10 +168,14 @@ abstract class AbstractRepository implements Repository {
       const promises: Promise<void>[] = this._filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
         return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
           const levels: Map<string, boolean> = new Map<string, boolean>();
-          results.values.forEach((value: any): void => {
-            levels.set(value[filterDimension.dimension], true);
-          });
-          this.dimensionFilterModel.addDimensionLevels(filterDimension.dimension, filterDimension.label, levels);
+          if (results) {
+            results.values.forEach((value: any): void => {
+              levels.set(value[filterDimension.dimension], true);
+            });
+          } else {
+            console.warn("No results found for query: " + filterDimension.query);
+          }
+          this.dimensionFilterModel.addDimensionLevels(filterDimension, levels);
         });
       });
       return Promise.all(promises);

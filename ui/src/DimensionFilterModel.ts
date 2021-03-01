@@ -1,10 +1,11 @@
+import type { FilterDimension } from "./Config";
+
 export class DimensionFilterModel {
 
-  dimensions: string[] = [];
-  labels: string[] = [];
   dimensionLevelValues: Map<string, boolean>[] = [];
   selectedDimensionIndex = 0;
   private toggleAllValue = false;
+  private _dimensions: FilterDimension[] = [];
 
   get selectedDimension(): string {
     return this.dimensions.length ? this.dimensions[this.selectedDimensionIndex] : undefined;
@@ -14,9 +15,8 @@ export class DimensionFilterModel {
     return this.dimensionLevelValues[this.selectedDimensionIndex];
   }
 
-  addDimensionLevels(dimension: string, label: string, levelValues: Map<string, boolean>) {
-    this.dimensions.push(dimension);
-    this.labels.push(label);
+  addDimensionLevels(dimension: FilterDimension, levelValues: Map<string, boolean>) {
+    this._dimensions.push(dimension);
     this.dimensionLevelValues.push(levelValues);
   }
 
@@ -34,6 +34,18 @@ export class DimensionFilterModel {
     return !currentValue;
   }
 
+  get dimensions(): string[] {
+    return this._dimensions.map((d: FilterDimension): string => {
+      return d.dimension;
+    });
+  }
+
+  get labels(): string[] {
+    return this._dimensions.map((d: FilterDimension): string => {
+      return d.label;
+    });
+  }
+
   get dimensionStateDescriptions(): string[] {
     return this.labels.map((label: string, rowIndex: number): string => {
 
@@ -49,8 +61,7 @@ export class DimensionFilterModel {
 
   toJson(): any {
     return {
-      dimensions: this.dimensions,
-      labels: this.labels,
+      _dimensions: this._dimensions,
       selectedDimensionIndex: this.selectedDimensionIndex,
       dimensionLevelValues: this.dimensionLevelValues.map((levelMap: Map<string, boolean>): any => {
         const ret = new Object();
@@ -64,8 +75,7 @@ export class DimensionFilterModel {
 
   static fromJson(json: any): DimensionFilterModel {
     const ret = new DimensionFilterModel();
-    ret.dimensions = json.dimensions;
-    ret.labels = json.labels;
+    ret._dimensions = JSON.parse(JSON.stringify(json._dimensions)) as FilterDimension[];
     ret.selectedDimensionIndex = json.selectedDimensionIndex;
     json.dimensionLevelValues.forEach((valueMap: any): void => {
       const m = new Map<string, boolean>();

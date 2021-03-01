@@ -22,8 +22,8 @@
   },
   "filterDimensions": [
     {
-      "dimension": "[Store].[Store].[Store State]",
-      "query": "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
+      "dimension": "[Store].[Store State]",
+      "query": "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
       "label": "State (Custom)"
     }
   ],
