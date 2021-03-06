@@ -2,22 +2,22 @@ import type { FilterDimension } from "./Config";
 
 export class DimensionFilterModel {
 
-  dimensionLevelValues: Map<string, boolean>[] = [];
   selectedDimensionIndex = 0;
   private toggleAllValue = false;
   private _dimensions: FilterDimension[] = [];
+  private _dimensionLevelValues: Map<string, boolean>[] = [];
 
   get selectedDimension(): string {
     return this.dimensions.length ? this.dimensions[this.selectedDimensionIndex] : undefined;
   }
 
   get selectedDimensionLevelValues(): Map<string, boolean> {
-    return this.dimensionLevelValues[this.selectedDimensionIndex];
+    return this._dimensionLevelValues[this.selectedDimensionIndex];
   }
 
   addDimensionLevels(dimension: FilterDimension, levelValues: Map<string, boolean>) {
     this._dimensions.push(dimension);
-    this.dimensionLevelValues.push(levelValues);
+    this._dimensionLevelValues.push(levelValues);
   }
 
   toggleAllSelectedDimensionLevelValues(): void {
@@ -25,7 +25,6 @@ export class DimensionFilterModel {
       this.selectedDimensionLevelValues.set(level, !this.toggleAllValue);
     });
     this.toggleAllValue = !this.toggleAllValue;
-    this.dimensionLevelValues = this.dimensionLevelValues; // reactive
   }
 
   toggleSelectedDimensionValue(level: string) : boolean {
@@ -49,7 +48,7 @@ export class DimensionFilterModel {
   get dimensionStateDescriptions(): string[] {
     return this.labels.map((label: string, rowIndex: number): string => {
 
-      const valueMap = this.dimensionLevelValues[rowIndex];
+      const valueMap = this._dimensionLevelValues[rowIndex];
       const selectedMembers = [...valueMap.entries()].filter(entry => {
         return entry[1];
       }).map(entry => { return entry[0]; });
@@ -59,11 +58,28 @@ export class DimensionFilterModel {
     });
   }
 
+  syncWith(model: DimensionFilterModel): void {
+    this.dimensions.forEach((dimension: string, rowIndex: number): void => {
+      if (model) {
+        model.dimensions.forEach((savedDimension: string, savedRowIndex: number): void => {
+          if (dimension === savedDimension) {
+            const savedValueMap = model._dimensionLevelValues[savedRowIndex];
+            savedValueMap.forEach((value: boolean, key: string): void => {
+              if (this._dimensionLevelValues[rowIndex].has(key)) {
+                this._dimensionLevelValues[rowIndex].set(key, value);
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
   toJson(): any {
     return {
       _dimensions: this._dimensions,
       selectedDimensionIndex: this.selectedDimensionIndex,
-      dimensionLevelValues: this.dimensionLevelValues.map((levelMap: Map<string, boolean>): any => {
+      dimensionLevelValues: this._dimensionLevelValues.map((levelMap: Map<string, boolean>): any => {
         const ret = new Object();
         levelMap.forEach((value: boolean, key: string): void => {
           ret[key] = value;
@@ -79,7 +95,7 @@ export class DimensionFilterModel {
     ret.selectedDimensionIndex = json.selectedDimensionIndex;
     json.dimensionLevelValues.forEach((valueMap: any): void => {
       const m = new Map<string, boolean>();
-      ret.dimensionLevelValues.push(m);
+      ret._dimensionLevelValues.push(m);
       Object.keys(valueMap).forEach((objectKey: string): void => {
         m.set(objectKey, valueMap[objectKey]);
       });

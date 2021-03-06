@@ -113,21 +113,10 @@ abstract class AbstractRepository implements Repository {
   }
 
   private syncDimensionFilterModel(): Promise<void> {
-    this.dimensionFilterModel.dimensions.forEach((dimension: string, rowIndex: number): void => {
-      if (this._uiState && this._uiState.dimensionFilterModel) {
-        this._uiState.dimensionFilterModel.dimensions.forEach((savedDimension: string, savedRowIndex: number): void => {
-          if (dimension === savedDimension) {
-            const savedValueMap = this._uiState.dimensionFilterModel.dimensionLevelValues[savedRowIndex];
-            savedValueMap.forEach((value: boolean, key: string): void => {
-              if (this.dimensionFilterModel.dimensionLevelValues[rowIndex].has(key)) {
-                this.dimensionFilterModel.dimensionLevelValues[rowIndex].set(key, value);
-              }
-            });
-          }
-        });
-      }
-    });
-    this._uiState.dimensionFilterModel = this.dimensionFilterModel;
+    if (this._uiState) {
+      this.dimensionFilterModel.syncWith(this._uiState.dimensionFilterModel);
+      this._uiState.dimensionFilterModel = this.dimensionFilterModel;
+    }
     return this.saveCurrentState(this._uiState);
   }
 
@@ -184,6 +173,8 @@ abstract class AbstractRepository implements Repository {
   }
 
   protected replaceDimensionFilterPlaceholders(mdx: string): string {
+    console.log(mdx);
+    console.log(this.dimensionFilterModel);
     // const replacementMap = new Map<string, string>();
     // [...this.dimensionFilters.keys()].forEach((dimension: string): void => {
     //   let allSelected = true;
