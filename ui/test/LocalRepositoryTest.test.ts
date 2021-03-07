@@ -13,11 +13,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { LocalRepository } from "../src/Repository";
-import type { Config } from "../src/Config";
+import { LocalRepository, Repository } from "../src/Repository";
+import type { Config, FilterDimension } from "../src/Config";
 import { UserInterfaceState, WidgetState } from "../src/UserInterfaceState";
+import { TestData } from "./_data/TestData";
 
-const repository = new LocalRepository();
+let repository: Repository;
+
+beforeEach(() => {
+  repository = new LocalRepository();
+});
 
 test('init', async () => {
   return repository.init().then(async (_config: Config) => {
@@ -46,4 +51,44 @@ test('ui state save and retrieve', async () => {
   });
 });
 
+test('filter dimensions', async () => {
+  return repository.init().then(async (_config: Config) => {
 
+    expect(repository.filterDimensions.length).toBe(10);
+
+    const countryDimension = repository.filterDimensions
+      .filter((fd: FilterDimension): boolean => { return fd.label==="Store Country"; })[0];
+
+    const countryLevel = TestData.TEST_DIMENSIONS["default"]
+      .filter((d: { name: string }): boolean => { return d.name==="Store"; })[0]
+      .hierarchies
+      .filter((h: { name: string }): boolean => { return h.name==="Store"; })[0]
+      .levels
+      .filter((level: { name: string }): boolean => { return level.name==="Store Country"; })[0];
+
+    expect(countryDimension.dimension === countryLevel.uniqueName).toBe(true);
+    expect(countryDimension.connection).toBe("foodmart");
+    expect(countryDimension.hierarchy).toBe('[Store]');
+    expect(countryDimension.query).toBe('WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store Country].Members} ON COLUMNS FROM [Warehouse]');
+    
+  });
+});
+
+test('dimension filters', async () => {
+  return repository.init().then(async (_config: Config) => {
+
+    expect(repository.dimensionFilterModel.selectedDimensionIndex).toBe(0);
+    expect(repository.dimensionFilterModel.dimensions).toStrictEqual(repository.filterDimensions.map((fd: FilterDimension): string => { return fd.dimension; }));
+    expect(repository.dimensionFilterModel.selectedDimension).toBe("[Store].[Store Country]");
+    expect(repository.dimensionFilterModel.selectedDimensionLevelValues.get("USA")).toBe(true);
+
+    repository.dimensionFilterModel.toggleSelectedDimensionValue("USA");
+    expect(repository.dimensionFilterModel.selectedDimensionLevelValues.get("USA")).toBe(false);
+
+    repository.dimensionFilterModel.selectedDimensionIndex = 1;
+
+    expect(repository.dimensionFilterModel.selectedDimension).toBe("[Store].[Store State]");
+    expect(repository.dimensionFilterModel.labels[repository.dimensionFilterModel.selectedDimensionIndex]).toBe("State (Custom)");
+
+  });
+});

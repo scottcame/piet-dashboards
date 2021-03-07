@@ -58,7 +58,6 @@ abstract class AbstractRepository implements Repository {
   private _firstVisit = true;
   private _filterDimensions: FilterDimension[] = [];
   dimensionFilterModel = new DimensionFilterModel();
-  dimensionFilters: any;
 
   get config(): Config {
     return this._config;
