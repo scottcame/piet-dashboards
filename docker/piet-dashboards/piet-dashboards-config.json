@@ -3,16 +3,17 @@
     "short": "Piet Dashboard",
     "long": "Demo Piet Dashboard"
   },
+  "connection": "foodmart",
+  "cube": "Warehouse",
   "mondrianRestUrl": "/mondrian-rest",
   "appLogoImageUrl": "img/piet-logo.jpg",
   "aboutContentUrl": "about-content.html",
   "allowVizExport": false,
   "filterDimensions": [
     {
-      "connection": "foodmart",
       "dimension": "[Store].[Store State]",
       "query": "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
-      "label": "State"
+      "label": "State (Custom)"
     }
   ],
   "groups": [
@@ -23,48 +24,30 @@
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state",
           "headerText": "Units Ordered by state (bar chart)",
-          "connection": "foodmart",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Store State]"
+          "xDimension": "[Store].[Store State]",
+          "xAxisPercentages": true
         },
         "viz-1-2": {
-          "vizType": "bar",
-          "panelTitle": "Bar: Units Ordered by state excluding Oregon",
-          "headerText": "Units Ordered by state (bar chart), excluding Oregon",
-          "connection": "foodmart",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store State].Members}, {[Store].[Store State].[OR]})) ON COLUMNS FROM [Warehouse]",
+          "vizType": "pie",
+          "panelTitle": "Pie: Units Ordered by state",
+          "headerText": "Units Ordered by state (bar chart)",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
+          "measureFormats": [","],
           "xDimension": "[Store].[Store State]"
         },
         "viz-1-3": {
-          "vizType": "pie",
-          "panelTitle": "Pie: Units Ordered by state ",
-          "headerText": "Units Ordered by state (pie chart)",
-          "connection": "foodmart",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
-          "measures": ["Units Ordered"],
-          "measureFormats": [","],
-          "xDimension": "[Store].[Store State]"
-        },
-        "viz-1-4": {
-          "vizType": "pie",
-          "panelTitle": "Pie: Units Ordered by state for filtering",
-          "headerText": "Units Ordered by state (pie chart), to test filtering",
-          "connection": "foodmart",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Store State]#} ON COLUMNS FROM [Warehouse]",
-          "measures": ["Units Ordered"],
-          "measureFormats": [","],
-          "xDimension": "[Store].[Store State]"
-        },
-        "viz-1-5": {
           "vizType": "bar",
-          "panelTitle": "Bar: Units Ordered by state for filtering",
-          "headerText": "Units Ordered by state (bar chart), for testing filtering",
-          "connection": "foodmart",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Store State]#} ON COLUMNS FROM [Warehouse]",
+          "panelTitle": "Bar: Units Ordered by state, w magnitude counts",
+          "headerText": "Units Ordered by state (bar chart)",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
-          "xDimension": "[Store].[Store State]"
+          "measureFormats": [","],
+          "xDimension": "[Store].[Store State]",
+          "xAxisPercentages": false,
+          "magnitudeLabels": true
         }
       }
     }

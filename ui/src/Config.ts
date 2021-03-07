@@ -157,7 +157,7 @@ export class FilterDimension {
 
   static fromGetDimensionsJson(json: {name: string, caption: string, hierarchies: [{name: string, caption: string, levels: [{name: string, uniqueName: string, caption: string}]}]}[], connection: string, cube: string): FilterDimension[] {
     const ret: FilterDimension[] = [];
-    json["default"].forEach(dimension => {
+    json.forEach(dimension => {
       if (dimension.name !== "Measures") {
         dimension.hierarchies.forEach(hierarchy => {
           hierarchy.levels.forEach(level => {

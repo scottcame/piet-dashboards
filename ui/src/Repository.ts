@@ -154,7 +154,7 @@ abstract class AbstractRepository implements Repository {
         }
         return d;
       }).filter((fd: FilterDimension): boolean => {
-        return !this._config.excludedDimensions.includes(fd.dimension);
+        return !this._config.excludedDimensions || !this._config.excludedDimensions.includes(fd.dimension);
       });
 
       const promises: Promise<void>[] = this._filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
@@ -280,7 +280,16 @@ export class RemoteRepository extends AbstractRepository {
   }
 
   protected async fetchDimensions(): Promise<FilterDimension[]> {
-    return Promise.resolve([]);
+    return fetch(this.config.mondrianRestURL + "/getDimensions?connectionName=" + this._config.connection + "&includeMembers=false&cube=" + this._config.cube, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(async (response: Response) => {
+      return response.json().then(async (json: any): Promise<any> => {
+        return Promise.resolve(FilterDimension.fromGetDimensionsJson(json, this.config.connection, this.config.cube));
+      });
+    });
   }
 
   async executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }> {

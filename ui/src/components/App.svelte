@@ -264,7 +264,7 @@ limitations under the License.
       <img src="{appLogoImageUrl}" class="h-16" alt="Logo"/>
       <ul class="border-r-2 ml-4 mr-2 pr-10">
           <li><span class="uppercase text-xl">{headerTitle}</span></li>
-          <li class="mt-3 italic"><span class="data-caveat-text">{@html dataCaveatText}</span></li>
+          <li class="mt-3 italic"><span class="data-caveat-text">{@html dataCaveatText||""}</span></li>
       </ul>
       <div class="ml-auto hover:underline cursor-pointer flex-none" on:click="{ e => showAboutModal() }">About this dashboard</div>
     </div>

@@ -21,7 +21,7 @@ import * as testDimensions from './get-dimensions.json';
 export class TestData {
 
   static TEST_CONFIG: any = testConfig;
-  static TEST_DIMENSIONS: any = testDimensions;
+  static TEST_DIMENSIONS: any = testDimensions["default"];
 
   readonly queryDataMap: Map<string, {values: any[]}> = new Map();
 
