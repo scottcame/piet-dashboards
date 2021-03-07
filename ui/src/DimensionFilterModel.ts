@@ -49,13 +49,37 @@ export class DimensionFilterModel {
     return this.labels.map((label: string, rowIndex: number): string => {
 
       const valueMap = this._dimensionLevelValues[rowIndex];
-      const selectedMembers = [...valueMap.entries()].filter(entry => {
-        return entry[1];
-      }).map(entry => { return entry[0]; });
+      const partition = this.partitionMembers(valueMap);
 
-      return selectedMembers.length == valueMap.size ? null : label + ": " + selectedMembers.join(",");
+      let ret = null;
+
+      const formatLevels = function(label: string, levels: string[]): string {
+        return label + ": " + levels.join(",");
+      }
+
+      if (!partition.allSelected) {
+        if (partition.selectedMembers.length < partition.deselectedMembers.length) {
+          ret = formatLevels(label, partition.selectedMembers);
+        } else {
+          ret = "Excluding " + formatLevels(label, partition.deselectedMembers);
+        }
+      }
+
+      return ret;
 
     }).filter((value: string): boolean => { return value != null; });
+  }
+
+  private partitionMembers(valueMap: Map<string, boolean>): DimensionMemberPartitioning {
+    const ret = new DimensionMemberPartitioning(valueMap.size);
+    [...valueMap.entries()].forEach((entry: [string, boolean]): void => {
+      if (entry[1]) {
+        ret.selectedMembers.push(entry[0]);
+      } else {
+        ret.deselectedMembers.push(entry[0]);
+      }
+    });
+    return ret;
   }
 
   applyTo(mdx: string): string {
@@ -63,22 +87,14 @@ export class DimensionFilterModel {
     const dimensionReplacementMap = new Map<string, string>();
 
     this._dimensionLevelValues.forEach((valueMap: Map<string, boolean>, rowIndex: number): void => {
-      const selectedMembers = [];
-      const deselectedMembers = [];
-      [...valueMap.entries()].forEach((entry: [string, boolean]): void => {
-        if (entry[1]) {
-          selectedMembers.push(entry[0]);
-        } else {
-          deselectedMembers.push(entry[0]);
-        }
-      });
-      if (selectedMembers.length < valueMap.size) {
+      const partition = this.partitionMembers(valueMap);
+      if (!partition.allSelected) {
         const d = this._dimensions[rowIndex].dimension;
         let mdxFunction = "Except";
-        let filterMembers = deselectedMembers;
-        if (selectedMembers.length < deselectedMembers.length) {
+        let filterMembers = partition.deselectedMembers;
+        if (partition.selectedMembers.length < partition.deselectedMembers.length) {
           mdxFunction = "Intersect";
-          filterMembers = selectedMembers;
+          filterMembers = partition.selectedMembers;
         }
         const memberList = "{" + filterMembers.map((selectedMember: string): string => {
           return d + ".[" + selectedMember + "]";
@@ -150,4 +166,16 @@ export class DimensionFilterModel {
     return ret;
   }
 
+}
+
+class DimensionMemberPartitioning {
+  private _levelCount: number;
+  constructor(levelCount: number) {
+    this._levelCount = levelCount;
+  }
+  selectedMembers: string[] = [];
+  deselectedMembers: string[] = [];
+  get allSelected(): boolean {
+    return this.selectedMembers.length == this._levelCount;
+  }
 }
