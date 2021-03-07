@@ -144,6 +144,7 @@ abstract class AbstractRepository implements Repository {
   protected async populateDimensionFilters(): Promise<void[]> {
 
     return this.fetchDimensions().then((filterDimensions: FilterDimension[]): Promise<void[]> => {
+
       this._filterDimensions = filterDimensions.map((d: FilterDimension): FilterDimension => {
         const matchingDimensions: FilterDimension[] = this._config.filterDimensions
           .filter((customDimension: FilterDimension): boolean => {
@@ -153,7 +154,10 @@ abstract class AbstractRepository implements Repository {
           d.updateFrom(matchingDimensions[0]);
         }
         return d;
+      }).filter((fd: FilterDimension): boolean => {
+        return !this._config.excludedDimensions.includes(fd.dimension);
       });
+
       const promises: Promise<void>[] = this._filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
         return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
           const levels: Map<string, boolean> = new Map<string, boolean>();
@@ -162,12 +166,15 @@ abstract class AbstractRepository implements Repository {
               levels.set(value[filterDimension.dimension], true);
             });
           } else {
+            // eslint-disable-next-line no-console
             console.warn("No results found for query: " + filterDimension.query);
           }
           this.dimensionFilterModel.addDimensionLevels(filterDimension, levels);
         });
       });
+
       return Promise.all(promises);
+
     });
     
   }
@@ -177,7 +184,7 @@ abstract class AbstractRepository implements Repository {
   }
 
   private makeDoubleHashRegex(dimension: string): RegExp {
-    return new RegExp("#" + dimension.replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/\./g, "\\.") + "#", "g")
+    return new RegExp("#" + dimension.replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/\./g, "\\.") + "#", "g");
   }
 
   private async replacePropertyPlaceholders(config: Config): Promise<Config> {

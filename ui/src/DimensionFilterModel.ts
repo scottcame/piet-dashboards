@@ -1,5 +1,8 @@
 import type { FilterDimension } from "./Config";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 export class DimensionFilterModel {
 
   selectedDimensionIndex = 0;
@@ -15,7 +18,7 @@ export class DimensionFilterModel {
     return this._dimensionLevelValues[this.selectedDimensionIndex];
   }
 
-  addDimensionLevels(dimension: FilterDimension, levelValues: Map<string, boolean>) {
+  addDimensionLevels(dimension: FilterDimension, levelValues: Map<string, boolean>): void {
     this._dimensions.push(dimension);
     this._dimensionLevelValues.push(levelValues);
   }
@@ -55,7 +58,7 @@ export class DimensionFilterModel {
 
       const formatLevels = function(label: string, levels: string[]): string {
         return label + ": " + levels.join(",");
-      }
+      };
 
       if (!partition.allSelected) {
         if (partition.selectedMembers.length < partition.deselectedMembers.length) {

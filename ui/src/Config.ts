@@ -27,6 +27,7 @@ import { Visualization } from "./Visualization";
   private _disclaimerFooterText: string;
   private _allowVizExport: boolean;
   private _filterDimensions: FilterDimension[] = [];
+  private _excludedDimensions: string[] = [];
   private _mondrianRestURL: string;
   private _connection: string;
   private _cube: string;
@@ -48,6 +49,7 @@ import { Visualization } from "./Visualization";
     ret.dataCaveatText = json.dataCaveatText;
     ret._connection = json.connection;
     ret._cube = json.cube;
+    ret._excludedDimensions = json.excludedDimensions;
 
     ret._groups = json.groups.map((groupJson: any): Group => {
       return Group.fromJson(groupJson, json.allowVizExport, json.connection);
@@ -95,6 +97,10 @@ import { Visualization } from "./Visualization";
 
   get filterDimensions(): FilterDimension[] {
     return this._filterDimensions;
+  }
+
+  get excludedDimensions(): string[] {
+    return this._excludedDimensions;
   }
 
   get propertyPlaceholders(): PropertyPlaceholder[] {

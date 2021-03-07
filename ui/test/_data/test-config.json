@@ -27,6 +27,9 @@
       "label": "State (Custom)"
     }
   ],
+  "excludedDimensions": [
+    "[Store Size in SQFT].[Store Sqft]"
+  ],
   "groups": [
     {
       "header": "Visualization Group 1",
@@ -72,7 +75,7 @@
           "vizType": "bar",
           "panelTitle": "Bar: Units Ordered by state for filtering",
           "headerText": "Units Ordered by state (bar chart), for testing filtering",
-          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {#[Store].[Store State]#} ON COLUMNS FROM [Warehouse]",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * {[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]",
           "measures": ["Units Ordered"],
           "xDimension": "[Store].[Store State]",
           "xAxisPercentages": true
