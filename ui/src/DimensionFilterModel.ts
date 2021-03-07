@@ -53,9 +53,9 @@ export class DimensionFilterModel {
         return entry[1];
       }).map(entry => { return entry[0]; });
 
-      return label + ": " + (selectedMembers.length == valueMap.size ? "All values selected" : selectedMembers.join(","));
+      return selectedMembers.length == valueMap.size ? null : label + ": " + selectedMembers.join(",");
 
-    });
+    }).filter((value: string): boolean => { return value != null; });
   }
 
   applyTo(mdx: string): string {
@@ -98,7 +98,7 @@ export class DimensionFilterModel {
     });
 
     if (wheres.length) {
-      mdx = mdx + " where " + wheres.join("*")
+      mdx = mdx + " where " + wheres.join("*");
     }
 
     return mdx;

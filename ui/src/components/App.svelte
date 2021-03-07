@@ -227,7 +227,12 @@ limitations under the License.
 
   function updateDimensionFilterText(): void {
     if (repository.dimensionFilterModel) {
-      dimensionFilterText = repository.dimensionFilterModel.dimensionStateDescriptions.join("; ");
+      const dimTextValues: string[] = repository.dimensionFilterModel.dimensionStateDescriptions;
+      if (dimTextValues.length) {
+        dimensionFilterText = dimTextValues.join("; ");
+      } else {
+        dimensionFilterText = "No filters selected."
+      }
     }
   }
 
