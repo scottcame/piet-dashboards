@@ -52,7 +52,6 @@ limitations under the License.
   }
 
   function dimensionSelected(e: CustomEvent<{selectedIndex: number, selectedItem: string}>): void {
-    console.log("Dimension " + e.detail.selectedItem + " selected");
     model.selectedDimensionIndex = e.detail.selectedIndex;
   }
 
