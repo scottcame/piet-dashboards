@@ -63,7 +63,7 @@ export abstract class Visualization {
   }
 
   get hasFilteredQuery(): boolean {
-    return /#/.test(this.query);
+    return true;
   }
 
   get connection(): string {

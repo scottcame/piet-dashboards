@@ -172,29 +172,8 @@ abstract class AbstractRepository implements Repository {
     
   }
 
-  protected replaceDimensionFilterPlaceholders(mdx: string): string {
-    console.log(mdx);
-    console.log(this.dimensionFilterModel);
-    // const replacementMap = new Map<string, string>();
-    // [...this.dimensionFilters.keys()].forEach((dimension: string): void => {
-    //   let allSelected = true;
-    //   const selectedLevels: string[] = [];
-    //   const selectionMap = this.dimensionFilters.get(dimension);
-    //   [...selectionMap.keys()].forEach((level: string): void => {
-    //     const value = selectionMap.get(level);
-    //     if (value) {
-    //       selectedLevels.push(dimension + ".[" + level + "]");
-    //     } else {
-    //       allSelected = false;
-    //     }
-    //   });
-    //   replacementMap.set(dimension, allSelected ? (dimension + ".Members") : selectedLevels.join(","));
-    // });
-    // [...replacementMap.keys()].forEach((dimension: string): void => {
-    //   const dimensionRegex = this.makeDoubleHashRegex(dimension);
-    //   mdx = mdx.replace(dimensionRegex, replacementMap.get(dimension));
-    // });
-    return mdx;
+  protected applyDimensionFiltersToMdx(mdx: string): string {
+    return this.dimensionFilterModel.applyTo(mdx);
   }
 
   private makeDoubleHashRegex(dimension: string): RegExp {
@@ -252,59 +231,8 @@ export class LocalRepository extends AbstractRepository {
 
   async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
 
-    mdx = this.replaceDimensionFilterPlaceholders(mdx);
-
-    let data: any = null;
-
-    if (mdx === TestData.TEST_QUERY_1D) {
-      data = TestData.TEST_RESULTS_1D;
-    } else if (mdx === TestData.TEST_QUERY_1D_EXCLUDES) {
-      data = TestData.TEST_RESULTS_1D_EXCLUDES;
-    } else if (mdx === TestData.TEST_QUERY_LINE_SIMPLE) {
-      data = TestData.TEST_RESULTS_LINE_SIMPLE;
-    } else if (mdx === TestData.TEST_QUERY_LINE_2_MEASURES) {
-      data = TestData.TEST_RESULTS_LINE_2_MEASURES;
-    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR) {
-      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR;
-    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH) {
-      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH;
-    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY) {
-      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_YEAR_MONTH_DAY;
-    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_1_MEASURE_DATE) {
-      data = TestData.TEST_RESULTS_LINE_TEMPORAL_1_MEASURE_DATE;
-    } else if (mdx === TestData.TEST_QUERY_LINE_TEMPORAL_RANDOM1) {
-      data = TestData.TEST_RESULTS_LINE_TEMPORAL_RANDOM1;
-    } else if (mdx === TestData.TEST_QUERY_LINE_YZ) {
-      data = TestData.TEST_RESULTS_LINE_YZ;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_COUNTRY_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_COUNTRY_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_STATE_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_STATE_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_CITY_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_CITY_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_NAME_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_NAME_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_SIZE_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_SIZE_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_YEAR_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_TIME_YEAR_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_QUARTER_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_TIME_QUARTER_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_MONTH_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_TIME_MONTH_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_WEEKLY_YEAR_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_TIME_WEEKLY_YEAR_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_WEEKLY_WEEK_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_TIME_WEEKLY_WEEK_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_DIMENSION_TIME_WEEKLY_DAY_FILTER) {
-      data = TestData.TEST_RESULTS_DIMENSION_TIME_WEEKLY_DAY_FILTER;
-    } else if (mdx === TestData.TEST_QUERY_FOR_BIGGEST_STATE) {
-      data = TestData.TEST_RESULTS_FOR_BIGGEST_STATE;
-    } else if (mdx === TestData.TEST_QUERY_FOR_SMALLEST_STATE) {
-      data = TestData.TEST_RESULTS_FOR_SMALLEST_STATE;
-    } else {
-      data = TestData.getFilteredData(mdx);
-    }
+    mdx = this.applyDimensionFiltersToMdx(mdx);
+    const data: any = new TestData().queryDataMap.get(mdx);
 
     return new Promise((resolve: (value: { values: any[] }) => void) => {
       setTimeout((_handler: TimerHandler): void => {
@@ -351,7 +279,7 @@ export class RemoteRepository extends AbstractRepository {
 
   async executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }> {
 
-    mdx = this.replaceDimensionFilterPlaceholders(mdx);
+    mdx = this.applyDimensionFiltersToMdx(mdx);
 
     const request: any = new Object();
 		request.connectionName = connection;

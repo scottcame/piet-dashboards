@@ -58,6 +58,53 @@ export class DimensionFilterModel {
     });
   }
 
+  applyTo(mdx: string): string {
+    
+    const dimensionReplacementMap = new Map<string, string>();
+
+    this._dimensionLevelValues.forEach((valueMap: Map<string, boolean>, rowIndex: number): void => {
+      const selectedMembers = [];
+      const deselectedMembers = [];
+      [...valueMap.entries()].forEach((entry: [string, boolean]): void => {
+        if (entry[1]) {
+          selectedMembers.push(entry[0]);
+        } else {
+          deselectedMembers.push(entry[0]);
+        }
+      });
+      if (selectedMembers.length < valueMap.size) {
+        const d = this._dimensions[rowIndex].dimension;
+        let mdxFunction = "Except";
+        let filterMembers = deselectedMembers;
+        if (selectedMembers.length < deselectedMembers.length) {
+          mdxFunction = "Intersect";
+          filterMembers = selectedMembers;
+        }
+        const memberList = "{" + filterMembers.map((selectedMember: string): string => {
+          return d + ".[" + selectedMember + "]";
+        }).join(",") + "}";
+        dimensionReplacementMap.set(d + ".Members", mdxFunction + "(" + d + ".Members, " + memberList + ")");
+      }
+    });
+
+    const wheres = [];
+
+    dimensionReplacementMap.forEach((filterMemberString: string, originalDimensionMembersText: string): void => {
+      if (mdx.includes(originalDimensionMembersText)) {
+        mdx = mdx.replace(originalDimensionMembersText, filterMemberString);
+      } else {
+        wheres.push(filterMemberString);
+      }
+    });
+
+    if (wheres.length) {
+      mdx = mdx + " where " + wheres.join("*")
+    }
+
+    return mdx;
+
+  }
+
   syncWith(model: DimensionFilterModel): void {
     this.dimensions.forEach((dimension: string, rowIndex: number): void => {
       if (model) {
