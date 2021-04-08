@@ -25,11 +25,9 @@ RUN mkdir -p /opt/tomcat/shared/config/
 
 COPY catalina.properties /usr/local/tomcat/conf/
 
-# RUN cd /tmp && \
-#   curl -o mondrian-rest.war https://repo1.maven.org/maven2/org/ojbc/mondrian-rest/2.0.4/mondrian-rest-2.0.4.war && \
-#   mv mondrian-rest.war /usr/local/tomcat/webapps/
-
-COPY mondrian-rest-2.0.6.war /usr/local/tomcat/webapps/mondrian-rest.war
+RUN cd /tmp && \
+  curl -o mondrian-rest.war https://repo1.maven.org/maven2/org/ojbc/mondrian-rest/2.0.6/mondrian-rest-2.0.6.war && \
+  mv mondrian-rest.war /usr/local/tomcat/webapps/
 
 COPY application.properties /usr/local/tomcat/shared/config/
 COPY piet-dashboards-config.json /usr/local/tomcat/shared/
