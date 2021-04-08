@@ -73,5 +73,10 @@ test('editing', async () => {
     expect(repository.dimensionFilterModel.applyTo(inputMdx))
     .toBe("SELECT NON EMPTY {[Measures].[Units Ordered]} * {Intersect([Store].[Store State].Members, {[Store].[Store State].[OH]})} ON COLUMNS FROM [Warehouse] where Intersect([Time].[Year].Members, {[Time].[Year].[2020]})");
 
-    });
+    const inputMdxWithWhere = "SELECT NON EMPTY {[Measures].[Units Ordered]} * {[Store].[Store State].Members} ON COLUMNS FROM [Warehouse] where {[Store Size in SQFT].[Store Sqft].[123]}";
+    
+    expect(repository.dimensionFilterModel.applyTo(inputMdxWithWhere))
+    .toBe("SELECT NON EMPTY {[Measures].[Units Ordered]} * {Intersect([Store].[Store State].Members, {[Store].[Store State].[OH]})} ON COLUMNS FROM [Warehouse] where {[Store Size in SQFT].[Store Sqft].[123]}*Intersect([Time].[Year].Members, {[Time].[Year].[2020]})");
+
+  });
 });

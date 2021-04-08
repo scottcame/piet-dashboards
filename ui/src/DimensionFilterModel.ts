@@ -132,7 +132,9 @@ export class DimensionFilterModel {
     });
 
     if (wheres.length) {
-      mdx = mdx + " where " + wheres.join("*");
+      const newWhere = wheres.join("*");
+      const joiner = /where/i.test(mdx) ? "*" : " where ";
+      mdx = mdx + joiner + newWhere;
     }
 
     return mdx;

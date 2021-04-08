@@ -59,7 +59,7 @@ test('filter dimensions', async () => {
     const countryDimension = repository.filterDimensions
       .filter((fd: FilterDimension): boolean => { return fd.label==="Store Country"; })[0];
 
-    const countryLevel = TestData.TEST_DIMENSIONS["default"]
+    const countryLevel = TestData.TEST_DIMENSIONS
       .filter((d: { name: string }): boolean => { return d.name==="Store"; })[0]
       .hierarchies
       .filter((h: { name: string }): boolean => { return h.name==="Store"; })[0]
