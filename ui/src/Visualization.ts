@@ -203,6 +203,7 @@ export class BarChartVisualization extends Visualization {
       const measure = this.measures[0];
       const measureLabel = this.measureLabels[0] || null;
       const xDimension = this.xDimension;
+      const measureFormat = this.measureFormats[0] || null;
 
       const transformedData = new DataObject();
 
@@ -250,7 +251,7 @@ export class BarChartVisualization extends Visualization {
       spec.encoding.x.type = "quantitative";
       spec.encoding.x.axis = new Axis();
       spec.encoding.x.axis.title = measureLabel;
-      spec.encoding.x.axis.format = (this.xAxisPercentages ? ".0%" : undefined);
+      spec.encoding.x.axis.format = (this.xAxisPercentages ? ".0%" : (measureFormat ? measureFormat : undefined));
       spec.encoding.x.scale = xScale;
       spec.encoding.y = new EncodingSpec();
       spec.encoding.y.field = "y";
@@ -271,7 +272,7 @@ export class BarChartVisualization extends Visualization {
         spec.layer[1].encoding.text = new TextEncodingSpec();
         spec.layer[1].encoding.text.field = measure;
         spec.layer[1].encoding.text.type = "quantitative";
-        spec.layer[1].encoding.text.format = (this.xAxisPercentages ? ".0%" : ",");
+        spec.layer[1].encoding.text.format = (this.xAxisPercentages ? ".0%" : (measureFormat ? measureFormat : ","));
       }
 
       ret = spec;
