@@ -125,15 +125,26 @@ export abstract class Visualization {
     return this._totalN;
   }
 
+  get exceedsCellLimit(): boolean {
+    return false;
+  }
+
 }
 
 export class RenderedVisualization {
+
   readonly visualization: Visualization = null;
   readonly spec: VegaLiteSpec = null;
+
   constructor(visualization: Visualization, spec: VegaLiteSpec) {
     this.visualization = visualization;
     this.spec = spec;
   }
+
+  get exceedsCellLimit(): boolean {
+    return this.visualization.exceedsCellLimit;
+  }
+
 }
 
 export class BarChartVisualization extends Visualization {
@@ -141,6 +152,9 @@ export class BarChartVisualization extends Visualization {
   readonly xDimension: string;
   readonly xAxisPercentages: boolean;
   readonly magnitudeLabels: boolean;
+  readonly xDimensionMaxCellLimit: number;
+
+  private xDimensionCellCount: number;
 
   constructor(id: string, json: {
     id: string,
@@ -156,12 +170,18 @@ export class BarChartVisualization extends Visualization {
     xDimension: string,
     debug: boolean,
     xAxisPercentages: boolean,
-    magnitudeLabels: boolean
+    magnitudeLabels: boolean,
+    xDimensionMaxCellLimit: number
   }, embedExport: boolean) {
     super(id, json, embedExport);
     this.xDimension = json.xDimension;
     this.xAxisPercentages = json.xAxisPercentages || false;
     this.magnitudeLabels = json.magnitudeLabels !== undefined && json.magnitudeLabels;
+    this.xDimensionMaxCellLimit = json.xDimensionMaxCellLimit || Number.MAX_VALUE;
+  }
+
+  get exceedsCellLimit(): boolean {
+    return this.xDimensionCellCount > this.xDimensionMaxCellLimit;
   }
 
   protected makeChart(data: DataObject, containerHeight: number, containerWidth: number): VegaLiteSpec {
@@ -191,6 +211,8 @@ export class BarChartVisualization extends Visualization {
       transformedData.values = transformedData.values.filter((v: any): boolean => {
         return v[xDimension] !== undefined;
       });
+
+      this.xDimensionCellCount = transformedData.values.length;
 
       let denom = 0;
 

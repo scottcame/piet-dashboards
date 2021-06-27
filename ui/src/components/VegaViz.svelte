@@ -22,6 +22,7 @@ limitations under the License.
   export let vegaLiteSpec: VegaLiteSpec;
   export let exportOption: boolean = false;
   export let rendering: boolean = true;
+  export let exceedsCellLimit: boolean = false;
 
   let container: HTMLElement;
   let actions: boolean | {export: boolean, source: boolean, compiled: boolean, editor: boolean};
@@ -35,7 +36,10 @@ limitations under the License.
         editor: false
   } : false;
 
-  $: if (vegaLiteSpec && vegaLiteSpec.hasData && container) {
+  $: if (exceedsCellLimit) {
+      showNoDataLabel = false;
+      vegaLiteSpec = null;
+    } else if (vegaLiteSpec && vegaLiteSpec.hasData && container) {
     vegaEmbed(container, vegaLiteSpec as any, {
       actions: actions,
       renderer: "canvas"
@@ -60,6 +64,7 @@ limitations under the License.
 {#if !rendering}
   <div class="mt-px h-full w-full {vegaLiteSpec && vegaLiteSpec.hasData ? '' : 'hidden'}" bind:this={container}></div>
   <div class="{showNoDataLabel ? '' : 'hidden'} italic mt-12 text-center">No data available</div>
+  <div class="{exceedsCellLimit ? '' : 'hidden'} italic mt-12 text-center">Visualization contains too many levels. Use filters to reduce the number of values.</div>
 {:else}
   <div class="mt-24">
     <div id="wait-spinner"></div>

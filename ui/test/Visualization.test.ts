@@ -72,6 +72,16 @@ test('bar viz with excludes', async () => {
   });
 });
 
+test('bar viz with max dim limit', async () => {
+  return repository.init().then(async (config: Config) => {
+    const viz = config.findVisualization("viz-1-7");
+    await viz.render(repository, 200, 200).then((renderedVisualization: RenderedVisualization): void => {
+      console.log(renderedVisualization.spec.data.values);
+      expect(renderedVisualization.exceedsCellLimit).toBeTruthy();
+    });
+  });
+});
+
 test('line viz', async () => {
   return repository.init().then(async (config: Config) => {
     const viz = config.findVisualization("viz-2-2");

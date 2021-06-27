@@ -34,7 +34,8 @@ limitations under the License.
   let vegaLiteSpec: VegaLiteSpec;
   let container: HTMLElement;
   let rendering: boolean;
-  let N: number = 12345;
+  let N: number;
+  let exceedsCellLimit = false;
 
   let allowVizExport: boolean = repository.config.allowVizExport;
 
@@ -65,6 +66,7 @@ limitations under the License.
       vegaLiteSpec = renderedVisualization.spec;
       N = renderedVisualization.visualization.totalN;
       rendering = false;
+      exceedsCellLimit = renderedVisualization.exceedsCellLimit;
     });
   }
 
@@ -96,6 +98,6 @@ limitations under the License.
     <div class="px-1 {N === undefined || N === null ? 'hidden' : ''}">N={N ? N.toLocaleString() : N}</div>
   </div>
   <div class="overflow-x-hidden">
-    <VegaViz vegaLiteSpec={vegaLiteSpec} exportOption={allowVizExport} rendering={rendering}/>
+    <VegaViz vegaLiteSpec={vegaLiteSpec} exportOption={allowVizExport} rendering={rendering} exceedsCellLimit={exceedsCellLimit}/>
   </div>
 </div>

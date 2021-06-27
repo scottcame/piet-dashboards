@@ -89,6 +89,17 @@
           "xDimension": "[Store].[Store State]",
           "xAxisPercentages": false,
           "magnitudeLabels": true
+        },
+        "viz-1-7": {
+          "vizType": "bar",
+          "panelTitle": "Bar: To test cell limit",
+          "headerText": "Units Ordered by state (bar chart)",
+          "query": "SELECT NON EMPTY {[Measures].[Units Ordered]} * Union({[Store].[Store State].Hierarchy.FirstChild.Parent}, Except({[Store].[Store State].Members}, {})) ON COLUMNS FROM [Warehouse]",
+          "measures": ["Units Ordered"],
+          "xDimension": "[Store].[Store State]",
+          "xAxisPercentages": true,
+          "magnitudeLabels": false,
+          "xDimensionMaxCellLimit": 2
         }
       }
     },
