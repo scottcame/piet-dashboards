@@ -294,6 +294,7 @@ export class BarChartVisualization extends Visualization {
 export class PieChartVisualization extends Visualization {
 
   readonly xDimension: string;
+  readonly xAxisPercentages: boolean;
 
   constructor(id: string, json: {
     id: string,
@@ -307,10 +308,12 @@ export class PieChartVisualization extends Visualization {
     measureLabels: string[],
     measureFormats: string[],
     xDimension: string,
+    xAxisPercentages: boolean,
     debug: boolean
   }, embedExport: boolean) {
     super(id, json, embedExport);
     this.xDimension = json.xDimension;
+    this.xAxisPercentages = json.xAxisPercentages || false;
   }
 
   protected makeChart(data: DataObject, containerHeight: number, containerWidth: number): VegaLiteSpec {
@@ -340,6 +343,12 @@ export class PieChartVisualization extends Visualization {
         o.y = o[xDimension];
         this._totalN += o[measure];
       });
+
+      transformedData.values.forEach((o: any): void => {
+        if (this.xAxisPercentages) {
+          o[measure] = this._totalN ? o[measure] / this._totalN : 0;
+        }
+      });
   
       const spec = new VegaLiteSpec();
       spec.data = transformedData;
@@ -366,7 +375,7 @@ export class PieChartVisualization extends Visualization {
       spec.layer[1].encoding = new Encoding();
       spec.layer[1].encoding.text = new TextEncodingSpec();
       spec.layer[1].encoding.text.field = measure;
-      spec.layer[1].encoding.text.format = measureFormat;
+      spec.layer[1].encoding.text.format = (this.xAxisPercentages ? ".0%" : (measureFormat ? measureFormat : undefined));
       spec.layer[1].encoding.text.type = "quantitative";
       spec.view = new ViewSpec();
       spec.view.stroke = null;
