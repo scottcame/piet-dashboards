@@ -26,6 +26,7 @@
   export let labels: string[];
   export let selectedItem: string;
   export let selectedIndex = 0;
+  export let sortLabels = true;
 
   let open = false;
   let containerDiv: HTMLDivElement;
@@ -67,6 +68,17 @@
     }
   }
 
+  function getSortedLabels(): string[] {
+    return sortLabels ? labels.map(val => { return val; }).sort() : labels;
+  }
+
+  function getRawLabelIndex(sortedRowIndex: number): number {
+    const ret = labels.map((val, ind) => {return {ind, val}})
+           .sort((a, b) => {return a.val > b.val ? 1 : a.val == b.val ? 0 : -1 })
+           .map((obj) => obj.ind)[sortedRowIndex];
+    return ret;
+  }
+
 </script>
 
 <div class="relative ml-2 w-full border border-gray-700" bind:this="{containerDiv}">
@@ -79,10 +91,10 @@
     </div>
   </button>
   {#if open}
-    <div class="absolute w-full bg-gray-100 border border-gray-700 shadow-xl max-h-128 overflow-y-auto">
+    <div class="absolute w-full bg-gray-100 border border-gray-700 shadow-xl h-screen-25 overflow-y-auto">
       <div>
-        {#each labels as label, idx}
-          <div class="block px-4 py-1 text-gray-800 hover:bg-gray-300" on:click="{_e => selectItem(idx)}">{label}</div>
+        {#each getSortedLabels() as label, idx}
+          <div class="block px-4 py-1 text-gray-800 hover:bg-gray-300" on:click="{_e => selectItem(getRawLabelIndex(idx))}">{label}</div>
         {/each}
       </div>
     </div>
