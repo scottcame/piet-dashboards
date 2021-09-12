@@ -18,8 +18,6 @@ import type { Config, FilterDimension } from "../src/Config";
 import { DimensionFilterModel } from "../src/DimensionFilterModel";
 import { LocalRepository } from "../src/Repository";
 
-const repository = new LocalRepository();
-
 test('no editing', () => {
   const model: DimensionFilterModel = new DimensionFilterModel();
   const inputMdx = "SELECT NON EMPTY {[Measures].[Units Ordered]} * {[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]";
@@ -28,6 +26,7 @@ test('no editing', () => {
 });
 
 test('editing', async () => {
+  const repository = new LocalRepository();
   return repository.init().then(async (_config: Config) => {
 
     const stateDimension = repository.filterDimensions
@@ -79,4 +78,34 @@ test('editing', async () => {
     .toBe("SELECT NON EMPTY {[Measures].[Units Ordered]} * {Intersect([Store].[Store State].Members, {[Store].[Store State].[OH]})} ON COLUMNS FROM [Warehouse] where {[Store Size in SQFT].[Store Sqft].[123]}*Intersect([Time].[Year].Members, {[Time].[Year].[2020]})");
 
   });
+});
+
+test('excluded filter dimensions', async () => {
+
+  const repository = new LocalRepository();
+
+  return repository.init().then(async (_config: Config) => {
+
+    const stateDimension = repository.filterDimensions
+      .filter((fd: FilterDimension): boolean => { return fd.label==="State (Custom)"; })[0];
+
+    const stateLevelValues: Map<string, boolean> = new Map();
+    stateLevelValues.set("OH", true);
+    stateLevelValues.set("MI", true);
+    stateLevelValues.set("VT", true);
+    repository.dimensionFilterModel.addDimensionLevels(stateDimension, stateLevelValues);
+
+    const inputMdx = "SELECT NON EMPTY {[Measures].[Units Ordered]} * {[Store].[Store State].Members} ON COLUMNS FROM [Warehouse]";
+    
+    expect(repository.dimensionFilterModel.applyTo(inputMdx)).toBe(inputMdx);
+
+    stateLevelValues.set("MI", false);
+    expect(repository.dimensionFilterModel.applyTo(inputMdx))
+      .toBe("SELECT NON EMPTY {[Measures].[Units Ordered]} * {Except([Store].[Store State].Members, {[Store].[Store State].[MI]})} ON COLUMNS FROM [Warehouse]");
+
+    const excludedFilterDimensions = ["[Store].[Store State]"];
+    expect(repository.dimensionFilterModel.applyTo(inputMdx, excludedFilterDimensions)).toBe(inputMdx);
+
+  });
+
 });

@@ -35,6 +35,7 @@ export abstract class Visualization {
   readonly query: string;
   readonly debug: boolean;
   readonly embedExport: boolean;
+  readonly excludedFilterDimensions: string[];
   
   protected _totalN: number = null;
 
@@ -48,6 +49,7 @@ export abstract class Visualization {
     measures: string[],
     measureLabels: string[],
     measureFormats: string[],
+    excludedFilterDimensions: string[],
     debug: boolean
   }, embedExport: boolean) {
     this.id = id;
@@ -59,6 +61,7 @@ export abstract class Visualization {
     this.measures = json.measures;
     this.measureLabels = json.measureLabels || [];
     this.measureFormats = json.measureFormats || [];
+    this.excludedFilterDimensions = json.excludedFilterDimensions || [];
     this.debug = json.debug || false;
   }
 
@@ -96,7 +99,7 @@ export abstract class Visualization {
     const query = this.query;
 
     if (query) {
-      ret = repository.executeQuery(query, this.connection, false).then((data: { values: any[] }): Promise<any> => {
+      ret = repository.executeQuery(query, this.connection, false, this.excludedFilterDimensions).then((data: { values: any[] }): Promise<any> => {
         let spec: VegaLiteSpec = null;
         if (data) {
           const dataObject = new DataObject();
@@ -167,6 +170,7 @@ export class BarChartVisualization extends Visualization {
     measures: string[],
     measureLabels: string[],
     measureFormats: string[],
+    excludedFilterDimensions: string[],
     xDimension: string,
     debug: boolean,
     xAxisPercentages: boolean,
@@ -307,6 +311,7 @@ export class PieChartVisualization extends Visualization {
     measures: string[],
     measureLabels: string[],
     measureFormats: string[],
+    excludedFilterDimensions: string[],
     xDimension: string,
     xAxisPercentages: boolean,
     debug: boolean
@@ -411,6 +416,7 @@ export class LineChartVisualization extends Visualization {
     measures: string[],
     measureLabels: string[],
     measureFormats: string[],
+    excludedFilterDimensions: string[],
     xDimension: string|TemporalAxis,
     yDimension: string,
     yDimensionLabel: string,

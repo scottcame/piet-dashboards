@@ -44,7 +44,7 @@ export interface Repository {
   readonly filterDimensions: FilterDimension[];
   dimensionFilterModel: DimensionFilterModel;
   init(): Promise<Config>;
-  executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
+  executeQuery(mdx: string, connection: string, simplifyNames: boolean, excludedFilterDimensions: string[]): Promise<{ values: any[] }>;
   saveCurrentState(currentState: UserInterfaceState): Promise<void>;
   getSavedState(): Promise<UserInterfaceState>;
   getFilterDimensionLabel(dimension: string): string;
@@ -133,7 +133,7 @@ abstract class AbstractRepository implements Repository {
     return this._firstVisit;
   }
 
-  abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }>;
+  abstract executeQuery(mdx: string, connection: string, simplifyNames: boolean, excludedFilterDimensions: string[]): Promise<{ values: any[] }>;
   abstract get label(): string;
 
   protected abstract fetchConfig(): Promise<Config>;
@@ -158,7 +158,7 @@ abstract class AbstractRepository implements Repository {
       });
 
       const promises: Promise<void>[] = this._filterDimensions.map(async (filterDimension: FilterDimension): Promise<void> => {
-        return this.executeQuery(filterDimension.query, filterDimension.connection, false).then((results: { values: any[] }): void => {
+        return this.executeQuery(filterDimension.query, filterDimension.connection, false, []).then((results: { values: any[] }): void => {
           const levels: Map<string, boolean> = new Map<string, boolean>();
           if (results) {
             results.values.forEach((value: any): void => {
@@ -178,8 +178,8 @@ abstract class AbstractRepository implements Repository {
     
   }
 
-  protected applyDimensionFiltersToMdx(mdx: string): string {
-    return this.dimensionFilterModel.applyTo(mdx);
+  protected applyDimensionFiltersToMdx(mdx: string, excludedFilterDimensions: string[]): string {
+    return this.dimensionFilterModel.applyTo(mdx, excludedFilterDimensions);
   }
 
   private makeDoubleHashRegex(dimension: string): RegExp {
@@ -190,7 +190,7 @@ abstract class AbstractRepository implements Repository {
     // for now, we just replace properties in the dataCaveatText...could do other things later
     const promises: Promise<PropertyPlaceholderReplacement>[] = [];
     config.propertyPlaceholders.forEach((propertyPlaceholder: PropertyPlaceholder): void => {
-      promises.push(this.executeQuery(propertyPlaceholder.query, propertyPlaceholder.connection, false).then((data: { values: any[] }): Promise<PropertyPlaceholderReplacement> => {
+      promises.push(this.executeQuery(propertyPlaceholder.query, propertyPlaceholder.connection, false, []).then((data: { values: any[] }): Promise<PropertyPlaceholderReplacement> => {
         if (data) {
           const propertyPlaceholderReplacement: PropertyPlaceholderReplacement = new PropertyPlaceholderReplacement();
           propertyPlaceholderReplacement.values = data.values;
@@ -235,9 +235,9 @@ export class LocalRepository extends AbstractRepository {
     return Promise.resolve(FilterDimension.fromGetDimensionsJson(TestData.TEST_DIMENSIONS, this.config.connection, this.config.cube));
   }
 
-  async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean): Promise<{ values: any[] }> {
+  async executeQuery(mdx: string, _connection: string, _simplifyNames: boolean, excludedFilterDimensions: string[]): Promise<{ values: any[] }> {
 
-    mdx = this.applyDimensionFiltersToMdx(mdx);
+    mdx = this.applyDimensionFiltersToMdx(mdx, excludedFilterDimensions);
     const data: any = new TestData().queryDataMap.get(mdx);
 
     return new Promise((resolve: (value: { values: any[] }) => void) => {
@@ -292,9 +292,9 @@ export class RemoteRepository extends AbstractRepository {
     });
   }
 
-  async executeQuery(mdx: string, connection: string, simplifyNames: boolean): Promise<{ values: any[] }> {
+  async executeQuery(mdx: string, connection: string, simplifyNames: boolean, excludedFilterDimensions: string[]): Promise<{ values: any[] }> {
 
-    mdx = this.applyDimensionFiltersToMdx(mdx);
+    mdx = this.applyDimensionFiltersToMdx(mdx, excludedFilterDimensions);
 
     const request: any = new Object();
 		request.connectionName = connection;

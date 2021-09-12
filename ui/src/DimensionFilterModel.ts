@@ -100,7 +100,7 @@ export class DimensionFilterModel {
     return ret;
   }
 
-  applyTo(mdx: string): string {
+  applyTo(mdx: string, excludedFilterDimensions: string[] = []): string {
     
     const dimensionReplacementMap = new Map<string, string>();
 
@@ -108,16 +108,18 @@ export class DimensionFilterModel {
       const partition = this.partitionMembers(valueMap);
       if (!partition.allSelected) {
         const d = this._dimensions[rowIndex].dimension;
-        let mdxFunction = "Except";
-        let filterMembers = partition.deselectedMembers;
-        if (partition.selectedMembers.length < partition.deselectedMembers.length) {
-          mdxFunction = "Intersect";
-          filterMembers = partition.selectedMembers;
+        if (!excludedFilterDimensions.includes(d)) {
+          let mdxFunction = "Except";
+          let filterMembers = partition.deselectedMembers;
+          if (partition.selectedMembers.length < partition.deselectedMembers.length) {
+            mdxFunction = "Intersect";
+            filterMembers = partition.selectedMembers;
+          }
+          const memberList = "{" + filterMembers.map((selectedMember: string): string => {
+            return d + ".[" + selectedMember + "]";
+          }).join(",") + "}";
+          dimensionReplacementMap.set(d + ".Members", mdxFunction + "(" + d + ".Members, " + memberList + ")");
         }
-        const memberList = "{" + filterMembers.map((selectedMember: string): string => {
-          return d + ".[" + selectedMember + "]";
-        }).join(",") + "}";
-        dimensionReplacementMap.set(d + ".Members", mdxFunction + "(" + d + ".Members, " + memberList + ")");
       }
     });
 
