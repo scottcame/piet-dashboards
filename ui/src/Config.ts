@@ -142,17 +142,19 @@ export class FilterDimension {
   readonly connection: string;
   private _label: string;
   private _hierarchy: string;
+  private _defaultSelectedValues: string[];
 
-  private constructor(query: string, dimension: string, connection: string, label: string) {
+  private constructor(query: string, dimension: string, connection: string, label: string, defaultSelectedValues: string[]) {
     this._query = query;
     this.dimension = dimension;
     this._label = label;
     this.connection = connection;
     this._hierarchy = dimension.replace(/(.+)\.\[.+\]$/, "$1");
+    this._defaultSelectedValues = defaultSelectedValues;
   }
 
-  static fromJson(json: { query: string, dimension: string, label: string }, connection: string): FilterDimension {
-    return new FilterDimension(json.query, json.dimension, connection, json.label);
+  static fromJson(json: { query: string, dimension: string, label: string, defaultSelectedValues: string[] }, connection: string): FilterDimension {
+    return new FilterDimension(json.query, json.dimension, connection, json.label, json.defaultSelectedValues ? json.defaultSelectedValues : null);
   }
 
   static fromGetDimensionsJson(json: {name: string, caption: string, hierarchies: [{name: string, caption: string, levels: [{name: string, uniqueName: string, caption: string}]}]}[], connection: string, cube: string): FilterDimension[] {
@@ -164,7 +166,7 @@ export class FilterDimension {
             if (level.name !== "(All)") {
               const levelText = level.uniqueName;
               const queryText = "WITH MEMBER Measures.Nul as Null SELECT {[Measures].[Nul]}*{" + levelText + ".Members} ON COLUMNS FROM [" + cube + "]";
-              ret.push(new FilterDimension(queryText, levelText, connection, level.caption));
+              ret.push(new FilterDimension(queryText, levelText, connection, level.caption, null));
             }
           });
         });
@@ -183,6 +185,10 @@ export class FilterDimension {
 
   get hierarchy(): string {
     return this._hierarchy;
+  }
+
+  get defaultSelectedValues(): string[] {
+    return this._defaultSelectedValues;
   }
 
   updateFrom(d: FilterDimension): void {

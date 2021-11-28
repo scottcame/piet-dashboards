@@ -22,21 +22,24 @@ export class UserInterfaceState {
 
   widgetStateGrid: WidgetState[][] = [];
   dimensionFilterModel: DimensionFilterModel;
+  appVersion: number;
   readonly name = "default";
 
-  static toJson(state: UserInterfaceState): { widgetStateGrid: any, dimensionFilterModel: DimensionFilterModel } {
+  static toJson(state: UserInterfaceState): { widgetStateGrid: any, dimensionFilterModel: DimensionFilterModel, appVersion: number } {
     const ret = {
       widgetStateGrid: JSON.parse(JSON.stringify(state.widgetStateGrid)),
       dimensionFilterModel: state.dimensionFilterModel ? state.dimensionFilterModel.toJson() : undefined,
-      name: state.name
+      name: state.name,
+      appVersion: state.appVersion
     };
     return ret;
   }
 
-  static fromJson(json: { widgetStateGrid: any, dimensionFilterModel: any }): UserInterfaceState {
+  static fromJson(json: { widgetStateGrid: any, dimensionFilterModel: any, appVersion: number }): UserInterfaceState {
     const ret = new UserInterfaceState();
     ret.widgetStateGrid = json.widgetStateGrid as WidgetState[][];
     ret.dimensionFilterModel = json.dimensionFilterModel ? DimensionFilterModel.fromJson(json.dimensionFilterModel) : undefined;
+    ret.appVersion = json.appVersion ? json.appVersion : null;
     return ret;
   }
 

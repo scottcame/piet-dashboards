@@ -23,6 +23,10 @@ import { DimensionFilterModel } from "./DimensionFilterModel";
 
 const INDEXEDDB_NAME = "PietDashboardUiRepository";
 
+// update this when there is a non-backwards compatible change to ui state. incrementing the value here
+// will trigger a wipe of the user's saved UI state upon next init/refresh.
+const APP_VERSION = 2.0;
+
 class UiStateDatabase extends Dexie {
 
   uiStates: Dexie.Table<any, string>;
@@ -30,7 +34,7 @@ class UiStateDatabase extends Dexie {
   constructor() {
     super(INDEXEDDB_NAME);
     this.version(1).stores({
-      uiStates: 'name',
+      uiStates: 'name'
     });
   }
 
@@ -87,7 +91,14 @@ abstract class AbstractRepository implements Repository {
       if (exists) {
         ret = this.uiStateDb.uiStates.toArray().then(async uiStates => {
           if (uiStates[0]) {
-            this._uiState = UserInterfaceState.fromJson(uiStates[0]);
+            const potentialUiState = UserInterfaceState.fromJson(uiStates[0]);
+            if (potentialUiState.appVersion === null || potentialUiState.appVersion < APP_VERSION) {
+              // eslint-disable-next-line no-console
+              console.warn("Outdated app detected, saved config app version=" + potentialUiState.appVersion + ", current app version is " + APP_VERSION);
+              this._uiState = new UserInterfaceState();
+            } else {
+              this._uiState = UserInterfaceState.fromJson(uiStates[0]);
+            }
             this._firstVisit = false;
           }
         });
@@ -121,6 +132,7 @@ abstract class AbstractRepository implements Repository {
 
   async saveCurrentState(currentState: UserInterfaceState): Promise<void> {
     this._uiState = currentState;
+    this._uiState.appVersion = APP_VERSION;
     return this.uiStateDb.uiStates.put(UserInterfaceState.toJson(this._uiState)).then((_key: string): void => {});
   }
 
@@ -161,8 +173,13 @@ abstract class AbstractRepository implements Repository {
         return this.executeQuery(filterDimension.query, filterDimension.connection, false, []).then((results: { values: any[] }): void => {
           const levels: Map<string, boolean> = new Map<string, boolean>();
           if (results) {
+            const matchingDimensions: FilterDimension[] = this._config.filterDimensions
+              .filter((customDimension: FilterDimension): boolean => {
+                return customDimension.dimension === filterDimension.dimension && customDimension.defaultSelectedValues !== null;
+              });
             results.values.forEach((value: any): void => {
-              levels.set(value[filterDimension.dimension], true);
+              const checked = matchingDimensions ? matchingDimensions[0].defaultSelectedValues.includes(value[filterDimension.dimension]) : true;
+              levels.set(value[filterDimension.dimension], checked);
             });
           } else {
             // eslint-disable-next-line no-console
