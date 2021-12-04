@@ -178,7 +178,7 @@ abstract class AbstractRepository implements Repository {
                 return customDimension.dimension === filterDimension.dimension && customDimension.defaultSelectedValues !== null;
               });
             results.values.forEach((value: any): void => {
-              const checked = matchingDimensions ? matchingDimensions[0].defaultSelectedValues.includes(value[filterDimension.dimension]) : true;
+              const checked = matchingDimensions && matchingDimensions[0] ? matchingDimensions[0].defaultSelectedValues.includes(value[filterDimension.dimension]) : true;
               levels.set(value[filterDimension.dimension], checked);
             });
           } else {
