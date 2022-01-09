@@ -278,7 +278,7 @@ limitations under the License.
     </div>
     {#if initialized}
       <div class="flex flex-col w-1/5 h-full p-2">
-        <VizMenu groups={repository.config.groups} helpVisible={repository.firstVisit}/>
+        <VizMenu groups={repository.config.groups} helpVisible={repository.firstVisit} alwaysShowHowToText={repository.config.alwaysShowHowToText}/>
       </div>
     {/if}
     <div class="h-full w-4/5">

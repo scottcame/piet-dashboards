@@ -10,6 +10,7 @@
   "aboutContentUrl": "about-content.html",
   "dataCaveatText": "Note: the biggest state is #biggestState# and the smallest is #smallestState#. data depicted in this <a href='https://google.com'>dashboard</a> are blah blah data depicted in this dashboard are blah blah data depicted in this dashboard are blah blah data depicted in this dashboard are blah blah data depicted in this dashboard are blah blah",
   "allowVizExport": false,
+  "alwaysShowHowToText": true,
   "initProperties": {
     "biggestState": {
       "dimension": "[Store].[Store State]",

@@ -15,10 +15,13 @@ limitations under the License.
 -->
 <script lang="ts">
 
+  const howToText = "Drag visualizations from the left sidebar onto the desired spot in the grid area to the right.";
+
   import type { Group } from "../Config";
   import VizMenuGroup from "./VizMenuGroup.svelte";
 
   export let groups: Group[] = [];
+  export let alwaysShowHowToText: boolean;
 
   let menuFilterText = "";
   let menuFilterRegex: RegExp = null;
@@ -61,12 +64,17 @@ limitations under the License.
         <div class="p-3 text-justify">
           <p>Type in the "Filter visualizations" box to the left to show only a subset of available visualizations.</p>
           <p class="mt-2">Expand a group of visualizations in the left sidebar by clicking on it.</p>
-          <p class="mt-2">Drag visualizations from the left sidebar onto the desired spot in the grid area to the right.</p>
+          <p class="mt-2">{howToText}</p>
           <p class="mt-2 underline cursor-pointer" on:click="{toggleHelp}">Close Help</p>
         </div>
       </div>
     </div>
   </div>
+  {#if alwaysShowHowToText}
+    <div class="mt-2 text-red-700 text-base">
+      {howToText}
+    </div>
+  {/if}
   <div class="mt-2 overflow-y-auto">
     {#each groups as group}
       <VizMenuGroup group={group} filterRegex={menuFilterRegex}/>

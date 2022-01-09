@@ -34,6 +34,7 @@ import { Visualization } from "./Visualization";
   private _aboutContentURL: string;
   dataCaveatText: string;
   private _propertyPlaceholders: PropertyPlaceholder[] = [];
+  private _alwaysShowHowToText: boolean;
 
   static fromJson(json: any): Config {
 
@@ -50,6 +51,7 @@ import { Visualization } from "./Visualization";
     ret._connection = json.connection;
     ret._cube = json.cube;
     ret._excludedDimensions = json.excludedDimensions;
+    ret._alwaysShowHowToText = json.alwaysShowHowToText || false;
 
     ret._groups = json.groups.map((groupJson: any): Group => {
       return Group.fromJson(groupJson, json.allowVizExport, json.connection);
@@ -73,6 +75,10 @@ import { Visualization } from "./Visualization";
 
   get groups(): Group[] {
     return this._groups;
+  }
+
+  get alwaysShowHowToText(): boolean {
+    return this._alwaysShowHowToText;
   }
 
   get shortTitle(): string {
